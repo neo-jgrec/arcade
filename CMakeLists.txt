@@ -94,8 +94,18 @@ if (DOXYGEN_FOUND)
     COMMAND python3 -m http.server --directory ${CMAKE_CURRENT_BINARY_DIR}/doc_doxygen/doxygen.html.out 8000
     VERBATIM
   )
+  add_custom_target(doc_doxygen_action
+    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMAND cp -r ${CMAKE_SOURCE_DIR}/assets.tek ${CMAKE_CURRENT_BINARY_DIR}/doc_doxygen/doxygen.html.out
+    VERBATIM
+  )
 else (DOXYGEN_FOUND)
   message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
 
-add_subdirectory(src)
+option(_SKIP_SRC "Option to skip the src directory" OFF) # OFF by default
+
+if(NOT _SKIP_SRC)
+    add_subdirectory(src)
+endif()
