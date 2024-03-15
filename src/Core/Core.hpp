@@ -26,6 +26,11 @@ namespace Arcade::Core
          * @brief Destructor for the Core class.
          */
         ~Core();
+
+        /**
+         * @brief Starts the core of the arcade game.
+         */
+        void Start();
     };
 }
 
