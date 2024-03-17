@@ -22,4 +22,6 @@ target_link_libraries(arcade_sfml
         sfml-graphics sfml-audio
 )
 
+set_target_properties(arcade_sfml PROPERTIES PREFIX "")
+
 install(TARGETS arcade_sfml LIBRARY DESTINATION lib)

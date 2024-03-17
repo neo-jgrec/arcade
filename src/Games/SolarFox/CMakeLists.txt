@@ -15,4 +15,6 @@ target_include_directories(arcade_solarfox
         ${CMAKE_SOURCE_DIR}/includes
 )
 
+set_target_properties(arcade_solarfox PROPERTIES PREFIX "")
+
 install(TARGETS arcade_solarfox LIBRARY DESTINATION lib)

@@ -15,4 +15,6 @@ target_include_directories(arcade_snake
         ${CMAKE_SOURCE_DIR}/includes
 )
 
+set_target_properties(arcade_snake PROPERTIES PREFIX "")
+
 install(TARGETS arcade_snake LIBRARY DESTINATION lib)
