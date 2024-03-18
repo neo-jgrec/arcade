@@ -34,10 +34,16 @@ namespace Arcade::Games {
             virtual std::vector<std::vector<Arcade::Displays::ISprite>> getMap(void) = 0;
 
             /**
-            * @brief Get the size of the map
+            * @brief Get the height of the map
             * @return void
             */
-            virtual void getMapSize(void) = 0;
+            virtual void getMapHeight(void) = 0;
+
+            /**
+             * @brief Get the width of the map
+             * @return void
+             */
+            virtual void getMapWidth(void) = 0;
 
             /**
              * @brief Get the score of the game

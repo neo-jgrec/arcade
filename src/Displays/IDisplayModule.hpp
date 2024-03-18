@@ -50,24 +50,14 @@ enum class KeyType {
 };
 
 namespace Arcade::Displays {
-
-    class BoxElement {
-        public:
-            BoxElement(std::string name, std::string value, bool selected);
-            ~BoxElement();
-
-            std::string name;
-            std::string value;
-            bool selected;
-    };
-
     class Box {
         public:
             Box(std::string name, std::string value, bool selected);
             ~Box();
 
+            std::string name;
             std::string value;
-            std::vector<BoxElement> elements;
+            std::vector<Box> subBoxes;
     };
 
     class HeaderElement {
@@ -85,23 +75,28 @@ namespace Arcade::Displays {
             ~IDisplay();
 
             /**
+             * @brief Init the display
+             * @return void
+             */
+            virtual void init(void) = 0;
+
+            /**
             * @brief Get the Inputs object
             * @return std::map<KeyType, bool>
             */
-            virtual std::map<KeyType, bool> getInputs() const = 0;
+            virtual std::map<KeyType, bool> getInputs(void) const = 0;
 
             /**
              * @brief Clear the display
-             * @param inputs
              * @return void
              */
-            virtual void clear() = 0;
+            virtual void clear(void) = 0;
 
             /**
              * @brief Set Header of the display
-             * @param name
-             * @param sprite
-             * @param value
+             * @param name the name of the header, if there is no sprite the name will be displayed
+             * @param sprite the icon of the header
+             * @param value string that correspond the value of the header
              * @return void
              */
             virtual void setHeader(std::string name, std::string value, ISprite sprite) = 0;
@@ -114,24 +109,38 @@ namespace Arcade::Displays {
 
             /**
              * @brief Set the Size of the map
-             * @param x
-             * @param y
+             * @param x horizontal size
+             * @param y vertical size
              * @return void
              */
             virtual void setMapSize(int x, int y) = 0;
 
             /**
              * @brief Display a tile
-             * @param x
-             * @param y
+             * @param x horizontal position
+             * @param y vertical position
              * @param sprite
              * @return void
              */
             virtual void displayTile(int x, int y, ISprite sprite) = 0;
 
+            /**
+             * @brief Add a box to the menu
+             * @return void
+             */
             virtual void setBox(Box box) = 0;
+
+            /**
+             * @brief Display the box
+             * @return void
+             */
             virtual void displayBox(void) = 0;
 
+            /**
+             * @brief Return a boolean if a box or a subbox is clicked
+             * @param name the name of the box
+             * @return void
+             */
             virtual bool clickedOnBoxElement(std::string name) = 0;
 
             /**
@@ -139,6 +148,12 @@ namespace Arcade::Displays {
              * @return void
              */
             virtual void displayMenu(void) = 0;
+
+            /**
+             * @brief close, responsible to close the display, free all
+             * @return void
+             */
+            virtual void close(void) = 0;
 
         protected:
         private:
