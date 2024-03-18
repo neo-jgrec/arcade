@@ -70,9 +70,9 @@ namespace Arcade::Displays {
             std::shared_ptr<ISprite> sprite;
     };
 
-    class IDisplay {
+    class IDisplayModule {
         public:
-            ~IDisplay();
+            ~IDisplayModule();
 
             /**
              * @brief Init the display

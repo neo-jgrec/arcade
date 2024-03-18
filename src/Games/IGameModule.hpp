@@ -15,10 +15,10 @@
 namespace Arcade::Games {
 
 
-    class IGame {
+    class IGameModule {
         public:
-            IGame();
-            ~IGame();
+            IGameModule();
+            ~IGameModule();
 
             /**
             * @brief update the game with inputs
