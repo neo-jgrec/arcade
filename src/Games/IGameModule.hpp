@@ -21,24 +21,27 @@ namespace Arcade::Games {
             ~IGameModule();
 
             /**
-            * @brief update the game with inputs
-            * @param inputs map of inputs
-            * @return void
-            */
+             * @brief init the game
+             * @return void
+             */
+            virtual void init(void) = 0;
+            /**
+             * @brief update the game with inputs
+             * @param inputs map of inputs
+             * @return void
+             */
             virtual void update(std::map<KeyType, bool> inputs) = 0;
+            /**
+             * @brief Get the name of the game
+             * @return std::string
+             */
+            void close(void);
 
             /**
-            * @brief Get the map of the game
-            * @return std::vector<std::string>
-            */
-            virtual std::vector<std::vector<Arcade::Displays::ISprite>> getMap(void) = 0;
-
-            /**
-            * @brief Get the height of the map
-            * @return void
-            */
+             * @brief Get the height of the map
+             * @return void
+             */
             virtual void getMapHeight(void) = 0;
-
             /**
              * @brief Get the width of the map
              * @return void
@@ -46,12 +49,21 @@ namespace Arcade::Games {
             virtual void getMapWidth(void) = 0;
 
             /**
+            * @brief Get the map of the game
+            * @return std::vector<std::string>
+            */
+            virtual std::vector<std::vector<Arcade::Displays::ISprite>> getMap(void) = 0;
+            /**
+             * @brief Get the list of boxes for the game header
+             * @return std::vector<Displays::Box>
+             */
+            virtual std::vector<Displays::Box> getHeader(void) = 0;
+            /**
              * @brief Get the score of the game
              * @return unsigned int
              */
             virtual unsigned int getScore(void) = 0;
 
-            virtual std::vector<Displays::HeaderElement> getHeader(void) = 0;
         protected:
         private:
     };
