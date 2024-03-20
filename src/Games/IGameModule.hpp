@@ -35,7 +35,7 @@ namespace Arcade::Games {
              * @brief Get the name of the game
              * @return std::string
              */
-            virtual std::string getGameName(void);
+            virtual std::string getGameName(void) = 0;
 
             /**
              * @brief Get the height of the map
