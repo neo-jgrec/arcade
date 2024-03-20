@@ -159,6 +159,12 @@ namespace Arcade::Displays {
              */
             virtual void setAnimationTime(float time) = 0;
 
+            /**
+             * @brief Get the delta time
+             * @return float
+             */
+            virtual float getDeltaT(void) = 0;
+
         protected:
         private:
     };
