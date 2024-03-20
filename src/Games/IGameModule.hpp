@@ -30,7 +30,7 @@ namespace Arcade::Games {
              * @param inputs map of inputs
              * @return void
              */
-            virtual void update(std::map<KeyType, bool> inputs) = 0;
+            virtual void update(std::map<KeyType, bool> inputs, float deltaT) = 0;
             /**
              * @brief Get the name of the game
              * @return std::string
@@ -63,6 +63,12 @@ namespace Arcade::Games {
              * @return unsigned int
              */
             virtual unsigned int getScore(void) = 0;
+
+            /**
+             * @brief Get the animation time of the game
+             * @return float
+             */
+            virtual float getAnimationTime(void) = 0;
 
         protected:
         private:

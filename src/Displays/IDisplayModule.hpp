@@ -50,26 +50,16 @@ enum class KeyType {
 };
 
 namespace Arcade::Displays {
-    class Box {
+    class IBox {
         public:
             Box(std::string name, std::string value, bool selected);
             ~Box();
 
-            std::string name;
-            std::string value;
-            std::vector<Box> subBoxes;
-            std::shared_ptr<ISprite> sprite;
+            // std::string name;
+            // std::string value;
+            // std::vector<Box> subBoxes;
+            // std::shared_ptr<ISprite> sprite;
     };
-
-    // class HeaderElement {
-    //     public:
-    //         HeaderElement(std::string name, std::string value, bool selected);
-    //         ~HeaderElement();
-
-    //         std::string name;
-    //         std::string value;
-    //         std::shared_ptr<ISprite> sprite;
-    // };
 
     class IDisplayModule {
         public:
@@ -92,21 +82,6 @@ namespace Arcade::Displays {
              */
             virtual std::map<KeyType, bool> getInputs(void) const = 0;
 
-            // /**
-            //  * @brief Set Header of the display
-            //  * @param name the name of the header, if there is no sprite the name will be displayed
-            //  * @param sprite the icon of the header
-            //  * @param value string that correspond the value of the header
-            //  * @return void
-            //  */
-            // virtual void setHeader(std::string name, std::string value, ISprite sprite) = 0;
-            // /**
-            //  * @brief Display the header
-            //  * @return void
-            //  */
-            // virtual void displayHeader(void) = 0;
-
-
             /**
              * @brief Set the name of the game
              * @param name the name of the game
@@ -118,18 +93,23 @@ namespace Arcade::Displays {
              * @brief reset the list of boxes
              * @return void
              */
-            virtual void resetBoxes(void) = 0;
+            virtual void resetHeaders(void) = 0;
             /**
              * @brief Add a box to the menu or modify it if it already exists
              * @return void
              */
-            virtual void setBox(Box box) = 0;
+            virtual void setHeader(IBox box) = 0;
 
-            // /**
-            //  * @brief Display all thes boxes
-            //  * @return void
-            //  */
-            // virtual void displayBoxes(void) = 0;
+            /**
+             * @brief reset the list of boxes
+             * @return void
+             */
+            virtual void resetMenu(void) = 0;
+            /**
+             * @brief Add a box to the menu or modify it if it already exists
+             * @return void
+             */
+            virtual void setMenu(IBox box) = 0;
 
             /**
              * @brief Set the Size of the map
@@ -146,7 +126,7 @@ namespace Arcade::Displays {
             virtual void clear(void) = 0;
 
             /**
-             * @brief Display a tile
+             * @brief Display a tile / update a tile
              * @param x horizontal position
              * @param y vertical position
              * @param sprite
@@ -172,6 +152,12 @@ namespace Arcade::Displays {
              * @return void
              */
             virtual void displayMenu(void) = 0;
+
+            /**
+             * @brief Set the time of the animation
+             * @return void
+             */
+            virtual void setAnimationTime(float time) = 0;
 
         protected:
         private:
