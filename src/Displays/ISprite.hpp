@@ -8,7 +8,7 @@
 #ifndef ISPRITE_HPP_
 #define ISPRITE_HPP_
 
-#include <iostream>
+#include <string>
 
 namespace Arcade::Displays {
     class ISprite {

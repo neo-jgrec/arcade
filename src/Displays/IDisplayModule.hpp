@@ -9,9 +9,6 @@
 #define IDISPLAY_HPP_
 #include <map>
 #include "ISprite.hpp"
-#include <iostream>
-#include <vector>
-#include <memory>
 
 enum class KeyType {
     UP,
@@ -52,8 +49,8 @@ enum class KeyType {
 namespace Arcade::Displays {
     class IBox {
         public:
-            Box(std::string name, std::string value, bool selected);
-            ~Box();
+            IBox(std::string name, std::string value, bool selected);
+            ~IBox();
 
             // std::string name;
             // std::string value;
