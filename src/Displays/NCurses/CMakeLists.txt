@@ -19,4 +19,6 @@ find_package(Curses REQUIRED)
 include_directories(${CURSES_INCLUDE_DIR})
 target_link_libraries(arcade_ncurses ${CURSES_LIBRARIES})
 
+set_target_properties(arcade_ncurses PROPERTIES PREFIX "")
+
 install(TARGETS arcade_ncurses LIBRARY DESTINATION lib)

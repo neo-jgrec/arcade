@@ -22,4 +22,6 @@ target_link_libraries(arcade_sdl2
         SDL2::SDL2
 )
 
+set_target_properties(arcade_sdl2 PROPERTIES PREFIX "")
+
 install(TARGETS arcade_sdl2 LIBRARY DESTINATION lib)
