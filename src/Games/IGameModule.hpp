@@ -32,8 +32,7 @@ namespace Arcade::Games {
 
     class IBox {
         public:
-            IBox(std::string name, std::string value, bool selected);
-            ~IBox();
+            virtual ~IBox() = default;
 
             virtual std::string getName() const = 0;
             virtual std::string getValue() const = 0;
@@ -75,12 +74,12 @@ namespace Arcade::Games {
             * @brief Get the map of the game
             * @return std::vector<std::string>
             */
-            virtual std::vector<std::vector<Arcade::Games::ISprite>> getMap(int layer = 0) = 0;
+            virtual std::vector<std::vector<Arcade::Games::ISprite *>> getMap(int layer = 0) = 0;
             /**
              * @brief Get the list of boxes for the game header
              * @return std::vector<Displays::Box>
              */
-            virtual std::vector<Arcade::Games::IBox> getHeader(void) = 0;
+            virtual std::vector<Arcade::Games::IBox *> getHeader(void) = 0;
             /**
              * @brief Get the score of the game
              * @return unsigned int

@@ -22,8 +22,7 @@ namespace Arcade::Displays {
 
     class ISprite {
         public:
-            ISprite();
-            ~ISprite();
+            virtual ~ISprite() = default;
 
             /**
             * @brief Set the ascii of the sprite

@@ -34,8 +34,7 @@ namespace Arcade::Displays {
 
     class IBox {
         public:
-            IBox(std::string name, std::string value, bool selected);
-            ~IBox();
+            virtual ~IBox() = default;
 
             virtual std::string getName() const = 0;
             virtual std::string getValue() const = 0;
@@ -77,13 +76,13 @@ namespace Arcade::Displays {
              * @brief Add a box to the menu or modify it if it already exists
              * @return void
              */
-            virtual void setHeader(Arcade::Displays::IBox box) = 0;
+            virtual void setHeader(Arcade::Displays::IBox *box) = 0;
 
             /**
              * @brief Add a box to the menu or modify it if it already exists
              * @return void
              */
-            virtual void setMenu(Arcade::Displays::IBox box) = 0;
+            virtual void setMenu(Arcade::Displays::IBox *box) = 0;
 
             /**
              * @brief Return a boolean if a box or a subbox is clicked
@@ -113,7 +112,7 @@ namespace Arcade::Displays {
              * @param sprite
              * @return void
              */
-            virtual void updateTile(Arcade::Displays::Vector2i position, Arcade::Displays::ISprite sprite, int layer = 0) = 0;
+            virtual void updateTile(Arcade::Displays::Vector2i position, Arcade::Displays::ISprite *sprite, int layer = 0) = 0;
 
 
             /**
