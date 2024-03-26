@@ -30,18 +30,18 @@ namespace Arcade::Games {
         RESTART
     };
 
-    class IBox {
+    class IText {
         public:
-            virtual ~IBox() = default;
+            virtual ~IText() = default;
 
-            virtual std::string getName() const = 0;
-            virtual std::string getValue() const = 0;
-            virtual ISprite &getSprite() const = 0;
-            virtual bool isSelected() const = 0;
-            virtual void setSelected(bool selected) = 0;
-            virtual void setValue(std::string value) = 0;
-            virtual void addSubBox(IBox box) = 0;
-            virtual std::vector<IBox> &getSubBoxes() const = 0;
+            virtual void setText(std::string text) = 0;
+            virtual std::string getText() = 0;
+
+            virtual void setPos(Vector2i pos) = 0;
+            virtual Vector2i getPos() = 0;
+
+            virtual void setColor(Color color) = 0;
+            virtual Color getColor() = 0;
     };
 
     class IGameModule {
@@ -74,12 +74,8 @@ namespace Arcade::Games {
             * @brief Get the map of the game
             * @return std::vector<std::string>
             */
-            virtual std::vector<std::vector<Arcade::Games::ISprite *>> getMap(int layer = 0) = 0;
-            /**
-             * @brief Get the list of boxes for the game header
-             * @return std::vector<Displays::Box>
-             */
-            virtual std::vector<Arcade::Games::IBox *> getHeader(void) = 0;
+            virtual std::vector<std::vector<Arcade::Games::ISprite *>> getMap(void) = 0;
+
             /**
              * @brief Get the score of the game
              * @return unsigned int
@@ -91,6 +87,12 @@ namespace Arcade::Games {
              * @return float
              */
             virtual float getAnimationTime(void) = 0;
+
+            /**
+             * @brief Get the texts of the game
+             * @return std::vector<IText *>
+             */
+            virtual std::vector<IText *> getTexts(void) = 0;
 
         protected:
         private:

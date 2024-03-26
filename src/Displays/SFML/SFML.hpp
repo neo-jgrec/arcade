@@ -8,7 +8,9 @@
 #ifndef SFML_HPP_
 #define SFML_HPP_
 
-class SFML {
+#include "../IDisplayModule.hpp"
+
+class SFML : public Arcade::Displays::IDisplayModule {
     public:
         SFML();
         ~SFML();
@@ -16,5 +18,13 @@ class SFML {
     protected:
     private:
 };
+
+extern "C" {
+
+    Arcade::Displays::IDisplayModule *displayEntryPoint() {
+        return new SFML();
+    }
+
+}
 
 #endif /* !SFML_HPP_ */

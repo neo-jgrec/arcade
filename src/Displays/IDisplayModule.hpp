@@ -32,20 +32,6 @@ namespace Arcade::Displays {
         RESTART
     };
 
-    class IBox {
-        public:
-            virtual ~IBox() = default;
-
-            virtual std::string getName() const = 0;
-            virtual std::string getValue() const = 0;
-            virtual ISprite &getSprite() const = 0;
-            virtual bool isSelected() const = 0;
-            virtual void setSelected(bool selected) = 0;
-            virtual void setValue(std::string value) = 0;
-            virtual void addSubBox(IBox box) = 0;
-            virtual std::vector<IBox> &getSubBoxes() const = 0;
-    };
-
     class IDisplayModule {
         public:
             ~IDisplayModule();
@@ -73,25 +59,6 @@ namespace Arcade::Displays {
             virtual void setGameName(std::string name) = 0;
 
             /**
-             * @brief Add a box to the menu or modify it if it already exists
-             * @return void
-             */
-            virtual void setHeader(Arcade::Displays::IBox *box) = 0;
-
-            /**
-             * @brief Add a box to the menu or modify it if it already exists
-             * @return void
-             */
-            virtual void setMenu(Arcade::Displays::IBox *box) = 0;
-
-            /**
-             * @brief Return a boolean if a box or a subbox is clicked
-             * @param name the name of the box
-             * @return void
-             */
-            virtual bool clickedOnBoxElement(std::string name) = 0;
-
-            /**
              * @brief Set the Size of the map
              * @param x horizontal size
              * @param y vertical size
@@ -112,7 +79,7 @@ namespace Arcade::Displays {
              * @param sprite
              * @return void
              */
-            virtual void updateTile(Arcade::Displays::Vector2i position, Arcade::Displays::ISprite *sprite, int layer = 0) = 0;
+            virtual void updateTile(Arcade::Displays::Vector2i position, Arcade::Displays::ISprite *sprite) = 0;
 
 
             /**
@@ -138,6 +105,8 @@ namespace Arcade::Displays {
              * @return float
              */
             virtual float getDeltaT(void) = 0;
+
+            virtual void setText(std::string text, Arcade::Displays::Vector2i pos, Arcade::Displays::Color color) = 0;
 
         protected:
         private:

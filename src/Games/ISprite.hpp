@@ -20,6 +20,23 @@ namespace Arcade::Games {
             int y;
     };
 
+    enum class Color {
+        BLACK,
+        RED,
+        GREEN,
+        YELLOW,
+        BLUE,
+        MAGENTA,
+        CYAN,
+        WHITE,
+        DEFAULT
+    };
+
+    enum class Shape {
+        RECTANGLE,
+        CIRCLE,
+        TRIANGLE
+    };
 
     class ISprite {
         public:
