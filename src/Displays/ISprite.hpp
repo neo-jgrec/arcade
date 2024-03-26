@@ -5,12 +5,21 @@
 ** ISprite
 */
 
-#ifndef ISPRITE_HPP_
-#define ISPRITE_HPP_
+#ifndef ISPRITEDISPLAY_HPP_
+#define ISPRITEDISPLAY_HPP_
 
 #include <string>
 
 namespace Arcade::Displays {
+    class Vector2i {
+        public:
+            Vector2i(int x, int y) : x(x), y(y) {}
+            ~Vector2i() = default;
+
+            int x;
+            int y;
+    };
+
     class ISprite {
         public:
             ISprite();
@@ -64,6 +73,9 @@ namespace Arcade::Displays {
              * @return int corresponding to the rotation of the sprite
              */
             virtual int getRotation(void) = 0;
+
+            virtual void setDirection(Vector2i direction) = 0;
+            virtual Vector2i getDirection(void) = 0;
 
         protected:
         private:
