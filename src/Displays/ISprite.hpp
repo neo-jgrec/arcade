@@ -94,6 +94,12 @@ namespace Arcade::Displays {
             virtual void setDirection(Vector2i direction) = 0;
             virtual Vector2i getDirection(void) = 0;
 
+            virtual void setColor(Color color) = 0;
+            virtual Color getColor(void) = 0;
+
+            virtual void setShape(Shape shape) = 0;
+            virtual Shape getShape(void) = 0;
+
         protected:
         private:
     };

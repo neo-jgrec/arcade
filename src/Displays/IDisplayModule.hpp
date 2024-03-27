@@ -89,12 +89,6 @@ namespace Arcade::Displays {
             virtual void displayGame(void) = 0;
 
             /**
-             * @brief Display the menu
-             * @return void
-             */
-            virtual void displayMenu(void) = 0;
-
-            /**
              * @brief Set the time of the animation
              * @return void
              */

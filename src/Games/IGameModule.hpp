@@ -53,7 +53,7 @@ namespace Arcade::Games {
              * @brief init the game
              * @return void
              */
-            virtual void init(void) = 0;
+            virtual void init(std::string args, size_t nb_args) = 0;
             virtual void close(void) = 0;
 
             /**
@@ -61,7 +61,7 @@ namespace Arcade::Games {
              * @param inputs map of inputs
              * @return void
              */
-            virtual void update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT) = 0;
+            virtual bool update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT) = 0;
             /**
              * @brief Get the name of the game
              * @return std::string
