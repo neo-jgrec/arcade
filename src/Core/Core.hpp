@@ -36,15 +36,18 @@ namespace Arcade::Core
             /**
              * @brief Starts the core of the arcade game.
              */
-            int Start(std::string libPath);
+            int Start(std::string displayLib);
         private:
             void addLibraries(const std::string &path);
             void displayLibraries(void);
+            void Loop(void);
 
             std::map<std::string, Arcade::Displays::IDisplayModule *> _displays;
             std::map<std::string, Arcade::Games::IGameModule *> _games;
             DLLoader<Arcade::Displays::IDisplayModule> _displayLoader;
             DLLoader<Arcade::Games::IGameModule> _gameLoader;
+            std::string _currentLib;
+            std::string _currentGame;
     };
 }
 

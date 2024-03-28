@@ -47,18 +47,14 @@
                 if (!_handle) {
                     throw std::runtime_error("Cannot open library: " + std::string(dlerror()));
                 }
-                // void *(*create)() = (void *(*)())dlsym(_handle, entryPoint.c_str());
-                int (*test)() = (int (*)())dlsym(_handle, "entryPoint");
-                if (!test) {
+                void *(*create)() = (void *(*)())dlsym(_handle, entryPoint.c_str());
+                if (!create) {
                     throw std::runtime_error("Cannot load symbol: " + std::string(dlerror()));
                 }
-                // if (!create) {
-                //     throw std::runtime_error("Cannot load symbol: " + std::string(dlerror()));
-                // }
-                // T *instance = static_cast<T *>(create());
+                T *instance = static_cast<T *>(create());
 
-                // return instance;
-                return nullptr;
+                return instance;
+                // return nullptr;
             }
 
             /**
