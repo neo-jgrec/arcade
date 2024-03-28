@@ -9,8 +9,9 @@
 #define IGAME_HPP_
 
 #include <iostream>
-#include "ISprite.hpp"
 #include <vector>
+#include <map>
+#include "ISprite.hpp"
 
 namespace Arcade::Games {
 
@@ -46,7 +47,6 @@ namespace Arcade::Games {
 
     class IGameModule {
         public:
-            IGameModule();
             ~IGameModule();
 
             /**
@@ -80,7 +80,7 @@ namespace Arcade::Games {
              * @brief Get the score of the game
              * @return unsigned int
              */
-            virtual unsigned int getScore(void) = 0;
+            virtual std::string getScore(void) = 0;
 
             /**
              * @brief Get the animation time of the game

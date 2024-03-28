@@ -8,6 +8,8 @@
 #ifndef SNAKE_HPP_
 #define SNAKE_HPP_
 
+#include "../IGameModule.hpp"
+
 class Snake {
     public:
         Snake();
@@ -16,5 +18,12 @@ class Snake {
     protected:
     private:
 };
+
+extern "C" {
+
+    Arcade::Games::IGameModule *gameEntryPoint(void) {
+        return nullptr;
+    }
+}
 
 #endif /* !SNAKE_HPP_ */

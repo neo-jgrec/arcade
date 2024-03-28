@@ -26,14 +26,15 @@ class SFML : public Arcade::Displays::IDisplayModule {
         void setAnimationTime(float time) override;
         float getDeltaT(void) override;
         void setText(std::string text, Arcade::Displays::Vector2i pos, Arcade::Displays::Color color) override;
+
     protected:
     private:
 };
 
 extern "C" {
 
-    int entryPoint() {
-        return 0;
+    Arcade::Displays::IDisplayModule *displayEntryPoint(void) {
+        return new SFML();
     }
 
 }
