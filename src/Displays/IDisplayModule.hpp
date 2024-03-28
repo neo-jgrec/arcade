@@ -8,54 +8,28 @@
 #ifndef IDISPLAY_HPP_
 #define IDISPLAY_HPP_
 #include <map>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <memory>
 #include "ISprite.hpp"
 
-enum class KeyType {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    ENTER,
-    ESCAPE,
-    SPACE,
-    A,
-    B,
-    C,
-    D,
-    E,
-    F,
-    G,
-    H,
-    I,
-    J,
-    K,
-    L,
-    M,
-    N,
-    O,
-    P,
-    Q,
-    R,
-    S,
-    T,
-    U,
-    V,
-    W,
-    X,
-    Y,
-    Z
-};
-
 namespace Arcade::Displays {
-    class IBox {
-        public:
-            IBox(std::string name, std::string value, bool selected);
-            ~IBox();
 
-            // std::string name;
-            // std::string value;
-            // std::vector<Box> subBoxes;
-            // std::shared_ptr<ISprite> sprite;
+    enum class KeyType {
+        VER,
+        HOR,
+        ACTION1,
+        ACTION2,
+        ACTION3,
+        ACTION4,
+        QUIT,
+        ESC,
+        NEXT_LIB,
+        PREV_LIB,
+        NEXT_GAME,
+        PREV_GAME,
+        RESTART
     };
 
     class IDisplayModule {
@@ -72,13 +46,11 @@ namespace Arcade::Displays {
              * @return void
              */
             virtual void close(void) = 0;
-
             /**
              * @brief Get the Inputs object
-             * @return std::map<KeyType, bool>
+             * @return std::map<KeyType, int>
              */
-            virtual std::map<KeyType, bool> getInputs(void) const = 0;
-
+            virtual std::map<Arcade::Displays::KeyType, int> getInputs(void) const = 0;
             /**
              * @brief Set the name of the game
              * @param name the name of the game
@@ -87,34 +59,12 @@ namespace Arcade::Displays {
             virtual void setGameName(std::string name) = 0;
 
             /**
-             * @brief reset the list of boxes
-             * @return void
-             */
-            virtual void resetHeaders(void) = 0;
-            /**
-             * @brief Add a box to the menu or modify it if it already exists
-             * @return void
-             */
-            virtual void setHeader(IBox box) = 0;
-
-            /**
-             * @brief reset the list of boxes
-             * @return void
-             */
-            virtual void resetMenu(void) = 0;
-            /**
-             * @brief Add a box to the menu or modify it if it already exists
-             * @return void
-             */
-            virtual void setMenu(IBox box) = 0;
-
-            /**
              * @brief Set the Size of the map
              * @param x horizontal size
              * @param y vertical size
              * @return void
              */
-            virtual void setMapSize(int x, int y) = 0;
+            virtual void setMapSize(Arcade::Displays::Vector2i size) = 0;
 
             /**
              * @brief Clear the display
@@ -129,26 +79,14 @@ namespace Arcade::Displays {
              * @param sprite
              * @return void
              */
-            virtual void displayTile(int x, int y, ISprite sprite) = 0;
+            virtual void updateTile(Arcade::Displays::Vector2i position, Arcade::Displays::ISprite *sprite) = 0;
 
-            /**
-             * @brief Return a boolean if a box or a subbox is clicked
-             * @param name the name of the box
-             * @return void
-             */
-            virtual bool clickedOnBoxElement(std::string name) = 0;
 
             /**
              * @brief Update the display of the game after drawing the map with displayTile
              * @return void
              */
             virtual void displayGame(void) = 0;
-
-            /**
-             * @brief Display the menu
-             * @return void
-             */
-            virtual void displayMenu(void) = 0;
 
             /**
              * @brief Set the time of the animation
@@ -161,6 +99,8 @@ namespace Arcade::Displays {
              * @return float
              */
             virtual float getDeltaT(void) = 0;
+
+            virtual void setText(std::string text, Arcade::Displays::Vector2i pos, Arcade::Displays::Color color) = 0;
 
         protected:
         private:

@@ -5,12 +5,12 @@
 ** ISprite
 */
 
-#ifndef ISPRITEDISPLAY_HPP_
-#define ISPRITEDISPLAY_HPP_
+#ifndef ISPRITEGAME_HPP_
+#define ISPRITEGAME_HPP_
 
-#include <string>
+#include <iostream>
 
-namespace Arcade::Displays {
+namespace Arcade::Games {
     class Vector2i {
         public:
             Vector2i(int x, int y) : x(x), y(y) {}
@@ -66,18 +66,6 @@ namespace Arcade::Displays {
              * @return std::string corresponding to the path of the sprite
              */
             virtual std::string getPath() = 0;
-
-            /**
-             * @brief Set the name of the sprite
-             * @param name std::string corresponding to the name of the sprite
-             * @return void
-             */
-            virtual void setName(std::string name) = 0;
-            /**
-             * @brief Get the name of the sprite
-             * @return std::string corresponding to the name of the sprite
-             */
-            virtual std::string getName(void) = 0;
 
             /**
              * @brief Set the rotation of the sprite

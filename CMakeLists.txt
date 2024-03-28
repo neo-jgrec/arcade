@@ -54,7 +54,6 @@ add_compile_options(-Wall
 	-fstack-protector-strong
 	-fstack-clash-protection
 	-flto=auto
-	-fvisibility=hidden
 	-fdiagnostics-color=auto
 	-grecord-gcc-switches
 	-pipe
