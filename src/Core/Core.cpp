@@ -96,10 +96,11 @@ void Core::Loop(void)
     game->init("", 0);
     while (running)
     {
-        display->clear();
         inputs = display->getInputs();
         if (inputs[Arcade::Displays::KeyType::ESC] == 1)
             running = false;
+        display->setText("test", Arcade::Displays::Vector2i(0, 0), Arcade::Displays::Color::DEFAULT);
+        display->clear();
         display->displayGame();
         // display->draw(game->getMap());
         // display->drawText(game->getTexts());
