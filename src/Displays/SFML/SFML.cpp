@@ -27,10 +27,6 @@ std::map<Arcade::Displays::KeyType, int> SFML::getInputs(void) const
 {
 }
 
-void SFML::setGameName(std::string name)
-{
-}
-
 void SFML::setMapSize(Arcade::Displays::Vector2i size)
 {
 }

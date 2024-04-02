@@ -7,7 +7,7 @@
 
 #include "Ncurses.hpp"
 
-Ncurses::Ncurses()
+Ncurses::Ncurses() : _mapSize(0, 0)
 {
 }
 
@@ -22,6 +22,8 @@ void Ncurses::init(void)
     noecho();
     nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
+    _map = std::vector<std::vector<Arcade::Displays::ISprite *>>();
+    _mapSize = Arcade::Displays::Vector2i(0, 0);
 }
 
 void Ncurses::close(void)
@@ -34,12 +36,12 @@ std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void) const
     std::map<Arcade::Displays::KeyType, int> inputs;
     int ch = 0;
     std::vector<int> keys;
+
     while (ch != ERR) {
         ch = getch();
         keys.push_back(ch);
     }
     if (keys.size() > 1) {
-            std::cout << keys[0] << std::endl;
         for (int i = 0; i < keys.size(); i++) {
             if (keys[i] == 27) {
                 inputs[Arcade::Displays::KeyType::ESC] = 1;
@@ -49,17 +51,14 @@ std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void) const
             }
         }
     }
-
                 // inputs[Arcade::Displays::KeyType::ESC] = 1;
     return inputs;
 }
 
-void Ncurses::setGameName(std::string name)
-{
-}
-
 void Ncurses::setMapSize(Arcade::Displays::Vector2i size)
 {
+    _mapSize = size;
+    _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(size.y, std::vector<Arcade::Displays::ISprite *>(size.x, nullptr));
 }
 
 void Ncurses::clear(void)
@@ -69,10 +68,21 @@ void Ncurses::clear(void)
 
 void Ncurses::updateTile(Arcade::Displays::Vector2i pos, Arcade::Displays::ISprite *sprite)
 {
+    if (pos.x < 0 || pos.y < 0 || pos.x >= _mapSize.x || pos.y >= _mapSize.y)
+        return;
+    _map[pos.y][pos.x] = sprite;
 }
 
 void Ncurses::displayGame(void)
 {
+    for (int y = 0; y < _mapSize.y; y++) {
+        for (int x = 0; x < _mapSize.x; x++) {
+            if (_map[y][x] != nullptr) {
+                mvprintw(y, x, "##");
+            }
+        }
+    }
+    refresh();
 }
 
 void Ncurses::setAnimationTime(float time)
