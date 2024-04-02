@@ -16,8 +16,8 @@ namespace Arcade::Games {
             Vector2i(int x, int y) : x(x), y(y) {}
             ~Vector2i() = default;
 
-            int x;
-            int y;
+            int x = 0;
+            int y = 0;
     };
 
     enum class Color {
