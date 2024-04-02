@@ -10,6 +10,7 @@
 
 #include <ncurses.h>
 #include "../IDisplayModule.hpp"
+#include <time.h>
 
 class Ncurses : public Arcade::Displays::IDisplayModule {
     public:
@@ -19,7 +20,6 @@ class Ncurses : public Arcade::Displays::IDisplayModule {
         void init(void) override;
         void close(void) override;
         std::map<Arcade::Displays::KeyType, int> getInputs(void) const override;
-        void setGameName(std::string name) override;
         void setMapSize(Arcade::Displays::Vector2i size) override;
         void clear(void) override;
         void updateTile(Arcade::Displays::Vector2i pos, Arcade::Displays::ISprite *sprite) override;
@@ -28,8 +28,14 @@ class Ncurses : public Arcade::Displays::IDisplayModule {
         float getDeltaT(void) override;
         void setText(std::string text, Arcade::Displays::Vector2i pos, Arcade::Displays::Color color) override;
 
+        void displayResize();
     protected:
     private:
+        std::vector<std::vector<Arcade::Displays::ISprite *>> _map;
+        Arcade::Displays::Vector2i _mapSize;
+        float _deltaT;
+        clock_t _lastTime;
+        std::vector<std::tuple<Arcade::Displays::Vector2i, std::string, Arcade::Displays::Color>> _texts;
 };
 
 extern "C" {

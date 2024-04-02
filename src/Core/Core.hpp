@@ -13,6 +13,7 @@
 #include "DLLoader/DLLoader.hpp"
 #include "../Displays/IDisplayModule.hpp"
 #include "../Games/IGameModule.hpp"
+#include "Sprite.hpp"
 
 /**
  * @namespace Arcade::Core
@@ -48,6 +49,8 @@ namespace Arcade::Core
             DLLoader<Arcade::Games::IGameModule> _gameLoader;
             std::string _currentLib;
             std::string _currentGame;
+
+            Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite);
     };
 }
 

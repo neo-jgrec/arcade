@@ -91,13 +91,17 @@ void Core::Loop(void)
 
     std::cout << "Starting game loop..." << std::endl;
     display->init();
+    display->setMapSize(Arcade::Displays::Vector2i(15, 15));
+    display->updateTile(Arcade::Displays::Vector2i(0, 0), new Sprite());
     game->init("", 0);
     while (running)
     {
-        display->clear();
         inputs = display->getInputs();
         if (inputs[Arcade::Displays::KeyType::ESC] == 1)
             running = false;
+        display->setText("test", Arcade::Displays::Vector2i(0, 0), Arcade::Displays::Color::DEFAULT);
+        display->clear();
+        display->displayGame();
         // display->draw(game->getMap());
         // display->drawText(game->getTexts());
         // display->display();
@@ -105,4 +109,41 @@ void Core::Loop(void)
     }
     display->close();
     game->close();
+}
+
+Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite) {
+    Sprite newSprite;
+    newSprite.setPath(sprite.getPath());
+    Arcade::Games::Shape shape = sprite.getShape();
+    Arcade::Games::Color color = sprite.getColor();
+    Arcade::Games::Vector2i dir = sprite.getDirection();
+    switch (color)
+    {
+    case Arcade::Games::Color::BLACK:
+        newSprite.setColor(Arcade::Displays::Color::BLACK);
+        break;
+    case Arcade::Games::Color::BLUE:
+        newSprite.setColor(Arcade::Displays::Color::BLUE);
+        break;
+    case Arcade::Games::Color::CYAN:
+        newSprite.setColor(Arcade::Displays::Color::CYAN);
+        break;
+    default:
+        break;
+    }
+    switch (shape)
+    {
+    case Arcade::Games::Shape::CIRCLE:
+        newSprite.setShape(Arcade::Displays::Shape::CIRCLE);
+        break;
+    case Arcade::Games::Shape::RECTANGLE:
+        newSprite.setShape(Arcade::Displays::Shape::RECTANGLE);
+        break;
+    case Arcade::Games::Shape::TRIANGLE:
+        newSprite.setShape(Arcade::Displays::Shape::TRIANGLE);
+        break;
+    }
+    newSprite.setRotation(sprite.getRotation());
+    newSprite.setDirection(Arcade::Displays::Vector2i(dir.x, dir.y));
+    return newSprite;
 }
