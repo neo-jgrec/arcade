@@ -55,8 +55,6 @@ namespace Arcade::Core
             void setTexts(void);
             void setTiles(void);
 
-            Arcade::Displays::Color getColor(Arcade::Games::Color color);
-            Arcade::Displays::Shape getShape(Arcade::Games::Shape shape);
             void displayMenu(void);
             void displayOptions(std::string name, Arcade::Displays::Vector2i pos, bool selected, bool hover);
 

@@ -15,12 +15,9 @@ target_include_directories(arcade_sfml
         ${CMAKE_SOURCE_DIR}/includes
 )
 
-find_package(SFML COMPONENTS graphics audio REQUIRED)
-
-target_link_libraries(arcade_sfml
-    PRIVATE
-        sfml-graphics sfml-audio
-)
+find_package(Curses REQUIRED)
+include_directories(${CURSES_INCLUDE_DIR})
+target_link_libraries(arcade_sfml ${CURSES_LIBRARIES})
 
 set_target_properties(arcade_sfml PROPERTIES PREFIX "")
 
