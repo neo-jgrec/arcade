@@ -26,10 +26,12 @@
     #define ROTATION_LEFT 0
 
     #define BACKGROUND_TILE _textures[0]
+    #define B _textures[0]
     #define ENEMY_TILE _textures[1]
     #define ENEMY_LASER_TILE _textures[2]
     #define PLAYER_lASER_TILE _textures[3]
     #define WALL_TILE _textures[4]
+    #define W _textures[4]
     #define FUZOR_TILE _textures[5]
     #define PLAYER_TILE _player.getSprite()
 
@@ -73,8 +75,7 @@ namespace Arcade::Games {
                  * @brief Get the size of the map
                  * @return Vector2i
                  */
-                Vector2i getMapSize(void) { return _mapSize; }
-
+                Vector2i getMapSize(void);
                 /**
                 * @brief Get the map of the game
                 * @return std::vector<std::string>
@@ -149,7 +150,7 @@ namespace Arcade::Games {
 
 extern "C" {
 
-    inline Arcade::Games::IGameModule *gameEntryPoint(void) {
+    Arcade::Games::IGameModule *gameEntryPoint(void) {
         return new Arcade::Games::SolarFox();
     }
 }

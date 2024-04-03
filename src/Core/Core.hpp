@@ -51,8 +51,10 @@ namespace Arcade::Core
             std::string _currentGame;
 
             void getInputs(void);
-            Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite);
+            Arcade::Displays::ISprite *getSprite(Arcade::Games::ISprite &sprite);
             void setTexts(void);
+            void setTiles(void);
+
             Arcade::Displays::Color getColor(Arcade::Games::Color color);
             Arcade::Displays::Shape getShape(Arcade::Games::Shape shape);
             void displayMenu(void);

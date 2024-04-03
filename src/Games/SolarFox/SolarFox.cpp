@@ -14,6 +14,7 @@ namespace Arcade::Games {
 
     SolarFox::SolarFox()
     {
+        //std::cout << "\n--------SolarFox-------\n" << std::endl;
         SolarSprite *_background = new SolarSprite();
         SolarSprite *_enemy = new SolarSprite();
         SolarSprite *_enemyLaser = new SolarSprite();
@@ -56,6 +57,7 @@ namespace Arcade::Games {
         _textures.push_back(_fuzor);
 
         loadRack();
+        //std::cout << "\n--------\\SolarFox-------\n" << std::endl;
     }
 
     SolarFox::~SolarFox()
@@ -66,60 +68,31 @@ namespace Arcade::Games {
         }
     }
 
-    void SolarFox::init(std::string, size_t nb_args)
+    void SolarFox::init(std::string oui, size_t nb_args)
     {
+        //std::cout << "\n--------\\init-------\n" << std::endl;
         if (nb_args != 0)
         {
             std::cerr << "Solar Fox: init: Wrong number of arguments, expected 0 args" << std::endl;
             exit(84);
         }
+        //std::cout << "\n--------\\init-------\n" << std::endl;
     }
 
     void SolarFox::close(void)
     {
+        //std::cout << "\n--------close-------\n" << std::endl;
+        //std::cout << "\n--------\\close-------\n" << std::endl;
     }
 
     void SolarFox::loadRack()
     {
-        std::ifstream file("gameAssets/solarfox/maps/rack" + std::to_string(_rackIndex) + ".txt");
-        std::string line;
-        std::vector<std::string> rack;
-
-        if (file.is_open()) {
-            while (std::getline(file, line)) {
-                rack.push_back(line);
-            }
-            file.close();
-        } else {
-            std::cerr << "Solar Fox: loadRack: Unable to open file" << std::endl;
-            exit(84);
-        }
-
-        for (std::size_t i = 0; i < rack.size(); i++) {
-            std::vector<ISprite *> row;
-            for (std::size_t j = 0; j < rack[i].size(); j++) {
-                switch (rack[i][j]) {
-                    case '#':
-                        row.push_back(WALL_TILE);
-                        break;
-                    case 'P':
-                        row.push_back(PLAYER_TILE);
-                        break;
-                    case '.':
-                        row.push_back(BACKGROUND_TILE);
-                        break;
-                    case 'E':
-                        row.push_back(ENEMY_TILE);
-                        break;
-                    case 'F':
-                        row.push_back(FUZOR_TILE);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            _map.push_back(row);
-        }
+        _map = std::vector<std::vector<Arcade::Games::ISprite *>>{
+            {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
+            {W, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
+            {W, B, W, W, W, W, W, W, W, W, W, W, W, W, W, W, B, W},
+            {W, B, W, B, B, B, B, B, B, B, B, B, B, B, B, W, B, W},
+        };
     }
 
 
@@ -134,8 +107,17 @@ namespace Arcade::Games {
         }
     }
 
+    Vector2i SolarFox::getMapSize(void)
+    {
+        //std::cout << "\n--------getMapSize-------\n" << std::endl;
+        //std::cout << "\n--------\\getMapSize-------\n" << std::endl;
+        return _mapSize;
+    }
+
     void SolarFox::updateMap()
     {
+        //std::cout << "\n--------updateMap-------\n" << std::endl;
+        //std::cout << "\n--------\\updateMap-------\n" << std::endl;
     }
 
     void SolarFox::moveUP(void)
@@ -199,57 +181,40 @@ namespace Arcade::Games {
 
     bool SolarFox::update(std::map<KeyType, int> inputs, float deltaT)
     {
-        KeyType vertical = KeyType::VER;
-        KeyType horizontal = KeyType::HOR;
-        std::vector<Vector2i> fuzors = _fuzors.getFuzors();
-        SolarSprite *playerSprite = _player.getSprite();
-        Vector2i direction = _player.getDirection();
+        //std::cout << "\n\n--------Update-------\n\n" << std::endl;
+        // KeyType vertical = KeyType::VER;
+        // KeyType horizontal = KeyType::HOR;
+        // std::vector<Vector2i> fuzors = _fuzors.getFuzors();
+        // SolarSprite *playerSprite = _player.getSprite();
+        // Vector2i direction = _player.getDirection();
 
-        // for (std::vector<std::pair<Arcade::Games::KeyType, int>, std::function<void>> &funct : _functs) {
-        //     for (std::pair<KeyType, int> &key : funct) {
-        //         if (inputs.at(key.first) == key.second) {
-        //             funct.back();
-        //         }
-        //     }
+        // if (inputs.at(KeyType::ACTION2) && _player.getVelocity() == 1) {
+        //     _player.setVelocity(2);
+        // } else if (!inputs.at(KeyType::ACTION2) && _player.getVelocity() == 2) {
+        //     _player.setVelocity(1);
         // }
 
-        if (inputs.at(KeyType::ACTION2) && _player.getVelocity() == 1) {
-            _player.setVelocity(2);
-        } else if (!inputs.at(KeyType::ACTION2) && _player.getVelocity() == 2) {
-            _player.setVelocity(1);
-        }
+        // if (deltaT > 5) {
+        //     updatePlayer(_map[_player.getPosition().y + _player.getDirection().y][_player.getPosition().x + _player.getDirection().x]);
+        //     updateMap();
+        // }
 
-        if (deltaT > 5) {
-            updatePlayer(_map[_player.getPosition().y + _player.getDirection().y][_player.getPosition().x + _player.getDirection().x]);
-            updateMap();
-        }
+        //std::cout << "\n--------\\Update-------\n" << std::endl;
         return true;
     }
 
     std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> SolarFox::getTexts(void)
     {
+        //std::cout << "\n\n--------GetTexts-------\n\n" << std::endl;
         std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> texts;
         std::string score = std::to_string(_score);
         std::string lives = std::to_string(_player.getLives());
-        std::string rack = std::string("Rack n°") + std::to_string(_rackIndex);
         Vector2i scorePos = Vector2i(0, 0);
         Vector2i livesPos = Vector2i(0, 1);
-        Vector2i rackPos = Vector2i(0, 2);
-        Color color = Color::WHITE;
 
-        texts.push_back(std::make_tuple(score, scorePos, color));
-        texts.push_back(std::make_tuple(lives, livesPos, color));
-        texts.push_back(std::make_tuple(rack, rackPos, color));
+        texts.push_back(std::make_tuple(score, scorePos, Color::WHITE));
+        texts.push_back(std::make_tuple(lives, livesPos, Color::WHITE));
+        //std::cout << "\n\n--------\\GetTexts-------\n\n" << std::endl;
         return texts;
     }
-
-    // std::vector<IText *> SolarFox::getTexts(void)
-    // {
-    //     _texts.clear();
-    //     IText *score = new SolarText(std::to_string(_score), Vector2i(0, 0), Color::WHITE);
-    //     IText *lives = new SolarText(std::to_string(_player.getLives()), Vector2i(0, 1), Color::WHITE);
-    //     IText *rack = new SolarText(std::string("Rack n°") + std::to_string(_rackIndex), Vector2i(0, 2), Color::WHITE);
-    //     _texts.push_back(score);
-    //     return _texts;
-    // }
 }

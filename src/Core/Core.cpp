@@ -92,12 +92,15 @@ void Core::Loop(void)
     bool running = true;
 
     std::cout << "Starting game loop..." << std::endl;
-    DISPLAY->init();
-    _inGame = false;
+    _inGame = true;
     _index = 0;
     _module = 0;
-    DISPLAY->setMapSize(Arcade::Displays::Vector2i(15, 15));
-    // GAME->init("", 0);
+    _currentGame = "./lib/arcade_solarfox.so";
+    for (auto &game : _games)
+     std::cout << game.first << std::endl;
+    GAME->init("", 0);
+    DISPLAY->init();
+    DISPLAY->setMapSize(DVEC(GAME->getMapSize().x, GAME->getMapSize().y));
     while (running)
     {
         DISPLAY->clear();
@@ -108,6 +111,7 @@ void Core::Loop(void)
             GAME->update(_inputs, _deltaT);
             if (_inputs[Arcade::Games::KeyType::ESC] == 1)
                 _inGame = false;
+            setTiles();
             setTexts();
         } else {
             displayMenu();
@@ -116,6 +120,20 @@ void Core::Loop(void)
     }
     DISPLAY->close();
     // GAME->close();
+}
+
+void Core::setTiles(void)
+{
+    std::vector<std::vector<Arcade::Games::ISprite *>> map = GAME->getMap();
+    for (size_t y = 0; y < map.size(); y++)
+    {
+        for (size_t x = 0; x < map[y].size(); x++)
+        {
+            // std::cout << "x: " << x << " y: " << y << std::endl;
+            DISPLAY->updateTile(Arcade::Displays::Vector2i(x, y), getSprite(*map[y][x]));
+        }
+    }
+
 }
 
 Arcade::Displays::Color Core::getColor(Arcade::Games::Color color)
@@ -132,9 +150,9 @@ Arcade::Displays::Color Core::getColor(Arcade::Games::Color color)
     return Arcade::Displays::Color::DEFAULT;
 }
 
-Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite) {
-    Sprite newSprite;
-    newSprite.setPath(sprite.getPath());
+Arcade::Displays::ISprite *Core::getSprite(Arcade::Games::ISprite &sprite) {
+    Sprite *newSprite = new Sprite();
+    newSprite->setPath(sprite.getPath());
     Arcade::Games::Shape shape = sprite.getShape();
     Arcade::Games::Color color = sprite.getColor();
     Arcade::Games::Vector2i dir = sprite.getDirection();
@@ -142,17 +160,17 @@ Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite) {
     switch (shape)
     {
     case Arcade::Games::Shape::CIRCLE:
-        newSprite.setShape(Arcade::Displays::Shape::CIRCLE);
+        newSprite->setShape(Arcade::Displays::Shape::CIRCLE);
         break;
     case Arcade::Games::Shape::RECTANGLE:
-        newSprite.setShape(Arcade::Displays::Shape::RECTANGLE);
+        newSprite->setShape(Arcade::Displays::Shape::RECTANGLE);
         break;
     case Arcade::Games::Shape::TRIANGLE:
-        newSprite.setShape(Arcade::Displays::Shape::TRIANGLE);
+        newSprite->setShape(Arcade::Displays::Shape::TRIANGLE);
         break;
     }
-    newSprite.setRotation(sprite.getRotation());
-    newSprite.setDirection(Arcade::Displays::Vector2i(dir.x, dir.y));
+    newSprite->setRotation(sprite.getRotation());
+    newSprite->setDirection(Arcade::Displays::Vector2i(dir.x, dir.y));
     return newSprite;
 }
 
