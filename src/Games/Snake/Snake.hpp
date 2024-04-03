@@ -17,22 +17,22 @@ namespace Arcade::Games {
             Snake();
             ~Snake();
 
-        void init(std::string args, size_t nb_args);
-        void close(void);
+        void init(std::string args, size_t nb_args) override;
+        void close(void) override;
 
-        bool update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT);
+        bool update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT) override;
 
-        std::string getGameName(void) { return _name; }
+        std::string getGameName(void) override { return _name; }
 
-        Vector2i getMapSize(void) { return _mapSize; }
+        Vector2i getMapSize(void) override { return _mapSize; }
 
-        std::vector<std::vector<Arcade::Games::ISprite *>> getMap(void) { return _map; }
+        std::vector<std::vector<Arcade::Games::ISprite *>> getMap(void) override { return _map; }
 
-        std::string getScore(void) { return std::to_string(_score); }
+        std::string getScore(void) override { return std::to_string(_score); }
 
-        float getAnimationTime(void) { return _animationTime; }
+        float getAnimationTime(void) override { return _animationTime; }
 
-        std::vector<IText *> getTexts(void);
+        std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void) override { return _texts; }
 
         protected:
         private:
@@ -42,7 +42,7 @@ namespace Arcade::Games {
 
             std::vector<Arcade::Games::ISprite *> _textures;
             std::vector<std::vector<Arcade::Games::ISprite *>> _map;
-            std::vector<IText *> _texts;
+            std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> _texts;
 
             Vector2i _mapSize = Vector2i(21, 21);
 
