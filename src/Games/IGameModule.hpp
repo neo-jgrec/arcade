@@ -92,7 +92,7 @@ namespace Arcade::Games {
              * @brief Get the texts of the game
              * @return std::vector<IText *>
              */
-            virtual std::vector<IText *> getTexts(void) = 0;
+            virtual std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void) = 0;
 
         protected:
         private:

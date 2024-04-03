@@ -8,6 +8,13 @@
 #include "Core.hpp"
 #include <dirent.h>
 
+#define GAME _games[_currentGame]
+#define DISPLAY _displays[_currentLib]
+#define DVEC(x, y) Arcade::Displays::Vector2i(x, y)
+#define DCOL(color) Arcade::Displays::Color::color
+#define DSHA(shape) Arcade::Displays::Shape::shape
+#define GKEY(key) Arcade::Games::KeyType::key
+
 using namespace Arcade::Core;
 
 Core::Core()
@@ -83,32 +90,33 @@ void Core::displayLibraries(void)
 
 void Core::Loop(void)
 {
-    Arcade::Displays::IDisplayModule *display = _displays[_currentLib];
-    Arcade::Games::IGameModule *game = _games[_currentGame];
-    std::map<Arcade::Displays::KeyType, int> inputs;
-    float deltaT = 0;
     bool running = true;
 
     std::cout << "Starting game loop..." << std::endl;
-    display->init();
-    display->setMapSize(Arcade::Displays::Vector2i(15, 15));
-    display->updateTile(Arcade::Displays::Vector2i(0, 0), new Sprite());
-    game->init("", 0);
+    DISPLAY->init();
+    _inGame = false;
+    _index = 0;
+    _module = 0;
+    DISPLAY->setMapSize(Arcade::Displays::Vector2i(15, 15));
+    GAME->init("", 0);
     while (running)
     {
-        inputs = display->getInputs();
-        if (inputs[Arcade::Displays::KeyType::ESC] == 1)
-            running = false;
-        display->setText("test", Arcade::Displays::Vector2i(0, 0), Arcade::Displays::Color::DEFAULT);
-        display->clear();
-        display->displayGame();
-        // display->draw(game->getMap());
-        // display->drawText(game->getTexts());
-        // display->display();
-        // running = game->update(inputs, deltaT);
+        DISPLAY->clear();
+        getInputs();
+        _deltaT = DISPLAY->getDeltaT();
+
+        if (_inGame) {
+            GAME->update(_inputs, _deltaT);
+            if (_inputs[Arcade::Games::KeyType::ESC] == 1)
+                _inGame = false;
+            setTexts();
+        } else {
+            displayMenu();
+        }
+        DISPLAY->displayGame();
     }
-    display->close();
-    game->close();
+    DISPLAY->close();
+    GAME->close();
 }
 
 Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite) {
@@ -117,20 +125,8 @@ Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite) {
     Arcade::Games::Shape shape = sprite.getShape();
     Arcade::Games::Color color = sprite.getColor();
     Arcade::Games::Vector2i dir = sprite.getDirection();
-    switch (color)
-    {
-    case Arcade::Games::Color::BLACK:
-        newSprite.setColor(Arcade::Displays::Color::BLACK);
-        break;
-    case Arcade::Games::Color::BLUE:
-        newSprite.setColor(Arcade::Displays::Color::BLUE);
-        break;
-    case Arcade::Games::Color::CYAN:
-        newSprite.setColor(Arcade::Displays::Color::CYAN);
-        break;
-    default:
-        break;
-    }
+    
+
     switch (shape)
     {
     case Arcade::Games::Shape::CIRCLE:
@@ -146,4 +142,101 @@ Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite) {
     newSprite.setRotation(sprite.getRotation());
     newSprite.setDirection(Arcade::Displays::Vector2i(dir.x, dir.y));
     return newSprite;
+}
+
+void Core::getInputs(void)
+{
+    _inputs.clear();
+    std::map<Arcade::Displays::KeyType, int> displayInputs = _displays[_currentLib]->getInputs();
+    for (auto &input : displayInputs)
+    {
+        switch (input.first)
+        {
+        case Arcade::Displays::KeyType::ESC:
+            _inputs[Arcade::Games::KeyType::ESC] = input.second;
+            break;
+        case Arcade::Displays::KeyType::HOR:
+            _inputs[Arcade::Games::KeyType::HOR] = input.second;
+            break;
+        case Arcade::Displays::KeyType::VER:
+            _inputs[Arcade::Games::KeyType::VER] = input.second;
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void Core::setTexts(void)
+{
+    std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> texts;
+    texts = _games[_currentGame]->getTexts();
+    for (auto &text : texts)
+    {
+        Arcade::Games::Vector2i pos = std::get<1>(text);
+        Arcade::Games::Color color = std::get<2>(text);
+
+        _displays[_currentLib]->setText(std::get<0>(text), Arcade::Displays::Vector2i(pos.x, pos.y), getColor(color));
+    }
+}
+
+Arcade::Displays::Color Core::getColor(Arcade::Games::Color color)
+{
+    switch (color)
+    {
+    case Arcade::Games::Color::BLACK:
+        return Arcade::Displays::Color::BLACK;
+    case Arcade::Games::Color::BLUE:
+        return Arcade::Displays::Color::BLUE;
+    case Arcade::Games::Color::CYAN:
+        return Arcade::Displays::Color::CYAN;
+    }
+    return Arcade::Displays::Color::DEFAULT;
+}
+
+void Core::displayMenu(void)
+{
+    int i = 0;
+
+    if (_inputs[Arcade::Games::KeyType::VER] == -1)
+        _index -= 1;
+    if (_inputs[Arcade::Games::KeyType::VER] == 1)
+        _index += 1;
+    if (_inputs[Arcade::Games::KeyType::HOR] == -1)
+        _module = (_module - 1) % 3;
+    if (_inputs[Arcade::Games::KeyType::HOR] == 1)
+        _module = (_module + 1) % 3;
+    if (_module == -1)
+        _module = 2;
+    if (_module == 0)
+        _index = _index % (_games.size() - 1);
+    if (_module == 1)
+        _index = _index % _displays.size();
+
+    displayOptions("F1: Games", DVEC(2, 1), _module == 0, false);
+    displayOptions("F2: Graphics", DVEC(10, 1), _module == 1, false);
+    for (auto &game : _games) {
+        if (game.first == "./lib/arcade_menu.so")
+            continue;
+        displayOptions(game.first, DVEC(2, 3 + i++ * 2), game.first == _currentGame, _index == i && _module == 0);
+    }
+    i = 0;
+    for (auto &display : _displays)
+        displayOptions(display.first, DVEC(10, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
+    displayOptions("F3: Name", DVEC(2, 11), _module == 2, false);
+    displayOptions("", DVEC(2, 13), false, _module == 2);
+
+    _displays[_currentLib]->displayGame();
+}
+
+void Core::displayOptions(std::string name, Arcade::Displays::Vector2i pos, bool selected, bool hover)
+{
+    std::string text = name;
+
+    if (hover)
+        text = "> " + text;
+    if (selected)
+        DISPLAY->setText(text, DVEC(pos.x, pos.y), DCOL(WHITE));
+    else
+        DISPLAY->setText(text, DVEC(pos.x, pos.y), DCOL(DEFAULT));
 }

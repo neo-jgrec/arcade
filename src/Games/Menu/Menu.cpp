@@ -7,7 +7,7 @@
 
 #include "Menu.hpp"
 
-Menu::Menu()
+Menu::Menu() : _mapSize(0, 0), _deltaT(0)
 {
 }
 
@@ -17,6 +17,7 @@ Menu::~Menu()
 
 void Menu::init(std::string args, size_t nb_args)
 {
+
 }
 
 void Menu::close(void)
@@ -53,9 +54,12 @@ float Menu::getAnimationTime(void)
     return 0;
 }
 
-std::vector<Arcade::Games::IText *> Menu::getTexts(void)
+std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> Menu::getTexts(void)
 {
-    return std::vector<Arcade::Games::IText *>();
+    std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> texts;
+    texts.push_back(std::make_tuple("Menu", Arcade::Games::Vector2i(0, 0), Arcade::Games::Color::WHITE));
+
+    return texts;
 }
 
 

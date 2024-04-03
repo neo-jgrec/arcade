@@ -50,7 +50,18 @@ namespace Arcade::Core
             std::string _currentLib;
             std::string _currentGame;
 
+            void getInputs(void);
             Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite);
+            void setTexts(void);
+            Arcade::Displays::Color getColor(Arcade::Games::Color color);
+            void displayMenu(void);
+            void displayOptions(std::string name, Arcade::Displays::Vector2i pos, bool selected, bool hover);
+
+            std::map<Arcade::Games::KeyType, int> _inputs;
+            float _deltaT;
+            bool _inGame;
+            int _index;
+            int _module;
     };
 }
 
