@@ -94,16 +94,16 @@ namespace Arcade::Games {
                 float getAnimationTime(void) { return _animationTime; }
 
                 /**
-                 * @brief Get the texts of the game
-                 * @return std::vector<IText *>
-                 */
-                std::vector<IText *> getTexts(void);
-
-                /**
                  * @brief load the current map
                  * @return void
                  */
                 void loadRack(void);
+
+                /**
+                 * @brief Get the texts of the game
+                 * @return std::vector<IText *>
+                 */
+                std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void);
 
                 /**
                  * @brief update the player
@@ -145,6 +145,13 @@ namespace Arcade::Games {
             long int _score = 0;
             std::string _name = std::string("SolarFox");
     };
-};
+}
+
+extern "C" {
+
+    inline Arcade::Games::IGameModule *gameEntryPoint(void) {
+        return new Arcade::Games::SolarFox();
+    }
+}
 
 #endif /* !SOLARFOX_HPP_ */
