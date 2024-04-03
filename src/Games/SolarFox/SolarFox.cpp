@@ -187,15 +187,15 @@ namespace Arcade::Games {
         loadRack();
     }
 
-    std::vector<std::vector<std::pair<Arcade::Games::KeyType, int>, std::function<void>>> _functs = {
-        {
-            {(KeyType::RESTART, 1), restart},
-            {(KeyType::VER, UP), moveUP},
-            {(KeyType::VER, DOWN), moveDown},
-            {(KeyType::HOR, RIGHT), moveRight},
-            {(KeyType::HOR, LEFT), moveLeft}
-        }
-    };
+    // std::vector<std::vector<std::pair<Arcade::Games::KeyType, int>, std::function<void>>> _functs = {
+    //     {
+    //         {(KeyType::RESTART, 1), restart},
+    //         {(KeyType::VER, UP), moveUP},
+    //         {(KeyType::VER, DOWN), moveDown},
+    //         {(KeyType::HOR, RIGHT), moveRight},
+    //         {(KeyType::HOR, LEFT), moveLeft}
+    //     }
+    // };
 
     bool SolarFox::update(std::map<KeyType, int> inputs, float deltaT)
     {
@@ -205,13 +205,13 @@ namespace Arcade::Games {
         SolarSprite *playerSprite = _player.getSprite();
         Vector2i direction = _player.getDirection();
 
-        for (std::vector<std::pair<Arcade::Games::KeyType, int>, std::function<void>> &funct : _functs) {
-            for (std::pair<KeyType, int> &key : funct) {
-                if (inputs.at(key.first) == key.second) {
-                    funct.back();
-                }
-            }
-        }
+        // for (std::vector<std::pair<Arcade::Games::KeyType, int>, std::function<void>> &funct : _functs) {
+        //     for (std::pair<KeyType, int> &key : funct) {
+        //         if (inputs.at(key.first) == key.second) {
+        //             funct.back();
+        //         }
+        //     }
+        // }
 
         if (inputs.at(KeyType::ACTION2) && _player.getVelocity() == 1) {
             _player.setVelocity(2);
@@ -226,18 +226,30 @@ namespace Arcade::Games {
         return true;
     }
 
-    float SolarFox::getAnimationTime(void)
+    std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> SolarFox::getTexts(void)
     {
-        return _animationTime;
+        std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> texts;
+        std::string score = std::to_string(_score);
+        std::string lives = std::to_string(_player.getLives());
+        std::string rack = std::string("Rack n°") + std::to_string(_rackIndex);
+        Vector2i scorePos = Vector2i(0, 0);
+        Vector2i livesPos = Vector2i(0, 1);
+        Vector2i rackPos = Vector2i(0, 2);
+        Color color = Color::WHITE;
+
+        texts.push_back(std::make_tuple(score, scorePos, color));
+        texts.push_back(std::make_tuple(lives, livesPos, color));
+        texts.push_back(std::make_tuple(rack, rackPos, color));
+        return texts;
     }
 
-    std::vector<IText *> SolarFox::getTexts(void)
-    {
-        _texts.clear();
-        IText *score = new SolarText(std::to_string(_score), Vector2i(0, 0), Color::WHITE);
-        IText *lives = new SolarText(std::to_string(_player.getLives()), Vector2i(0, 1), Color::WHITE);
-        IText *rack = new SolarText(std::string("Rack n°") + std::to_string(_rackIndex), Vector2i(0, 2), Color::WHITE);
-        _texts.push_back(score);
-        return _texts;
-    }
+    // std::vector<IText *> SolarFox::getTexts(void)
+    // {
+    //     _texts.clear();
+    //     IText *score = new SolarText(std::to_string(_score), Vector2i(0, 0), Color::WHITE);
+    //     IText *lives = new SolarText(std::to_string(_player.getLives()), Vector2i(0, 1), Color::WHITE);
+    //     IText *rack = new SolarText(std::string("Rack n°") + std::to_string(_rackIndex), Vector2i(0, 2), Color::WHITE);
+    //     _texts.push_back(score);
+    //     return _texts;
+    // }
 }
