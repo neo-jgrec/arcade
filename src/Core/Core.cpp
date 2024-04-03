@@ -119,13 +119,26 @@ void Core::Loop(void)
     GAME->close();
 }
 
+Arcade::Displays::Color Core::getColor(Arcade::Games::Color color)
+{
+    switch (color)
+    {
+    case Arcade::Games::Color::BLACK:
+        return Arcade::Displays::Color::BLACK;
+    case Arcade::Games::Color::BLUE:
+        return Arcade::Displays::Color::BLUE;
+    case Arcade::Games::Color::CYAN:
+        return Arcade::Displays::Color::CYAN;
+    }
+    return Arcade::Displays::Color::DEFAULT;
+}
+
 Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite) {
     Sprite newSprite;
     newSprite.setPath(sprite.getPath());
     Arcade::Games::Shape shape = sprite.getShape();
     Arcade::Games::Color color = sprite.getColor();
     Arcade::Games::Vector2i dir = sprite.getDirection();
-    
 
     switch (shape)
     {
@@ -180,18 +193,18 @@ void Core::setTexts(void)
     }
 }
 
-Arcade::Displays::Color Core::getColor(Arcade::Games::Color color)
+Arcade::Displays::Shape Core::getShape(Arcade::Games::Shape shape)
 {
-    switch (color)
+    switch (shape)
     {
-    case Arcade::Games::Color::BLACK:
-        return Arcade::Displays::Color::BLACK;
-    case Arcade::Games::Color::BLUE:
-        return Arcade::Displays::Color::BLUE;
-    case Arcade::Games::Color::CYAN:
-        return Arcade::Displays::Color::CYAN;
+    case Arcade::Games::Shape::CIRCLE:
+        return Arcade::Displays::Shape::CIRCLE;
+    case Arcade::Games::Shape::RECTANGLE:
+        return Arcade::Displays::Shape::RECTANGLE;
+    case Arcade::Games::Shape::TRIANGLE:
+        return Arcade::Displays::Shape::TRIANGLE;
     }
-    return Arcade::Displays::Color::DEFAULT;
+    return Arcade::Displays::Shape::RECTANGLE;
 }
 
 void Core::displayMenu(void)
