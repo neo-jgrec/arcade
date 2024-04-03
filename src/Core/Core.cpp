@@ -113,6 +113,7 @@ void Core::Loop(void)
                 _inGame = false;
             setTiles();
             setTexts();
+            setTiles();
         } else {
             displayMenu();
         }
@@ -198,6 +199,19 @@ void Core::getInputs(void)
             break;
         }
     }
+}
+
+void Core::setTiles(void)
+{
+    std::vector<std::vector<Arcade::Games::ISprite *>> map = GAME->getMap();
+    for (size_t y = 0; y < map.size(); y++)
+    {
+        for (size_t x = 0; x < map[y].size(); x++)
+        {
+            DISPLAY->updateTile(Arcade::Displays::Vector2i(x, y), &getSprite(*map[y][x]));
+        }
+    }
+
 }
 
 void Core::setTexts(void)
