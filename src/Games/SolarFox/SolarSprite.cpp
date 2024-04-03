@@ -27,7 +27,7 @@ namespace Arcade::Games {
         return _ascii;
     }
 
-    void SolarSprite::setPath(char path)
+    void SolarSprite::setPath(std::string path)
     {
         _path = path;
     }
