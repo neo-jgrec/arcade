@@ -27,11 +27,12 @@ void Ncurses::init(void)
     _mapSize = Arcade::Displays::Vector2i(0, 0);
 
     start_color();
-    init_pair(1, COLOR_BLACK, COLOR_WHITE);
+    init_pair(1, COLOR_WHITE, COLOR_BLACK);
     init_pair(2, COLOR_YELLOW, COLOR_WHITE);
     init_pair(3, COLOR_BLACK, COLOR_WHITE);
     init_pair(4, COLOR_RED, COLOR_WHITE);
     init_pair(5, COLOR_BLUE, COLOR_WHITE);
+    init_pair(6, COLOR_BLACK, COLOR_WHITE);
 
     _lastTime = clock();
 }
@@ -56,8 +57,17 @@ std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void) const
             if (keys[i] == 27) {
                 inputs[Arcade::Displays::KeyType::ESC] = 1;
             }
-            if (keys[i] == 10) {
-                inputs[Arcade::Displays::KeyType::ACTION1] = 1;
+            if (keys[i] == KEY_UP) {
+                inputs[Arcade::Displays::KeyType::VER] -= 1;
+            }
+            if (keys[i] == KEY_DOWN) {
+                inputs[Arcade::Displays::KeyType::VER] += 1;
+            }
+            if (keys[i] == KEY_LEFT) {
+                inputs[Arcade::Displays::KeyType::HOR] -= 1;
+            }
+            if (keys[i] == KEY_RIGHT) {
+                inputs[Arcade::Displays::KeyType::HOR] += 1;
             }
         }
     }
@@ -73,7 +83,6 @@ void Ncurses::setMapSize(Arcade::Displays::Vector2i size)
 
 void Ncurses::clear(void)
 {
-    erase();
     _texts.clear();
 }
 
@@ -106,6 +115,7 @@ void Ncurses::displayResize(void)
 
 void Ncurses::displayGame(void)
 {
+    erase();
     if (LINES < _mapSize.y || COLS < _mapSize.x * 3) {
         displayResize();
         _lastTime = clock() - _lastTime;
@@ -125,10 +135,13 @@ void Ncurses::displayGame(void)
                     attron(COLOR_PAIR(4));
                 else if (_map[y][x]->getColor() == Arcade::Displays::Color::BLUE)
                     attron(COLOR_PAIR(5));
+                else if (_map[y][x]->getColor() == Arcade::Displays::Color::WHITE)
+                    attron(COLOR_PAIR(6));
                 mvprintw(y, x * 3, "###");
             }
         }
     }
+    attron(COLOR_PAIR(1));
     for (auto text : _texts) {
         Arcade::Displays::Vector2i pos = std::get<0>(text);
         std::string str = std::get<1>(text);
@@ -143,6 +156,8 @@ void Ncurses::displayGame(void)
             attron(COLOR_PAIR(4));
         else if (color == Arcade::Displays::Color::BLUE)
             attron(COLOR_PAIR(5));
+        else if (color == Arcade::Displays::Color::WHITE)
+            attron(COLOR_PAIR(6));
         mvprintw(pos.y, pos.x * 3, str.c_str());
     }
     _lastTime = clock() - _lastTime;

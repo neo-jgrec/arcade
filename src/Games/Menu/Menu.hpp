@@ -11,6 +11,7 @@
 #include "../IGameModule.hpp"
 
 class Menu : public Arcade::Games::IGameModule {
+
     public:
         Menu();
         ~Menu();
@@ -29,10 +30,18 @@ class Menu : public Arcade::Games::IGameModule {
 
         float getAnimationTime(void);
 
-        std::vector<Arcade::Games::IText *> getTexts(void);
+        std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void);
 
     protected:
     private:
+        std::vector<std::vector<Arcade::Games::ISprite *>> _map;
+        std::vector<std::string> _displays;
+        std::vector<std::string> _games;
+        std::vector<std::string> _name;
+        int _selectedGame;
+        int _selectedDisplay;
+        Arcade::Games::Vector2i _mapSize;
+        float _deltaT;
 };
 
 extern "C" {
