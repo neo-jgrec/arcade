@@ -53,7 +53,6 @@ int Core::Start(std::string displayLib)
         return 84;
     }
     _currentLib = displayLib;
-    _currentGame = std::string("./lib/arcade_menu.so");
     std::cout << "Current display library: " << displayLib << std::endl;
     std::cout << "Current game library: " << _currentGame << std::endl;
     Loop();
@@ -98,7 +97,7 @@ void Core::Loop(void)
     _index = 0;
     _module = 0;
     DISPLAY->setMapSize(Arcade::Displays::Vector2i(15, 15));
-    GAME->init("", 0);
+    // GAME->init("", 0);
     while (running)
     {
         DISPLAY->clear();
@@ -116,7 +115,7 @@ void Core::Loop(void)
         DISPLAY->displayGame();
     }
     DISPLAY->close();
-    GAME->close();
+    // GAME->close();
 }
 
 Arcade::Displays::Color Core::getColor(Arcade::Games::Color color)
@@ -222,17 +221,14 @@ void Core::displayMenu(void)
     if (_module == -1)
         _module = 2;
     if (_module == 0)
-        _index = _index % (_games.size() - 1);
+        _index = _index % _games.size();
     if (_module == 1)
         _index = _index % _displays.size();
 
     displayOptions("F1: Games", DVEC(2, 1), _module == 0, false);
     displayOptions("F2: Graphics", DVEC(10, 1), _module == 1, false);
-    for (auto &game : _games) {
-        if (game.first == "./lib/arcade_menu.so")
-            continue;
+    for (auto &game : _games)
         displayOptions(game.first, DVEC(2, 3 + i++ * 2), game.first == _currentGame, _index == i && _module == 0);
-    }
     i = 0;
     for (auto &display : _displays)
         displayOptions(display.first, DVEC(10, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
