@@ -26,19 +26,13 @@ namespace Arcade::Games {
 
         Vector2i getMapSize(void) { return _mapSize; }
 
-        std::vector<std::vector<Arcade::Games::ISprite *>> getMap(void) { updateMap(); return _map; }
+        std::vector<std::vector<Arcade::Games::ISprite *>> getMap(void) { return _map; }
 
         std::string getScore(void) { return std::to_string(_score); }
 
         float getAnimationTime(void) { return _animationTime; }
 
         std::vector<IText *> getTexts(void);
-
-        void loadRack(void);
-
-        void updatePlayer(ISprite *tile);
-
-        void updateMap();
 
         protected:
         private:
@@ -50,20 +44,13 @@ namespace Arcade::Games {
             std::vector<std::vector<Arcade::Games::ISprite *>> _map;
             std::vector<IText *> _texts;
 
-            Vector2i _mapSize = Vector2i(20, 20);
+            Vector2i _mapSize = Vector2i(21, 21);
 
             SnakePlayer _player;
 
             long int _score = 0;
             std::string _name = std::string("Snake");
     };
-}
-
-extern "C" {
-
-    inline Arcade::Games::IGameModule *gameEntryPoint(void) {
-        return nullptr;
-    }
 }
 
 #endif /* !SNAKE_HPP_ */
