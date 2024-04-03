@@ -191,6 +191,9 @@ void Core::getInputs(void)
         case Arcade::Displays::KeyType::VER:
             _inputs[Arcade::Games::KeyType::VER] = input.second;
             break;
+        case Arcade::Displays::KeyType::ACTION1:
+            _inputs[Arcade::Games::KeyType::ACTION1] = input.second;
+            break;
         default:
             break;
         }
@@ -242,6 +245,27 @@ void Core::displayMenu(void)
         _index = _index % _games.size();
     if (_module == 1)
         _index = _index % _displays.size();
+    if (_inputs[Arcade::Games::KeyType::ACTION1] == 1)
+    {
+        std::cout << "Enter pressed" << std::endl;
+        int j = 0;
+        for (auto &display : _displays)
+        {
+            if (j == _index && _module == 1) {
+                std::cout << "Selected display: " << display.first << std::endl;
+                DISPLAY->close();
+                _currentLib = display.first;
+                DISPLAY->init();
+            }
+            j++;
+        }
+        // if (_module == 0)
+        //     _currentGame = _games.begin()->first;
+        // if (_module == 1)
+        //     _currentLib = _displays.begin()->first;
+        // if (_module == 2)
+        //     _inGame = true;
+    }
 
     displayOptions("F1: Games", DVEC(2, 1), _module == 0, false);
     displayOptions("F2: Graphics", DVEC(10, 1), _module == 1, false);
