@@ -13,25 +13,26 @@ namespace Arcade::Games {
 
     class SolarSprite : public ISprite {
 
-        SolarSprite();
-        ~SolarSprite();
+        public:
+            SolarSprite();
+            ~SolarSprite();
 
-        void setAscii(std::string ascii);
-        std::string getAscii();
+            void setAscii(std::string ascii);
+            std::string getAscii();
 
-        void setPath(char path);
-        std::string getPath();
+            void setPath(std::string path);
+            std::string getPath();
 
-        void setRotation(int rotation);
-        int getRotation(void);
+            void setRotation(int rotation);
+            int getRotation(void);
 
-        void setDirection(Vector2i direction);
-        Vector2i getDirection(void);
+            void setDirection(Vector2i direction);
+            Vector2i getDirection(void);
 
-        void setColor(Color color);
-        Color getColor(void);
+            void setColor(Color color);
+            Color getColor(void);
 
-        void setShape(Shape shape);
+            void setShape(Shape shape);
         Shape getShape(void);
 
         private:

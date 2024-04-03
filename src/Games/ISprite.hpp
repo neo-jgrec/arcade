@@ -16,8 +16,10 @@ namespace Arcade::Games {
             Vector2i(int x, int y) : x(x), y(y) {}
             ~Vector2i() = default;
 
-            int x = 0;
-            int y = 0;
+            int x;
+            int y;
+            bool operator==(const Vector2i &rhs) const { return x == rhs.x && y == rhs.y; }
+            Vector2i operator+(const Vector2i &rhs) const { return Vector2i(x + rhs.x, y + rhs.y); }
     };
 
     enum class Color {
