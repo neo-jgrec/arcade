@@ -39,7 +39,7 @@ SFML::~SFML()
 
 void SFML::init(void)
 {
-   _window.create(sf::VideoMode(800, 600), "Arcade", sf::Style::Titlebar | sf::Style::Close);
+   _window.create(sf::VideoMode(25 * 32, 15 * 32), "Arcade", sf::Style::Titlebar | sf::Style::Close);
     _window.setFramerateLimit(60);
 }
 
@@ -89,6 +89,7 @@ std::map<Arcade::Displays::KeyType, int> SFML::getInputs(void)
 void SFML::setMapSize(Arcade::Displays::Vector2i size)
 {
     _mapSize = size;
+    _window.create(sf::VideoMode(size.x * 32, size.y * 32), "Arcade", sf::Style::Titlebar | sf::Style::Close);
     _window.setSize(sf::Vector2u(size.x * 32, size.y * 32));
     _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(_mapSize.y, std::vector<Arcade::Displays::ISprite *>(_mapSize.x, nullptr));
 }
