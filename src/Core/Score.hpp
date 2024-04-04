@@ -15,7 +15,9 @@
 class GameScores {
     public:
         GameScores(std::string name) : _name(name)
-        {};
+        {
+            _scores = std::list<std::pair<std::string, int>>();
+        };
         ~GameScores() {};
         void addScore(std::string name, int score) {
             _scores.push_back(std::make_pair(name, score));
@@ -41,8 +43,9 @@ class Score {
         void addScore(std::string gameName, std::string name, int score) {
             for (auto &game : _gameScores) {
                 if (game._name == gameName) {
+                    std::cout << name << " " << score << std::endl;
                     game.addScore(name, score);
-                    game.sortScores();
+                    // game.sortScores();
                     return;
                 }
             }
@@ -50,6 +53,7 @@ class Score {
         std::list<std::pair<std::string, int>> getScores(std::string gameName) {
             for (auto &game : _gameScores) {
                 if (game._name == gameName) {
+                    game.sortScores();
                     return game._scores;
                 }
             }

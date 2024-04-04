@@ -105,7 +105,6 @@ void Core::addLibraries(const std::string &path)
         _games[path] = _gameLoader.getInstance(path, "gameEntryPoint");
         std::cout << "Game library loaded: " << path << std::endl;
         _score.addGame(path);
-        _score.addScore(path, "AAA", 0);
     } catch (const std::exception &e) {}
 }
 
@@ -151,6 +150,7 @@ void Core::Loop(void)
             if (_inputs[Arcade::Games::KeyType::ESC] == 1) {
                 DISPLAY->setMapSize(DVEC(25, 15));
                 _inGame = false;
+                _score.addScore(_currentGame, _name, stoi(GAME->getScore()));
             }
             setTiles();
             setTexts();
@@ -324,9 +324,12 @@ void Core::handleName(void)
         _name[_indexName] = switchChar(_name[_indexName], true);
     if (_inputs[Arcade::Games::KeyType::VER] == -1)
         _name[_indexName] = switchChar(_name[_indexName], false);
-
+    if (_inputs[Arcade::Games::KeyType::VER] != 0) {
+        _time = 0;
+        _flipflop = false;
+    }
     std::string text = _name;
-    if (_time > 0.03) {
+    if (_time > 0.015) {
         _time = 0;
         _flipflop = !_flipflop;
     }
@@ -339,11 +342,10 @@ char Core::switchChar(char c, bool up)
 {
     int charIndex = 0;
 
+    up = !up;
     for (size_t i = 0; i < nameList.size(); i++)
-    {
         if (nameList[i] == c)
             charIndex = i;
-    }
     if (charIndex == 0 && !up)
         return nameList[nameList.size() - 1];
     if (charIndex == nameList.size() - 1 && up)
@@ -363,9 +365,19 @@ void Core::displayScores(void)
             scores = _score.getScores(game.first);
     DISPLAY->setText("F4: Scores", DVEC(14, 11), DCOL(DEFAULT));
     if (scores.empty())
-        DISPLAY->setText("No scores", DVEC(16, 13), DCOL(DEFAULT));
+        DISPLAY->setText("No scores", DVEC(14, 13), DCOL(DEFAULT));
     for (auto &score : scores)
     {
-        DISPLAY->setText(score.first + ": " + std::to_string(score.second), DVEC(16, 11 + (i++ + 1) * 2), DCOL(DEFAULT));
+        if (i > 3)
+            break;
+        DISPLAY->setText(removeUnderScore(score.first) + ": " + std::to_string(score.second), DVEC(14, 11 + (i++ + 1) * 2), DCOL(DEFAULT));
     }
+}
+
+std::string Core::removeUnderScore(std::string name)
+{
+    for (size_t i = 0; i < name.size(); i++)
+        if (name[i] == '_')
+            name[i] = ' ';
+    return name;
 }

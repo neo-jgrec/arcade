@@ -59,6 +59,7 @@ namespace Arcade::Core
 
             void displayMenu(void);
             void displayScores(void);
+            std::string removeUnderScore(std::string name);
             void displayOptions(std::string name, Arcade::Displays::Vector2i pos, bool selected, bool hover);
             char switchChar(char c, bool up);
 
