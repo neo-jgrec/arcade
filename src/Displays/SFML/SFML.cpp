@@ -15,6 +15,8 @@ static std::map<Arcade::Displays::Color,sf::Color> colorMap = {
     {Arcade::Displays::Color::BLUE, sf::Color::Blue},
     {Arcade::Displays::Color::MAGENTA, sf::Color::Magenta},
     {Arcade::Displays::Color::CYAN, sf::Color::Cyan},
+    {Arcade::Displays::Color::GREEN, sf::Color::Green},
+    {Arcade::Displays::Color::BLACK, sf::Color::Black},
 };
 
 SFML::SFML() : _mapSize(0, 0)
