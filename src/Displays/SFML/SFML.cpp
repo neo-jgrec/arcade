@@ -7,18 +7,26 @@
 
 #include "SFML.hpp"
 
-static std::map<Arcade::Displays::Color, int> colorMap = {
-    {Arcade::Displays::Color::DEFAULT, 1},
-    {Arcade::Displays::Color::WHITE, 2},
-    {Arcade::Displays::Color::RED, 3},
-    {Arcade::Displays::Color::YELLOW, 4},
-    {Arcade::Displays::Color::BLUE, 5},
-    {Arcade::Displays::Color::MAGENTA, 6},
-    {Arcade::Displays::Color::CYAN, 7},
+static std::map<Arcade::Displays::Color,sf::Color> colorMap = {
+    {Arcade::Displays::Color::DEFAULT, sf::Color::White},
+    {Arcade::Displays::Color::WHITE, sf::Color::White},
+    {Arcade::Displays::Color::RED, sf::Color::Red},
+    {Arcade::Displays::Color::YELLOW, sf::Color::Yellow},
+    {Arcade::Displays::Color::BLUE, sf::Color::Blue},
+    {Arcade::Displays::Color::MAGENTA, sf::Color::Magenta},
+    {Arcade::Displays::Color::CYAN, sf::Color::Cyan},
 };
 
 SFML::SFML() : _mapSize(0, 0)
 {
+    if (!_font.loadFromFile("gameAssets/ncurses/monogram.ttf")) {
+        throw std::runtime_error("Could not load font");
+    }
+    _text.setFont(_font);
+    _text.setString("Hello, SFML!");
+    _text.setCharacterSize(24);
+    _text.setFillColor(sf::Color::White);
+    _text.setStyle(sf::Text::Bold);
 }
 
 SFML::~SFML()
@@ -27,75 +35,59 @@ SFML::~SFML()
 
 void SFML::init(void)
 {
-    initscr();
-    cbreak();
-    noecho();
-    curs_set(0);
-    nodelay(stdscr, TRUE);
-    keypad(stdscr, TRUE);
-    _map = std::vector<std::vector<Arcade::Displays::ISprite *>>();
-    _mapSize = Arcade::Displays::Vector2i(0, 0);
-
-    start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLACK); // default
-    init_pair(2, COLOR_BLACK, COLOR_WHITE); // white
-    init_pair(3, COLOR_WHITE, COLOR_RED);
-    init_pair(4, COLOR_WHITE, COLOR_YELLOW);
-    init_pair(5, COLOR_WHITE, COLOR_BLUE);
-    init_pair(6, COLOR_WHITE, COLOR_MAGENTA);
-    init_pair(7, COLOR_WHITE, COLOR_CYAN);
-
-    _lastTime = clock();
+   _window.create(sf::VideoMode(800, 600), "Arcade");
+    _window.setFramerateLimit(60);
 }
 
 void SFML::close(void)
 {
-    endwin();
+    _window.close();
 }
 
-std::map<Arcade::Displays::KeyType, int> SFML::getInputs(void) const
+std::map<Arcade::Displays::KeyType, int> SFML::getInputs(void)
 {
     std::map<Arcade::Displays::KeyType, int> inputs;
-    int ch = 0;
-    std::vector<int> keys;
 
-    while (ch != ERR) {
-        ch = getch();
-        keys.push_back(ch);
-    }
-    if (keys.size() > 1) {
-        for (int i = 0; i < keys.size(); i++) {
-            if (keys[i] == 27)
-                inputs[Arcade::Displays::KeyType::ESC] = 1;
-            if (keys[i] == KEY_UP)
-                inputs[Arcade::Displays::KeyType::VER] -= 1;
-            if (keys[i] == KEY_DOWN)
-                inputs[Arcade::Displays::KeyType::VER] += 1;
-            if (keys[i] == KEY_LEFT)
-                inputs[Arcade::Displays::KeyType::HOR] -= 1;
-            if (keys[i] == KEY_RIGHT)
-                inputs[Arcade::Displays::KeyType::HOR] += 1;
-            // std::cout << keys[i] << std::endl;
-            if (keys[i] == 97) {
-                inputs[Arcade::Displays::KeyType::ACTION1] = 1;
-                std::cout << "ACTION1" << std::endl;
-            }
+    sf::Event event;
+    while (_window.pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            inputs[Arcade::Displays::KeyType::QUIT] = 1;
         }
     }
-                // inputs[Arcade::Displays::KeyType::ESC] = 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && _saveInputs[sf::Keyboard::Up] == 0)
+        inputs[Arcade::Displays::KeyType::VER] -= 1;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && _saveInputs[sf::Keyboard::Down] == 0)
+        inputs[Arcade::Displays::KeyType::VER] += 1;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && _saveInputs[sf::Keyboard::Left] == 0)
+        inputs[Arcade::Displays::KeyType::HOR] -= 1;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && _saveInputs[sf::Keyboard::Right] == 0)
+        inputs[Arcade::Displays::KeyType::HOR] += 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && _saveInputs[sf::Keyboard::Escape] == 0)
+        inputs[Arcade::Displays::KeyType::ESC] = 1;
+    _saveInputs = {
+        {sf::Keyboard::Up, sf::Keyboard::isKeyPressed(sf::Keyboard::Up)},
+        {sf::Keyboard::Down, sf::Keyboard::isKeyPressed(sf::Keyboard::Down)},
+        {sf::Keyboard::Left, sf::Keyboard::isKeyPressed(sf::Keyboard::Left)},
+        {sf::Keyboard::Right, sf::Keyboard::isKeyPressed(sf::Keyboard::Right)},
+        {sf::Keyboard::Escape, sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)},
+    };
     return inputs;
 }
 
 void SFML::setMapSize(Arcade::Displays::Vector2i size)
 {
     _mapSize = size;
-    _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(size.y, std::vector<Arcade::Displays::ISprite *>(size.x, nullptr));
+    _window.setSize(sf::Vector2u(size.x * 32, size.y * 32));
+    _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(_mapSize.y, std::vector<Arcade::Displays::ISprite *>(_mapSize.x, nullptr));
 }
 
 void SFML::clear(void)
 {
     _texts.clear();
-    _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(_mapSize.y, std::vector<Arcade::Displays::ISprite *>(_mapSize.x, nullptr));
+
 }
 
 void SFML::updateTile(Arcade::Displays::Vector2i pos, Arcade::Displays::ISprite *sprite)
@@ -105,56 +97,23 @@ void SFML::updateTile(Arcade::Displays::Vector2i pos, Arcade::Displays::ISprite 
     _map[pos.y][pos.x] = sprite;
 }
 
-void SFML::displayResize(void)
-{
-    attron(A_BOLD);
-    mvprintw(LINES / 2 - 2, COLS / 2 - 12, "Terminal size too small:");
-
-    mvprintw(LINES / 2 - 1, COLS / 2 - 11, "Width =");
-    attron(COLOR_PAIR((COLS < 80) ? 1 : 2));
-    mvprintw(LINES / 2 - 1, COLS / 2 - 3, "%s", std::to_string(COLS).c_str());
-    attroff(COLOR_PAIR(1));
-
-    mvprintw(LINES / 2 - 1, COLS / 2 , "Height = ");
-    attron(COLOR_PAIR((LINES < 24) ? 1 : 2));
-    mvprintw(LINES / 2 - 1, COLS / 2 + 9, "%s", std::to_string(LINES).c_str());
-    attroff(COLOR_PAIR(2));
-
-    mvprintw(LINES / 2 + 1, COLS / 2 - 13, "%s", "Needed for current config:");
-    mvprintw(LINES / 2 + 2, COLS / 2 - 11, "%s", ("Width = " + std::to_string(_mapSize.x * 3) + " Height = " + std::to_string(_mapSize.y)).c_str());
-    attroff(A_BOLD);
-}
-
 void SFML::displayGame(void)
 {
-    ::clear();
-    // std::string str = "Ncurses" + std::to_string(_mapSize.x) + " " + std::to_string(_mapSize.y);
-    // mvprintw(15, 15, str.c_str());
-    if (LINES < _mapSize.y || COLS < _mapSize.x * 3) {
-        displayResize();
-        _lastTime = clock() - _lastTime;
-        refresh();
-        return;
-    }
-    for (int y = 0; y < _mapSize.y; y++) {
-        for (int x = 0; x < _mapSize.x; x++) {
-            if (_map[y][x] != nullptr) {
-                attron(COLOR_PAIR(colorMap[_map[y][x]->getColor()]));
-                mvprintw(y, x, "m");
-            }
+    _window.clear();
+    for (auto &text : _texts) {
+        _text.setString(std::get<1>(text));
+        _text.setPosition(std::get<0>(text).x * 32, std::get<0>(text).y * 32);
+        _text.setFillColor(sf::Color::White);
+        if (std::get<2>(text) != Arcade::Displays::Color::DEFAULT) {
+            _textBackground.setSize(sf::Vector2f(_text.getLocalBounds().width + 3, _text.getLocalBounds().height + 12));
+            _textBackground.setPosition(std::get<0>(text).x * 32, std::get<0>(text).y * 32 + 10);
+            _textBackground.setFillColor(colorMap[std::get<2>(text)]);
+            _text.setFillColor(sf::Color::Black);
+            _window.draw(_textBackground);
         }
+        _window.draw(_text);
     }
-    attron(COLOR_PAIR(1));
-    for (auto text : _texts) {
-        Arcade::Displays::Vector2i pos = std::get<0>(text);
-        std::string str = std::get<1>(text);
-        Arcade::Displays::Color color = std::get<2>(text);
-        attron(COLOR_PAIR(colorMap[color]));
-        mvprintw(pos.y, pos.x * 3, str.c_str());
-    }
-    _lastTime = clock() - _lastTime;
-    refresh();
-    usleep(10000);
+    _window.display();
 }
 
 void SFML::setAnimationTime(float time)
