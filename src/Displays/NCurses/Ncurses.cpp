@@ -144,7 +144,7 @@ void Ncurses::displayGame(void)
         for (int x = 0; x < _mapSize.x; x++) {
             if (_map[y][x] != nullptr) {
                 attron(COLOR_PAIR(colorMap[_map[y][x]->getColor()]));
-                mvprintw(y, x, "m");
+                mvprintw(y, x, " ");
             }
         }
     }
