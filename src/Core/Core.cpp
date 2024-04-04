@@ -7,6 +7,9 @@
 
 #include "Core.hpp"
 #include <dirent.h>
+#include <list>
+
+static std::string nameList = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
 
 static std::map<Arcade::Games::Color, Arcade::Displays::Color> colorMap = {
     {Arcade::Games::Color::DEFAULT, Arcade::Displays::Color::DEFAULT},
@@ -101,6 +104,8 @@ void Core::addLibraries(const std::string &path)
     try {
         _games[path] = _gameLoader.getInstance(path, "gameEntryPoint");
         std::cout << "Game library loaded: " << path << std::endl;
+        _score.addGame(path);
+        _score.addScore(path, "AAA", 0);
     } catch (const std::exception &e) {}
 }
 
@@ -225,56 +230,71 @@ void Core::setTexts(void)
 void Core::displayMenu(void)
 {
     int i = 0;
+    
+    if (_inName) {
+        if (_inputs[Arcade::Games::KeyType::ACTION1] == 1)
+            _inName = false;
+        handleName();
+        
+    } else {
 
-    if (_inputs[Arcade::Games::KeyType::VER] == -1)
-        _index -= 1;
-    if (_inputs[Arcade::Games::KeyType::VER] == 1)
-        _index += 1;
-    if (_inputs[Arcade::Games::KeyType::HOR] == -1)
-        _module = (_module - 1) % 3;
-    if (_inputs[Arcade::Games::KeyType::HOR] == 1)
-        _module = (_module + 1) % 3;
-    if (_module == -1)
-        _module = 2;
-    if (_module == 0)
-        _index = _index % _games.size();
-    if (_module == 1)
-        _index = _index % _displays.size();
-    if (_inputs[Arcade::Games::KeyType::ACTION1] == 1)
-    {
-        int j = 0;
-        for (auto &display : _displays)
+        if (_inputs[Arcade::Games::KeyType::VER] == -1)
+            _index -= 1;
+        if (_inputs[Arcade::Games::KeyType::VER] == 1)
+            _index += 1;
+        if (_inputs[Arcade::Games::KeyType::HOR] == -1)
+            _module = (_module - 1) % 3;
+        if (_inputs[Arcade::Games::KeyType::HOR] == 1)
+            _module = (_module + 1) % 3;
+        if (_module == -1)
+            _module = 2;
+        if (_module == 0)
+            _index = _index % _games.size();
+        if (_module == 1)
+            _index = _index % _displays.size();
+        if (_inputs[Arcade::Games::KeyType::ACTION1] == 1)
         {
-            if (j == _index && _module == 1) {
-                DISPLAY->close();
-                _currentLib = display.first;
-                DISPLAY->init();
-                DISPLAY->setMapSize(DVEC(25, 15));
+            if (_module == 2) {
+                _inName = true;
             }
-            j++;
-        }
-        j = 0;
-        for (auto &game : _games)
-        {
-            if (j == _index && _module == 0) {
-                GAME->close();
-                _currentGame = game.first;
-                GAME->init("", 0);
-                DISPLAY->setMapSize(DVEC(GAME->getMapSize().x, GAME->getMapSize().y));
-                _inGame = true;
+            int j = 0;
+            for (auto &display : _displays)
+            {
+                if (j == _index && _module == 1) {
+                    DISPLAY->close();
+                    _currentLib = display.first;
+                    DISPLAY->init();
+                    DISPLAY->setMapSize(DVEC(25, 15));
+                }
+                j++;
             }
-            j++;
+            j = 0;
+            for (auto &game : _games)
+            {
+                if (j == _index && _module == 0) {
+                    GAME->close();
+                    _currentGame = game.first;
+                    GAME->init("", 0);
+                    DISPLAY->setMapSize(DVEC(GAME->getMapSize().x, GAME->getMapSize().y));
+                    _inGame = true;
+                }
+                j++;
+            }
         }
     }
+    if (_module == 0) {
+        displayScores();
+    }
     displayOptions("F1: Games", DVEC(2, 1), _module == 0, false);
-    displayOptions("F2: Graphics", DVEC(16, 1), _module == 1, false);
+    displayOptions("F2: Graphics", DVEC(14, 1), _module == 1, false);
     for (auto &game : _games)
         displayOptions(game.first, DVEC(2, 3 + i++ * 2), false, _index == i && _module == 0);
     i = 0;
     for (auto &display : _displays)
-        displayOptions(display.first, DVEC(16, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
+        displayOptions(display.first, DVEC(14, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
     displayOptions("F3: Name", DVEC(2, 11), _module == 2, false);
-    displayOptions("", DVEC(2, 13), false, _module == 2);
+    if (!_inName)
+        displayOptions(_name, DVEC(2, 13), false, _module == 2);
     DISPLAY->displayGame();
 }
 
@@ -288,4 +308,64 @@ void Core::displayOptions(std::string name, Arcade::Displays::Vector2i pos, bool
         DISPLAY->setText(text, DVEC(pos.x, pos.y), DCOL(WHITE));
     else
         DISPLAY->setText(text, DVEC(pos.x, pos.y), DCOL(DEFAULT));
+}
+
+void Core::handleName(void)
+{
+    if (_inputs[Arcade::Games::KeyType::HOR] == 1)
+        _indexName = (_indexName + 1) % 10;
+    if (_inputs[Arcade::Games::KeyType::HOR] == -1)
+        _indexName = (_indexName - 1) % 10;
+    if (_indexName == -1)
+        _indexName = 9;
+    _time += _deltaT;
+
+    if (_inputs[Arcade::Games::KeyType::VER] == 1)
+        _name[_indexName] = switchChar(_name[_indexName], true);
+    if (_inputs[Arcade::Games::KeyType::VER] == -1)
+        _name[_indexName] = switchChar(_name[_indexName], false);
+
+    std::string text = _name;
+    if (_time > 0.03) {
+        _time = 0;
+        _flipflop = !_flipflop;
+    }
+    if (_flipflop)
+        text[_indexName] = ' ';
+    displayOptions(text, DVEC(2, 13), false, true);
+}
+
+char Core::switchChar(char c, bool up)
+{
+    int charIndex = 0;
+
+    for (size_t i = 0; i < nameList.size(); i++)
+    {
+        if (nameList[i] == c)
+            charIndex = i;
+    }
+    if (charIndex == 0 && !up)
+        return nameList[nameList.size() - 1];
+    if (charIndex == nameList.size() - 1 && up)
+        return nameList[0];
+    if (up)
+        return nameList[charIndex + 1];
+    return nameList[charIndex - 1];
+}
+
+void Core::displayScores(void)
+{
+    std::list<std::pair<std::string, int>> scores = std::list<std::pair<std::string, int>>();
+    int i = 0;
+
+    for (auto &game : _games)
+        if (game.first == _currentGame)
+            scores = _score.getScores(game.first);
+    DISPLAY->setText("F4: Scores", DVEC(14, 11), DCOL(DEFAULT));
+    if (scores.empty())
+        DISPLAY->setText("No scores", DVEC(16, 13), DCOL(DEFAULT));
+    for (auto &score : scores)
+    {
+        DISPLAY->setText(score.first + ": " + std::to_string(score.second), DVEC(16, 11 + (i++ + 1) * 2), DCOL(DEFAULT));
+    }
 }
