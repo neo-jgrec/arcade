@@ -131,7 +131,6 @@ void SFML::displayGame(void)
             }
         }
     }
-    _lastTime = clock() - _lastTime;
     _window.display();
     usleep(10000);
 }
