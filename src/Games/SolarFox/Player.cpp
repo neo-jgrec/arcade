@@ -12,8 +12,8 @@ namespace Arcade::Games {
     Player::Player()
     {
         _sprite->setAscii("P");
-        _sprite->setPath(std::string("gameAssets/solarfox/player.png"));
-        _sprite->setColor(Color::WHITE);
+        _sprite->setPath(std::string("gameAssets/solarfox/sprites/player.png"));
+        _sprite->setColor(Color::BLUE);
         _sprite->setShape(Shape::TRIANGLE);
     }
 
