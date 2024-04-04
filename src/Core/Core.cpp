@@ -137,7 +137,6 @@ void Core::Loop(void)
         DISPLAY->clear();
         getInputs();
         _deltaT = DISPLAY->getDeltaT();
-
         if (_inGame) {
             GAME->update(_inputs, _deltaT);
             if (_inputs[Arcade::Games::KeyType::ESC] == 1) {
@@ -146,13 +145,13 @@ void Core::Loop(void)
             }
             setTiles();
             setTexts();
+            DISPLAY->displayGame();
         } else {
             displayMenu();
         }
-        DISPLAY->displayGame();
     }
     DISPLAY->close();
-    // GAME->close();
+    GAME->close();
 }
 
 void Core::setTiles(void)
@@ -246,10 +245,7 @@ void Core::displayMenu(void)
             }
             j++;
         }
-    }
-    if (_inputs[Arcade::Games::KeyType::ACTION1] == 1)
-    {
-        int j = 0;
+        j = 0;
         for (auto &game : _games)
         {
             if (j == _index && _module == 0) {
@@ -262,7 +258,6 @@ void Core::displayMenu(void)
             j++;
         }
     }
-
     displayOptions("F1: Games", DVEC(2, 1), _module == 0, false);
     displayOptions("F2: Graphics", DVEC(16, 1), _module == 1, false);
     for (auto &game : _games)

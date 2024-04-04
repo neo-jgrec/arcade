@@ -8,7 +8,7 @@
 #ifndef SFML_HPP_
 #define SFML_HPP_
 
-#include <ncurses.h>
+
 #include <SFML/Graphics.hpp>
 #include "../IDisplayModule.hpp"
 #include <time.h>
@@ -20,7 +20,7 @@ class SFML : public Arcade::Displays::IDisplayModule {
 
         void init(void) override;
         void close(void) override;
-        std::map<Arcade::Displays::KeyType, int> getInputs(void) const override;
+        std::map<Arcade::Displays::KeyType, int> getInputs(void) override;
         void setMapSize(Arcade::Displays::Vector2i size) override;
         void clear(void) override;
         void updateTile(Arcade::Displays::Vector2i pos, Arcade::Displays::ISprite *sprite) override;
@@ -29,14 +29,19 @@ class SFML : public Arcade::Displays::IDisplayModule {
         float getDeltaT(void) override;
         void setText(std::string text, Arcade::Displays::Vector2i pos, Arcade::Displays::Color color) override;
 
-        void displayResize();
     protected:
     private:
-        std::vector<std::vector<Arcade::Displays::ISprite *>> _map;
+        sf::RenderWindow _window;
         Arcade::Displays::Vector2i _mapSize;
-        float _deltaT;
         clock_t _lastTime;
+        float _deltaT;
         std::vector<std::tuple<Arcade::Displays::Vector2i, std::string, Arcade::Displays::Color>> _texts;
+        std::vector<std::vector<Arcade::Displays::ISprite *>> _map;
+        sf::Font _font;
+        sf::Text _text;
+        sf::RectangleShape _textBackground;
+        std::map<sf::Keyboard::Key, int> _saveInputs;
+
 };
 
 extern "C" {

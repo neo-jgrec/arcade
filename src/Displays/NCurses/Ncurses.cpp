@@ -53,7 +53,7 @@ void Ncurses::close(void)
     endwin();
 }
 
-std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void) const
+std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void)
 {
     std::map<Arcade::Displays::KeyType, int> inputs;
     int ch = 0;
