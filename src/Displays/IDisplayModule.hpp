@@ -50,7 +50,7 @@ namespace Arcade::Displays {
              * @brief Get the Inputs object
              * @return std::map<KeyType, int>
              */
-            virtual std::map<Arcade::Displays::KeyType, int> getInputs(void) const = 0;
+            virtual std::map<Arcade::Displays::KeyType, int> getInputs(void) = 0;
             // /**
             //  * @brief Set the name of the game
             //  * @param name the name of the game

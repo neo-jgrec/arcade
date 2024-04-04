@@ -12,9 +12,14 @@
 #include <vector>
 #include <map>
 #include "ISprite.hpp"
+#include <map>
 
 namespace Arcade::Games {
 
+    /**
+     * VER: -1 = down | 1 = up
+     * HOR: -1 = left | 1 = right
+    */
     enum class KeyType {
         VER,
         HOR,
@@ -78,7 +83,7 @@ namespace Arcade::Games {
 
             /**
              * @brief Get the score of the game
-             * @return unsigned int
+             * @return std::string
              */
             virtual std::string getScore(void) = 0;
 

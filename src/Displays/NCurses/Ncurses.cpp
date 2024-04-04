@@ -7,6 +7,18 @@
 
 #include "Ncurses.hpp"
 
+static std::map<Arcade::Displays::Color, int> colorMap = {
+    {Arcade::Displays::Color::DEFAULT, 1},
+    {Arcade::Displays::Color::WHITE, 2},
+    {Arcade::Displays::Color::RED, 3},
+    {Arcade::Displays::Color::YELLOW, 4},
+    {Arcade::Displays::Color::BLUE, 5},
+    {Arcade::Displays::Color::MAGENTA, 6},
+    {Arcade::Displays::Color::CYAN, 7},
+    {Arcade::Displays::Color::GREEN, 8},
+    {Arcade::Displays::Color::BLACK, 9},
+};
+
 Ncurses::Ncurses() : _mapSize(0, 0)
 {
 }
@@ -27,12 +39,15 @@ void Ncurses::init(void)
     _mapSize = Arcade::Displays::Vector2i(0, 0);
 
     start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    init_pair(2, COLOR_YELLOW, COLOR_WHITE);
-    init_pair(3, COLOR_BLACK, COLOR_WHITE);
-    init_pair(4, COLOR_RED, COLOR_WHITE);
-    init_pair(5, COLOR_BLUE, COLOR_WHITE);
-    init_pair(6, COLOR_BLACK, COLOR_WHITE);
+    init_pair(1, COLOR_WHITE, COLOR_BLACK); // default
+    init_pair(2, COLOR_BLACK, COLOR_WHITE); // white
+    init_pair(3, COLOR_WHITE, COLOR_RED);
+    init_pair(4, COLOR_WHITE, COLOR_YELLOW);
+    init_pair(5, COLOR_WHITE, COLOR_BLUE);
+    init_pair(6, COLOR_WHITE, COLOR_MAGENTA);
+    init_pair(7, COLOR_WHITE, COLOR_CYAN);
+    init_pair(8, COLOR_WHITE, COLOR_GREEN);
+    init_pair(9, COLOR_WHITE, COLOR_BLACK);
 
     _lastTime = clock();
 }
@@ -42,7 +57,7 @@ void Ncurses::close(void)
     endwin();
 }
 
-std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void) const
+std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void)
 {
     std::map<Arcade::Displays::KeyType, int> inputs;
     int ch = 0;
@@ -54,20 +69,20 @@ std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void) const
     }
     if (keys.size() > 1) {
         for (int i = 0; i < keys.size(); i++) {
-            if (keys[i] == 27) {
+            if (keys[i] == 27)
                 inputs[Arcade::Displays::KeyType::ESC] = 1;
-            }
-            if (keys[i] == KEY_UP) {
+            if (keys[i] == KEY_UP)
                 inputs[Arcade::Displays::KeyType::VER] -= 1;
-            }
-            if (keys[i] == KEY_DOWN) {
+            if (keys[i] == KEY_DOWN)
                 inputs[Arcade::Displays::KeyType::VER] += 1;
-            }
-            if (keys[i] == KEY_LEFT) {
+            if (keys[i] == KEY_LEFT)
                 inputs[Arcade::Displays::KeyType::HOR] -= 1;
-            }
-            if (keys[i] == KEY_RIGHT) {
+            if (keys[i] == KEY_RIGHT)
                 inputs[Arcade::Displays::KeyType::HOR] += 1;
+            // std::cout << keys[i] << std::endl;
+            if (keys[i] == 97) {
+                inputs[Arcade::Displays::KeyType::ACTION1] = 1;
+                std::cout << "ACTION1" << std::endl;
             }
         }
     }
@@ -84,6 +99,7 @@ void Ncurses::setMapSize(Arcade::Displays::Vector2i size)
 void Ncurses::clear(void)
 {
     _texts.clear();
+    _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(_mapSize.y, std::vector<Arcade::Displays::ISprite *>(_mapSize.x, nullptr));
 }
 
 void Ncurses::updateTile(Arcade::Displays::Vector2i pos, Arcade::Displays::ISprite *sprite)
@@ -115,7 +131,9 @@ void Ncurses::displayResize(void)
 
 void Ncurses::displayGame(void)
 {
-    erase();
+    ::clear();
+    // std::string str = "Ncurses" + std::to_string(_mapSize.x) + " " + std::to_string(_mapSize.y);
+    // mvprintw(15, 15, str.c_str());
     if (LINES < _mapSize.y || COLS < _mapSize.x * 3) {
         displayResize();
         _lastTime = clock() - _lastTime;
@@ -125,19 +143,8 @@ void Ncurses::displayGame(void)
     for (int y = 0; y < _mapSize.y; y++) {
         for (int x = 0; x < _mapSize.x; x++) {
             if (_map[y][x] != nullptr) {
-                if (_map[y][x]->getColor() == Arcade::Displays::Color::DEFAULT)
-                    attron(COLOR_PAIR(1));
-                else if (_map[y][x]->getColor() == Arcade::Displays::Color::YELLOW)
-                    attron(COLOR_PAIR(2));
-                else if (_map[y][x]->getColor() == Arcade::Displays::Color::BLACK)
-                    attron(COLOR_PAIR(3));
-                else if (_map[y][x]->getColor() == Arcade::Displays::Color::RED)
-                    attron(COLOR_PAIR(4));
-                else if (_map[y][x]->getColor() == Arcade::Displays::Color::BLUE)
-                    attron(COLOR_PAIR(5));
-                else if (_map[y][x]->getColor() == Arcade::Displays::Color::WHITE)
-                    attron(COLOR_PAIR(6));
-                mvprintw(y, x * 3, "###");
+                attron(COLOR_PAIR(colorMap[_map[y][x]->getColor()]));
+                mvprintw(y, x, " ");
             }
         }
     }
@@ -146,22 +153,11 @@ void Ncurses::displayGame(void)
         Arcade::Displays::Vector2i pos = std::get<0>(text);
         std::string str = std::get<1>(text);
         Arcade::Displays::Color color = std::get<2>(text);
-        if (color == Arcade::Displays::Color::DEFAULT)
-            attron(COLOR_PAIR(1));
-        else if (color == Arcade::Displays::Color::YELLOW)
-            attron(COLOR_PAIR(2));
-        else if (color == Arcade::Displays::Color::BLACK)
-            attron(COLOR_PAIR(3));
-        else if (color == Arcade::Displays::Color::RED)
-            attron(COLOR_PAIR(4));
-        else if (color == Arcade::Displays::Color::BLUE)
-            attron(COLOR_PAIR(5));
-        else if (color == Arcade::Displays::Color::WHITE)
-            attron(COLOR_PAIR(6));
+        attron(COLOR_PAIR(colorMap[color]));
         mvprintw(pos.y, pos.x * 3, str.c_str());
     }
-    _lastTime = clock() - _lastTime;
     refresh();
+    usleep(10000);
 }
 
 void Ncurses::setAnimationTime(float time)
@@ -170,7 +166,10 @@ void Ncurses::setAnimationTime(float time)
 
 float Ncurses::getDeltaT(void)
 {
-    return ((float)_lastTime / CLOCKS_PER_SEC);
+    clock_t currentTime = clock();
+    float deltaTime = static_cast<float>(currentTime - _lastTime) / CLOCKS_PER_SEC;
+    _lastTime = currentTime;
+    return deltaTime;
 }
 
 void Ncurses::setText(std::string text, Arcade::Displays::Vector2i pos, Arcade::Displays::Color color)

@@ -7,6 +7,41 @@
 
 #include "Core.hpp"
 #include <dirent.h>
+#include <list>
+
+static std::string nameList = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+
+static std::map<Arcade::Games::Color, Arcade::Displays::Color> colorMap = {
+    {Arcade::Games::Color::DEFAULT, Arcade::Displays::Color::DEFAULT},
+    {Arcade::Games::Color::WHITE, Arcade::Displays::Color::WHITE},
+    {Arcade::Games::Color::RED, Arcade::Displays::Color::RED},
+    {Arcade::Games::Color::YELLOW, Arcade::Displays::Color::YELLOW},
+    {Arcade::Games::Color::BLUE, Arcade::Displays::Color::BLUE},
+    {Arcade::Games::Color::MAGENTA, Arcade::Displays::Color::MAGENTA},
+    {Arcade::Games::Color::CYAN, Arcade::Displays::Color::CYAN},
+};
+
+static std::map<Arcade::Games::Shape, Arcade::Displays::Shape> shapeMap = {
+    {Arcade::Games::Shape::CIRCLE, Arcade::Displays::Shape::CIRCLE},
+    {Arcade::Games::Shape::RECTANGLE, Arcade::Displays::Shape::RECTANGLE},
+    {Arcade::Games::Shape::TRIANGLE, Arcade::Displays::Shape::TRIANGLE},
+};
+
+static std::map<Arcade::Displays::KeyType, Arcade::Games::KeyType> keyMap = {
+    {Arcade::Displays::KeyType::HOR, Arcade::Games::KeyType::HOR},
+    {Arcade::Displays::KeyType::VER, Arcade::Games::KeyType::VER},
+    {Arcade::Displays::KeyType::ACTION1, Arcade::Games::KeyType::ACTION1},
+    {Arcade::Displays::KeyType::ACTION2, Arcade::Games::KeyType::ACTION2},
+    {Arcade::Displays::KeyType::ACTION3, Arcade::Games::KeyType::ACTION3},
+    {Arcade::Displays::KeyType::ACTION4, Arcade::Games::KeyType::ACTION4},
+    {Arcade::Displays::KeyType::QUIT, Arcade::Games::KeyType::QUIT},
+    {Arcade::Displays::KeyType::ESC, Arcade::Games::KeyType::ESC},
+    {Arcade::Displays::KeyType::NEXT_LIB, Arcade::Games::KeyType::NEXT_LIB},
+    {Arcade::Displays::KeyType::PREV_LIB, Arcade::Games::KeyType::PREV_LIB},
+    {Arcade::Displays::KeyType::NEXT_GAME, Arcade::Games::KeyType::NEXT_GAME},
+    {Arcade::Displays::KeyType::PREV_GAME, Arcade::Games::KeyType::PREV_GAME},
+    {Arcade::Displays::KeyType::RESTART, Arcade::Games::KeyType::RESTART},
+};
 
 #define GAME _games[_currentGame]
 #define DISPLAY _displays[_currentLib]
@@ -69,6 +104,7 @@ void Core::addLibraries(const std::string &path)
     try {
         _games[path] = _gameLoader.getInstance(path, "gameEntryPoint");
         std::cout << "Game library loaded: " << path << std::endl;
+        _score.addGame(path);
     } catch (const std::exception &e) {}
 }
 
@@ -92,67 +128,70 @@ void Core::Loop(void)
     bool running = true;
 
     std::cout << "Starting game loop..." << std::endl;
-    DISPLAY->init();
     _inGame = false;
     _index = 0;
     _module = 0;
-    DISPLAY->setMapSize(Arcade::Displays::Vector2i(15, 15));
-    // GAME->init("", 0);
+    _currentGame = "./lib/arcade_solarfox.so";
+
+    GAME->init("", 0);
+    DISPLAY->init();
+    DISPLAY->setMapSize(DVEC(25, 15));
     while (running)
     {
         DISPLAY->clear();
         getInputs();
+        if (_inputs[Arcade::Games::KeyType::QUIT] == 1) {
+            running = false;
+            break;
+        }
         _deltaT = DISPLAY->getDeltaT();
-
         if (_inGame) {
             GAME->update(_inputs, _deltaT);
-            if (_inputs[Arcade::Games::KeyType::ESC] == 1)
+            if (_inputs[Arcade::Games::KeyType::ESC] == 1) {
+                DISPLAY->setMapSize(DVEC(25, 15));
                 _inGame = false;
+                _score.addScore(_currentGame, _name, stoi(GAME->getScore()));
+            }
+            setTiles();
             setTexts();
+            DISPLAY->displayGame();
         } else {
+            if (_inputs[Arcade::Games::KeyType::ESC] == 1) {
+                running = false;
+            }
             displayMenu();
         }
-        DISPLAY->displayGame();
     }
     DISPLAY->close();
     // GAME->close();
 }
 
-Arcade::Displays::Color Core::getColor(Arcade::Games::Color color)
+void Core::setTiles(void)
 {
-    switch (color)
+    std::vector<std::vector<Arcade::Games::ISprite *>> map = GAME->getMap();
+    for (size_t y = 0; y < map.size(); y++)
     {
-    case Arcade::Games::Color::BLACK:
-        return Arcade::Displays::Color::BLACK;
-    case Arcade::Games::Color::BLUE:
-        return Arcade::Displays::Color::BLUE;
-    case Arcade::Games::Color::CYAN:
-        return Arcade::Displays::Color::CYAN;
+        for (size_t x = 0; x < map[y].size(); x++)
+        {
+            DISPLAY->updateTile(Arcade::Displays::Vector2i(x, y), getSprite(*map[y][x]));
+        }
     }
-    return Arcade::Displays::Color::DEFAULT;
+
 }
 
-Arcade::Displays::ISprite &getSprite(Arcade::Games::ISprite &sprite) {
-    Sprite newSprite;
-    newSprite.setPath(sprite.getPath());
+Arcade::Displays::ISprite *Core::getSprite(Arcade::Games::ISprite &sprite) {
+    Sprite *newSprite = new Sprite();
+    newSprite->setPath(sprite.getPath());
+
     Arcade::Games::Shape shape = sprite.getShape();
     Arcade::Games::Color color = sprite.getColor();
     Arcade::Games::Vector2i dir = sprite.getDirection();
 
-    switch (shape)
-    {
-    case Arcade::Games::Shape::CIRCLE:
-        newSprite.setShape(Arcade::Displays::Shape::CIRCLE);
-        break;
-    case Arcade::Games::Shape::RECTANGLE:
-        newSprite.setShape(Arcade::Displays::Shape::RECTANGLE);
-        break;
-    case Arcade::Games::Shape::TRIANGLE:
-        newSprite.setShape(Arcade::Displays::Shape::TRIANGLE);
-        break;
-    }
-    newSprite.setRotation(sprite.getRotation());
-    newSprite.setDirection(Arcade::Displays::Vector2i(dir.x, dir.y));
+
+    newSprite->setShape(shapeMap[shape]);
+    newSprite->setColor(colorMap[color]);
+    newSprite->setRotation(sprite.getRotation());
+    newSprite->setDirection(Arcade::Displays::Vector2i(dir.x, dir.y));
     return newSprite;
 }
 
@@ -160,21 +199,17 @@ void Core::getInputs(void)
 {
     _inputs.clear();
     std::map<Arcade::Displays::KeyType, int> displayInputs = _displays[_currentLib]->getInputs();
+
+    for (auto &input : keyMap)
+    {
+        _inputs[input.second] = 0;
+    }
     for (auto &input : displayInputs)
     {
-        switch (input.first)
+        for (auto &key : keyMap)
         {
-        case Arcade::Displays::KeyType::ESC:
-            _inputs[Arcade::Games::KeyType::ESC] = input.second;
-            break;
-        case Arcade::Displays::KeyType::HOR:
-            _inputs[Arcade::Games::KeyType::HOR] = input.second;
-            break;
-        case Arcade::Displays::KeyType::VER:
-            _inputs[Arcade::Games::KeyType::VER] = input.second;
-            break;
-        default:
-            break;
+            if (key.first == input.first)
+                _inputs[key.second] = input.second;
         }
     }
 }
@@ -188,54 +223,79 @@ void Core::setTexts(void)
         Arcade::Games::Vector2i pos = std::get<1>(text);
         Arcade::Games::Color color = std::get<2>(text);
 
-        _displays[_currentLib]->setText(std::get<0>(text), Arcade::Displays::Vector2i(pos.x, pos.y), getColor(color));
+        _displays[_currentLib]->setText(std::get<0>(text), Arcade::Displays::Vector2i(pos.x, pos.y), colorMap[color]);
     }
-}
-
-Arcade::Displays::Shape Core::getShape(Arcade::Games::Shape shape)
-{
-    switch (shape)
-    {
-    case Arcade::Games::Shape::CIRCLE:
-        return Arcade::Displays::Shape::CIRCLE;
-    case Arcade::Games::Shape::RECTANGLE:
-        return Arcade::Displays::Shape::RECTANGLE;
-    case Arcade::Games::Shape::TRIANGLE:
-        return Arcade::Displays::Shape::TRIANGLE;
-    }
-    return Arcade::Displays::Shape::RECTANGLE;
 }
 
 void Core::displayMenu(void)
 {
     int i = 0;
+    
+    if (_inName) {
+        if (_inputs[Arcade::Games::KeyType::ACTION1] == 1)
+            _inName = false;
+        handleName();
+        
+    } else {
 
-    if (_inputs[Arcade::Games::KeyType::VER] == -1)
-        _index -= 1;
-    if (_inputs[Arcade::Games::KeyType::VER] == 1)
-        _index += 1;
-    if (_inputs[Arcade::Games::KeyType::HOR] == -1)
-        _module = (_module - 1) % 3;
-    if (_inputs[Arcade::Games::KeyType::HOR] == 1)
-        _module = (_module + 1) % 3;
-    if (_module == -1)
-        _module = 2;
-    if (_module == 0)
-        _index = _index % _games.size();
-    if (_module == 1)
-        _index = _index % _displays.size();
-
+        if (_inputs[Arcade::Games::KeyType::VER] == -1)
+            _index -= 1;
+        if (_inputs[Arcade::Games::KeyType::VER] == 1)
+            _index += 1;
+        if (_inputs[Arcade::Games::KeyType::HOR] == -1)
+            _module = (_module - 1) % 3;
+        if (_inputs[Arcade::Games::KeyType::HOR] == 1)
+            _module = (_module + 1) % 3;
+        if (_module == -1)
+            _module = 2;
+        if (_module == 0)
+            _index = _index % _games.size();
+        if (_module == 1)
+            _index = _index % _displays.size();
+        if (_inputs[Arcade::Games::KeyType::ACTION1] == 1)
+        {
+            if (_module == 2) {
+                _inName = true;
+            }
+            int j = 0;
+            for (auto &display : _displays)
+            {
+                if (j == _index && _module == 1) {
+                    DISPLAY->close();
+                    _currentLib = display.first;
+                    DISPLAY->init();
+                    DISPLAY->setMapSize(DVEC(25, 15));
+                }
+                j++;
+            }
+            j = 0;
+            for (auto &game : _games)
+            {
+                if (j == _index && _module == 0) {
+                    GAME->close();
+                    _currentGame = game.first;
+                    GAME->init("", 0);
+                    DISPLAY->setMapSize(DVEC(GAME->getMapSize().x, GAME->getMapSize().y));
+                    _inGame = true;
+                }
+                j++;
+            }
+        }
+    }
+    if (_module == 0) {
+        displayScores();
+    }
     displayOptions("F1: Games", DVEC(2, 1), _module == 0, false);
-    displayOptions("F2: Graphics", DVEC(10, 1), _module == 1, false);
+    displayOptions("F2: Graphics", DVEC(14, 1), _module == 1, false);
     for (auto &game : _games)
-        displayOptions(game.first, DVEC(2, 3 + i++ * 2), game.first == _currentGame, _index == i && _module == 0);
+        displayOptions(game.first, DVEC(2, 3 + i++ * 2), false, _index == i && _module == 0);
     i = 0;
     for (auto &display : _displays)
-        displayOptions(display.first, DVEC(10, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
+        displayOptions(display.first, DVEC(14, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
     displayOptions("F3: Name", DVEC(2, 11), _module == 2, false);
-    displayOptions("", DVEC(2, 13), false, _module == 2);
-
-    _displays[_currentLib]->displayGame();
+    if (!_inName)
+        displayOptions(_name, DVEC(2, 13), false, _module == 2);
+    DISPLAY->displayGame();
 }
 
 void Core::displayOptions(std::string name, Arcade::Displays::Vector2i pos, bool selected, bool hover)
@@ -248,4 +308,76 @@ void Core::displayOptions(std::string name, Arcade::Displays::Vector2i pos, bool
         DISPLAY->setText(text, DVEC(pos.x, pos.y), DCOL(WHITE));
     else
         DISPLAY->setText(text, DVEC(pos.x, pos.y), DCOL(DEFAULT));
+}
+
+void Core::handleName(void)
+{
+    if (_inputs[Arcade::Games::KeyType::HOR] == 1)
+        _indexName = (_indexName + 1) % 10;
+    if (_inputs[Arcade::Games::KeyType::HOR] == -1)
+        _indexName = (_indexName - 1) % 10;
+    if (_indexName == -1)
+        _indexName = 9;
+    _time += _deltaT;
+
+    if (_inputs[Arcade::Games::KeyType::VER] == 1)
+        _name[_indexName] = switchChar(_name[_indexName], true);
+    if (_inputs[Arcade::Games::KeyType::VER] == -1)
+        _name[_indexName] = switchChar(_name[_indexName], false);
+    if (_inputs[Arcade::Games::KeyType::VER] != 0) {
+        _time = 0;
+        _flipflop = false;
+    }
+    std::string text = _name;
+    if (_time > 0.015) {
+        _time = 0;
+        _flipflop = !_flipflop;
+    }
+    if (_flipflop)
+        text[_indexName] = ' ';
+    displayOptions(text, DVEC(2, 13), false, true);
+}
+
+char Core::switchChar(char c, bool up)
+{
+    int charIndex = 0;
+
+    up = !up;
+    for (size_t i = 0; i < nameList.size(); i++)
+        if (nameList[i] == c)
+            charIndex = i;
+    if (charIndex == 0 && !up)
+        return nameList[nameList.size() - 1];
+    if (charIndex == nameList.size() - 1 && up)
+        return nameList[0];
+    if (up)
+        return nameList[charIndex + 1];
+    return nameList[charIndex - 1];
+}
+
+void Core::displayScores(void)
+{
+    std::list<std::pair<std::string, int>> scores = std::list<std::pair<std::string, int>>();
+    int i = 0;
+
+    for (auto &game : _games)
+        if (game.first == _currentGame)
+            scores = _score.getScores(game.first);
+    DISPLAY->setText("F4: Scores", DVEC(14, 11), DCOL(DEFAULT));
+    if (scores.empty())
+        DISPLAY->setText("No scores", DVEC(14, 13), DCOL(DEFAULT));
+    for (auto &score : scores)
+    {
+        if (i > 3)
+            break;
+        DISPLAY->setText(removeUnderScore(score.first) + ": " + std::to_string(score.second), DVEC(14, 11 + (i++ + 1) * 2), DCOL(DEFAULT));
+    }
+}
+
+std::string Core::removeUnderScore(std::string name)
+{
+    for (size_t i = 0; i < name.size(); i++)
+        if (name[i] == '_')
+            name[i] = ' ';
+    return name;
 }

@@ -19,7 +19,7 @@ class Ncurses : public Arcade::Displays::IDisplayModule {
 
         void init(void) override;
         void close(void) override;
-        std::map<Arcade::Displays::KeyType, int> getInputs(void) const override;
+        std::map<Arcade::Displays::KeyType, int> getInputs(void) override;
         void setMapSize(Arcade::Displays::Vector2i size) override;
         void clear(void) override;
         void updateTile(Arcade::Displays::Vector2i pos, Arcade::Displays::ISprite *sprite) override;
