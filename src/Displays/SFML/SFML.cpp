@@ -131,7 +131,6 @@ void SFML::displayGame(void)
             }
         }
     }
-    _lastTime = clock() - _lastTime;
     _window.display();
     usleep(10000);
 }
@@ -142,7 +141,11 @@ void SFML::setAnimationTime(float time)
 
 float SFML::getDeltaT(void)
 {
-    return ((float)_lastTime / CLOCKS_PER_SEC);
+    clock_t currentTime = clock();
+    float deltaTime = static_cast<float>(currentTime - _lastTime) / CLOCKS_PER_SEC;
+    _lastTime = currentTime;
+    std::cout << deltaTime << std::endl;
+    return deltaTime;
 }
 
 void SFML::setText(std::string text, Arcade::Displays::Vector2i pos, Arcade::Displays::Color color)

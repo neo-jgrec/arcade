@@ -156,7 +156,6 @@ void Ncurses::displayGame(void)
         attron(COLOR_PAIR(colorMap[color]));
         mvprintw(pos.y, pos.x * 3, str.c_str());
     }
-    _lastTime = clock() - _lastTime;
     refresh();
     usleep(10000);
 }
@@ -167,7 +166,10 @@ void Ncurses::setAnimationTime(float time)
 
 float Ncurses::getDeltaT(void)
 {
-    return ((float)_lastTime / CLOCKS_PER_SEC);
+    clock_t currentTime = clock();
+    float deltaTime = static_cast<float>(currentTime - _lastTime) / CLOCKS_PER_SEC;
+    _lastTime = currentTime;
+    return deltaTime;
 }
 
 void Ncurses::setText(std::string text, Arcade::Displays::Vector2i pos, Arcade::Displays::Color color)
