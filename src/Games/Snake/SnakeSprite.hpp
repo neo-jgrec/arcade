@@ -13,26 +13,23 @@
 namespace Arcade::Games {
     class SnakeSprite : public ISprite {
         public:
-            SnakeSprite();
-            ~SnakeSprite();
+            SnakeSprite() {};
+            ~SnakeSprite() {};
 
-            void setAscii(std::string ascii) { _ascii = ascii; }
-            std::string getAscii() { return _ascii; }
+            void setPath(std::string path) override { _path = path; }
+            std::string getPath() override { return _path; }
 
-            void setPath(std::string path) { _path = path; }
-            std::string getPath() { return _path; }
+            void setRotation(int rotation) override { _rotation = rotation; }
+            int getRotation(void) override { return _rotation; }
 
-            void setRotation(int rotation) { _rotation = rotation; }
-            int getRotation(void) { return _rotation; }
+            void setDirection(Vector2i direction) override { _direction = direction; }
+            Vector2i getDirection(void) override { return _direction; }
 
-            void setDirection(Vector2i direction) { _direction = direction; }
-            Vector2i getDirection(void) { return _direction; }
+            void setColor(Color color) override { _color = color; }
+            Color getColor(void) override { return _color; }
 
-            void setColor(Color color) { _color = color; }
-            Color getColor(void) { return _color; }
-
-            void setShape(Shape shape) { _shape = shape; }
-            Shape getShape(void) { return _shape; }
+            void setShape(Shape shape) override { _shape = shape; }
+            Shape getShape(void) override { return _shape; }
 
         private:
             std::string _ascii = "";

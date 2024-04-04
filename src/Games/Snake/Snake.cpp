@@ -14,17 +14,15 @@ using namespace Arcade::Games;
 Snake::Snake()
 {
     SnakeSprite *tile = new SnakeSprite();
-    tile->setAscii(" ");
+    std::cout << "SnakeSprite: " << tile << std::endl;
     tile->setColor(Color::GREEN);
     _textures.push_back(tile);
 
     SnakeSprite *head = new SnakeSprite();
-    head->setAscii("O");
     head->setColor(Color::GREEN);
     _textures.push_back(head);
 
     SnakeSprite *body = new SnakeSprite();
-    body->setAscii("o");
     body->setColor(Color::GREEN);
     _textures.push_back(body);
 }
@@ -121,8 +119,3 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
     return _player.getAlive();
 }
 
-extern "C" {
-    Arcade::Games::IGameModule *gameEntryPoint(void) {
-        return nullptr;
-    }
-}

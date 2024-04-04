@@ -17,22 +17,54 @@ namespace Arcade::Games {
             Snake();
             ~Snake();
 
-        void init(std::string args, size_t nb_args) override;
-        void close(void) override;
+            /**
+                 * @brief init the game
+                 * @return void
+                 */
+                void init(std::string args, size_t nb_args);
+                void close(void);
 
-        bool update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT) override;
+                /**
+                 * @brief update the game with inputs
+                 * @param inputs map of inputs
+                 * @return void
+                 */
+                bool update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT);
 
-        std::string getGameName(void) override { return _name; }
+                /**
+                 * @brief Get the name of the game
+                 * @return std::string
+                 */
+                std::string getGameName(void) { return _name; }
 
-        Vector2i getMapSize(void) override { return _mapSize; }
+                /**
+                 * @brief Get the size of the map
+                 * @return Vector2i
+                 */
+                Vector2i getMapSize(void) { return _mapSize; }
+                /**
+                * @brief Get the map of the game
+                * @return std::vector<std::string>
+                */
+                std::vector<std::vector<Arcade::Games::ISprite *>> getMap(void) { return _map; }
 
-        std::vector<std::vector<Arcade::Games::ISprite *>> getMap(void) override { return _map; }
+                /**
+                 * @brief Get the score of the game
+                 * @return std::string
+                 */
+                std::string getScore(void) { return std::to_string(_score); }
 
-        std::string getScore(void) override { return std::to_string(_score); }
+                /**
+                 * @brief Get the animation time of the game
+                 * @return float
+                 */
+                float getAnimationTime(void) { return _animationTime; }
 
-        float getAnimationTime(void) override { return _animationTime; }
-
-        std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void) override { return _texts; }
+                /**
+                 * @brief Get the texts of the game
+                 * @return std::vector<IText *>
+                 */
+                std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void) { return _texts; }
 
         protected:
         private:
@@ -51,6 +83,12 @@ namespace Arcade::Games {
             long int _score = 0;
             std::string _name = std::string("Snake");
     };
+}
+
+extern "C" {
+    Arcade::Games::IGameModule *gameEntryPoint(void) {
+        return new Arcade::Games::Snake();
+    }
 }
 
 #endif /* !SNAKE_HPP_ */
