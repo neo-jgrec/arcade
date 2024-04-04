@@ -15,6 +15,8 @@ static std::map<Arcade::Displays::Color, int> colorMap = {
     {Arcade::Displays::Color::BLUE, 5},
     {Arcade::Displays::Color::MAGENTA, 6},
     {Arcade::Displays::Color::CYAN, 7},
+    {Arcade::Displays::Color::GREEN, 8},
+    {Arcade::Displays::Color::BLACK, 9},
 };
 
 Ncurses::Ncurses() : _mapSize(0, 0)
@@ -44,6 +46,8 @@ void Ncurses::init(void)
     init_pair(5, COLOR_WHITE, COLOR_BLUE);
     init_pair(6, COLOR_WHITE, COLOR_MAGENTA);
     init_pair(7, COLOR_WHITE, COLOR_CYAN);
+    init_pair(8, COLOR_WHITE, COLOR_GREEN);
+    init_pair(9, COLOR_WHITE, COLOR_BLACK);
 
     _lastTime = clock();
 }
