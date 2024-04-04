@@ -119,16 +119,16 @@ void SFML::displayGame(void)
         }
         _window.draw(_text);
     }
-    // for (int y = 0; y < _mapSize.y; y++) {
-    //     for (int x = 0; x < _mapSize.x; x++) {
-    //         if (_map[y][x] != nullptr) {
-    //             _rect.setSize(sf::Vector2f(32, 32));
-    //             _rect.setPosition(x * 32, y * 32);
-    //             _rect.setFillColor(colorMap[_map[y][x]->getColor()]);
-    //             _window.draw(_rect);
-    //         }
-    //     }
-    // }
+    for (int y = 0; y < _mapSize.y; y++) {
+        for (int x = 0; x < _mapSize.x; x++) {
+            if (_map[y][x] != nullptr) {
+                _rect.setSize(sf::Vector2f(32, 32));
+                _rect.setPosition(x * 32, y * 32);
+                _rect.setFillColor(colorMap[_map[y][x]->getColor()]);
+                _window.draw(_rect);
+            }
+        }
+    }
     _window.display();
 }
 

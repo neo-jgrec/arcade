@@ -24,7 +24,7 @@ namespace Arcade::Games {
 
         _background->setAscii(" ");
         _background->setPath(std::string("gameAssets/solarfox/sprites/background.png"));
-        _background->setColor(Color::BLACK);
+        _background->setColor(Color::DEFAULT);
 
         _enemy->setAscii("E");
         _enemy->setPath(std::string("gameAssets/solarfox/sprites/enemy.png"));
