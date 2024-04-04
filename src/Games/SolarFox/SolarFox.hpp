@@ -13,6 +13,10 @@
     #include "Player.hpp"
     #include "SolarText.hpp"
 
+    #include <functional>
+    #include <tuple>
+    #include <vector>
+
     #define NEUTRAL 0
 
     #define UP -1
@@ -31,8 +35,17 @@
     #define ENEMY_LASER_TILE _textures[2]
     #define PLAYER_lASER_TILE _textures[3]
     #define WALL_TILE _textures[4]
-    #define W _textures[4]
+    #define I _textures[4]
+    #define _ _textures[10]
     #define FUZOR_TILE _textures[5]
+    #define CORNER_0_TILE _textures[6]
+    #define C0 _textures[6]
+    #define CORNER_90_TILE _textures[7]
+    #define C9 _textures[7]
+    #define CORNER_180_TILE _textures[8]
+    #define C18 _textures[8]
+    #define CORNER_270_TILE _textures[9]
+    #define C27 _textures[9]
     #define PLAYER_TILE _player.getSprite()
 
     #define BACKGROUND 1
@@ -42,7 +55,6 @@
     #define WALL 5
     #define FUZOR 6
     #define PLAYER 7
-
 
 namespace Arcade::Games {
 
@@ -108,10 +120,9 @@ namespace Arcade::Games {
 
                 /**
                  * @brief update the player
-                 * @param tile the tile where the player is headed to
                  * @return void
                  */
-                void updatePlayer(ISprite *tile);
+                void updatePlayer();
 
                 /**
                  * @brief update the map
@@ -138,13 +149,17 @@ namespace Arcade::Games {
             std::vector<std::vector<Arcade::Games::ISprite *>> _map;
             std::vector<IText *> _texts;
 
-            Vector2i _mapSize = Vector2i(9, 9);
+            Vector2i _mapSize = Vector2i(18, 18);
 
             Fuzors _fuzors;
             Player _player;
 
+            float _time = 0;
+
             long int _score = 0;
             std::string _name = std::string("SolarFox");
+
+            std::vector<std::tuple<Arcade::Games::KeyType, int, std::function<void()>>> _functs;
     };
 }
 

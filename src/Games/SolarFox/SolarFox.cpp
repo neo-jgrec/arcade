@@ -7,19 +7,20 @@
 
 #include "SolarFox.hpp"
 
-#include <functional>
-#include <fstream>
-
 namespace Arcade::Games {
 
     SolarFox::SolarFox()
     {
-        //std::cout << "\n--------SolarFox-------\n" << std::endl;
         SolarSprite *_background = new SolarSprite();
         SolarSprite *_enemy = new SolarSprite();
         SolarSprite *_enemyLaser = new SolarSprite();
         SolarSprite *_playerLaser = new SolarSprite();
-        SolarSprite *_wall = new SolarSprite();
+        SolarSprite *_wallVer = new SolarSprite();
+        SolarSprite *_wallHor = new SolarSprite();
+        SolarSprite *_corner_0 = new SolarSprite();
+        SolarSprite *_corner_90 = new SolarSprite();
+        SolarSprite *_corner_180 = new SolarSprite();
+        SolarSprite *_corner_270 = new SolarSprite();
         SolarSprite *_fuzor = new SolarSprite();
 
         _background->setAscii(" ");
@@ -40,9 +41,34 @@ namespace Arcade::Games {
         _playerLaser->setColor(Color::GREEN);
         _playerLaser->setShape(Shape::TRIANGLE);
 
-        _wall->setAscii("W");
-        _wall->setPath(std::string("gameAssets/solarfox/sprites/wall.png"));
-        _wall->setColor(Color::WHITE);
+        _wallVer->setAscii("W");
+        _wallVer->setPath(std::string("gameAssets/solarfox/sprites/wall.png"));
+        _wallVer->setColor(Color::WHITE);
+
+        _wallHor->setAscii("W");
+        _wallHor->setPath(std::string("gameAssets/solarfox/sprites/wall.png"));
+        _wallHor->setColor(Color::WHITE);
+        _wallHor->setRotation(90);
+
+        _corner_0->setAscii("W");
+        _corner_0->setPath(std::string("gameAssets/solarfox/sprites/corner.png"));
+        _corner_0->setColor(Color::WHITE);
+        _corner_0->setRotation(0);
+
+        _corner_90->setAscii("W");
+        _corner_90->setPath(std::string("gameAssets/solarfox/sprites/corner.png"));
+        _corner_90->setColor(Color::WHITE);
+        _corner_90->setRotation(90);
+
+        _corner_180->setAscii("W");
+        _corner_180->setPath(std::string("gameAssets/solarfox/sprites/corner.png"));
+        _corner_180->setColor(Color::WHITE);
+        _corner_180->setRotation(180);
+
+        _corner_270->setAscii("W");
+        _corner_270->setPath(std::string("gameAssets/solarfox/sprites/corner.png"));
+        _corner_270->setColor(Color::WHITE);
+        _corner_270->setRotation(270);
 
         _fuzor->setAscii("F");
         _fuzor->setPath(std::string("gameAssets/solarfox/sprites/fuzor.png"));
@@ -53,11 +79,22 @@ namespace Arcade::Games {
         _textures.push_back(_enemy);
         _textures.push_back(_enemyLaser);
         _textures.push_back(_playerLaser);
-        _textures.push_back(_wall);
+        _textures.push_back(_wallVer);
         _textures.push_back(_fuzor);
+        _textures.push_back(_corner_0);
+        _textures.push_back(_corner_90);
+        _textures.push_back(_corner_180);
+        _textures.push_back(_corner_270);
+        _textures.push_back(_wallHor);
+
+
+        _functs.emplace_back(KeyType::RESTART, 1, [this](){ return restart(); });
+        _functs.emplace_back(KeyType::VER, UP, [this](){ return moveUP(); });
+        _functs.emplace_back(KeyType::VER, DOWN, [this](){ return moveDown(); });
+        _functs.emplace_back(KeyType::HOR, RIGHT, [this](){ return moveRight(); });
+        _functs.emplace_back(KeyType::HOR, LEFT, [this](){ return moveLeft(); });
 
         loadRack();
-        //std::cout << "\n--------\\SolarFox-------\n" << std::endl;
     }
 
     SolarFox::~SolarFox()
@@ -68,40 +105,56 @@ namespace Arcade::Games {
         }
     }
 
-    void SolarFox::init(std::string oui, size_t nb_args)
+    void SolarFox::init(std::string, size_t nb_args)
     {
-        //std::cout << "\n--------\\init-------\n" << std::endl;
         if (nb_args != 0)
         {
             std::cerr << "Solar Fox: init: Wrong number of arguments, expected 0 args" << std::endl;
             exit(84);
         }
-        //std::cout << "\n--------\\init-------\n" << std::endl;
+
+        _player.setDirection(Vector2i(1, 0));
     }
 
     void SolarFox::close(void)
     {
-        //std::cout << "\n--------close-------\n" << std::endl;
-        //std::cout << "\n--------\\close-------\n" << std::endl;
     }
 
     void SolarFox::loadRack()
     {
+        _map.clear();
         _map = std::vector<std::vector<Arcade::Games::ISprite *>>{
-            {W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W, W},
-            {W, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, W},
-            {W, B, W, W, W, W, W, W, W, W, W, W, W, W, W, W, B, W},
-            {W, B, W, B, B, B, B, B, B, B, B, B, B, B, B, W, B, W},
+            {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+            {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+            {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+            {B, B, B, C0, _, _, _, _, _, _, _, _, _, _, C9, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
+            {B, B, B, C27, _, _, _, _, _, _, _, _, _, _, C18, B, B, B},
+            {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+            {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
+            {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
         };
     }
 
 
-    void SolarFox::updatePlayer(ISprite *tile)
+    void SolarFox::updatePlayer()
     {
-        if (tile == WALL_TILE) {
-            _player.setDirection(Vector2i(NEUTRAL, NEUTRAL));
+        Vector2i pDir = _player.getDirection();
+        Vector2i pPos = _player.getPosition();
+        ISprite *tile = _map[pDir.y + pPos.y][pDir.x + pPos.x];
+
+        if (tile == WALL_TILE ||  tile == _) {
             _player.loseOneLife();
-            _player.setPosition(Vector2i(5, 5));
+            _player.setPosition(Vector2i(8, 8));
         } else {
             _player.move();
         }
@@ -109,15 +162,16 @@ namespace Arcade::Games {
 
     Vector2i SolarFox::getMapSize(void)
     {
-        //std::cout << "\n--------getMapSize-------\n" << std::endl;
-        //std::cout << "\n--------\\getMapSize-------\n" << std::endl;
         return _mapSize;
     }
 
     void SolarFox::updateMap()
     {
-        //std::cout << "\n--------updateMap-------\n" << std::endl;
-        //std::cout << "\n--------\\updateMap-------\n" << std::endl;
+        int x = _player.getPosition().x;
+        int y = _player.getPosition().y;
+
+        loadRack();
+        _map[y][x] = PLAYER_TILE;
     }
 
     void SolarFox::moveUP(void)
@@ -158,63 +212,52 @@ namespace Arcade::Games {
 
     void SolarFox::restart(void)
     {
-        _player.setPosition(Vector2i(5, 5));
+        _player.setPosition(Vector2i(8, 8));
         _player.setDirection(Vector2i(1, 0));
         _player.setLives(3);
         _player.setVelocity(1);
         _score = 0;
         _rackIndex = 1;
         _pause = false;
-        _map.clear();
         loadRack();
     }
 
-    // std::vector<std::vector<std::pair<Arcade::Games::KeyType, int>, std::function<void>>> _functs = {
-    //     {
-    //         {(KeyType::RESTART, 1), restart},
-    //         {(KeyType::VER, UP), moveUP},
-    //         {(KeyType::VER, DOWN), moveDown},
-    //         {(KeyType::HOR, RIGHT), moveRight},
-    //         {(KeyType::HOR, LEFT), moveLeft}
-    //     }
-    // };
-
     bool SolarFox::update(std::map<KeyType, int> inputs, float deltaT)
     {
-        //std::cout << "\n\n--------Update-------\n\n" << std::endl;
-        // KeyType vertical = KeyType::VER;
-        // KeyType horizontal = KeyType::HOR;
-        // std::vector<Vector2i> fuzors = _fuzors.getFuzors();
-        // SolarSprite *playerSprite = _player.getSprite();
-        // Vector2i direction = _player.getDirection();
+        KeyType vertical = KeyType::VER;
+        KeyType horizontal = KeyType::HOR;
+        std::vector<Vector2i> fuzors = _fuzors.getFuzors();
+        SolarSprite *playerSprite = _player.getSprite();
+        Vector2i direction = _player.getDirection();
 
-        // if (inputs.at(KeyType::ACTION2) && _player.getVelocity() == 1) {
-        //     _player.setVelocity(2);
-        // } else if (!inputs.at(KeyType::ACTION2) && _player.getVelocity() == 2) {
-        //     _player.setVelocity(1);
-        // }
 
-        // if (deltaT > 5) {
-        //     updatePlayer(_map[_player.getPosition().y + _player.getDirection().y][_player.getPosition().x + _player.getDirection().x]);
-        //     updateMap();
-        // }
+        for (auto funct : _functs) {
+            if (inputs.at(std::get<0>(funct)) == std::get<1>(funct)) {
+                std::get<2>(funct)();
+            }
+        }
 
-        //std::cout << "\n--------\\Update-------\n" << std::endl;
+        _time += deltaT;
+
+        if (_time > 10) {
+            _time = 0;
+            std::cout << "deltaT: " << deltaT << std::endl;
+            updatePlayer();
+        }
+
         return true;
     }
 
     std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> SolarFox::getTexts(void)
     {
-        //std::cout << "\n\n--------GetTexts-------\n\n" << std::endl;
         std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> texts;
-        std::string score = std::to_string(_score);
-        std::string lives = std::to_string(_player.getLives());
-        Vector2i scorePos = Vector2i(0, 0);
-        Vector2i livesPos = Vector2i(0, 1);
+        std::string score = std::string("score: ") + std::to_string(_score);
+        std::string lives = std::string("lives: ") + std::to_string(_player.getLives());
+        Vector2i scorePos = Vector2i(4, 0);
+        Vector2i livesPos = Vector2i(4, 1);
 
         texts.push_back(std::make_tuple(score, scorePos, Color::WHITE));
         texts.push_back(std::make_tuple(lives, livesPos, Color::WHITE));
-        //std::cout << "\n\n--------\\GetTexts-------\n\n" << std::endl;
         return texts;
     }
 }
