@@ -27,6 +27,8 @@ SFML::SFML() : _mapSize(0, 0)
     _text.setCharacterSize(24);
     _text.setFillColor(sf::Color::White);
     _text.setStyle(sf::Text::Bold);
+
+    _lastTime = clock();
 }
 
 SFML::~SFML()
@@ -129,7 +131,9 @@ void SFML::displayGame(void)
             }
         }
     }
+    _lastTime = clock() - _lastTime;
     _window.display();
+    usleep(10000);
 }
 
 void SFML::setAnimationTime(float time)
