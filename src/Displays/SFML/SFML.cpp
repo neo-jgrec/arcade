@@ -21,9 +21,8 @@ static std::map<Arcade::Displays::Color,sf::Color> colorMap = {
 
 SFML::SFML() : _mapSize(0, 0)
 {
-    if (!_font.loadFromFile("gameAssets/ncurses/monogram.ttf")) {
+    if (!_font.loadFromFile("gameAssets/ncurses/monogram.ttf"))
         throw std::runtime_error("Could not load font");
-    }
     _text.setFont(_font);
     _text.setString("Hello, SFML!");
     _text.setCharacterSize(24);
