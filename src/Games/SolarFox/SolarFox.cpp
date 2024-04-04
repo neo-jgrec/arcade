@@ -25,7 +25,7 @@ namespace Arcade::Games {
 
         _background->setAscii(" ");
         _background->setPath(std::string("gameAssets/solarfox/sprites/background.png"));
-        _background->setColor(Color::BLACK);
+        _background->setColor(Color::DEFAULT);
 
         _enemy->setAscii("E");
         _enemy->setPath(std::string("gameAssets/solarfox/sprites/enemy.png"));
@@ -256,8 +256,8 @@ namespace Arcade::Games {
         Vector2i scorePos = Vector2i(4, 0);
         Vector2i livesPos = Vector2i(4, 1);
 
-        texts.push_back(std::make_tuple(score, scorePos, Color::WHITE));
-        texts.push_back(std::make_tuple(lives, livesPos, Color::WHITE));
+        texts.push_back(std::make_tuple(score, scorePos, Color::DEFAULT));
+        texts.push_back(std::make_tuple(lives, livesPos, Color::DEFAULT));
         return texts;
     }
 }
