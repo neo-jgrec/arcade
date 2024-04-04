@@ -35,7 +35,7 @@ SFML::~SFML()
 
 void SFML::init(void)
 {
-   _window.create(sf::VideoMode(800, 600), "Arcade");
+   _window.create(sf::VideoMode(800, 600), "Arcade", sf::Style::Titlebar | sf::Style::Close);
     _window.setFramerateLimit(60);
 }
 
@@ -51,7 +51,9 @@ std::map<Arcade::Displays::KeyType, int> SFML::getInputs(void)
     sf::Event event;
     while (_window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
+            std::cout << "Window closed" << std::endl;
             inputs[Arcade::Displays::KeyType::QUIT] = 1;
+            return inputs;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && _saveInputs[sf::Keyboard::Up] == 0)
@@ -67,12 +69,15 @@ std::map<Arcade::Displays::KeyType, int> SFML::getInputs(void)
         inputs[Arcade::Displays::KeyType::HOR] += 1;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) && _saveInputs[sf::Keyboard::Escape] == 0)
         inputs[Arcade::Displays::KeyType::ESC] = 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && _saveInputs[sf::Keyboard::A] == 0)
+        inputs[Arcade::Displays::KeyType::ACTION1] = 1;
     _saveInputs = {
         {sf::Keyboard::Up, sf::Keyboard::isKeyPressed(sf::Keyboard::Up)},
         {sf::Keyboard::Down, sf::Keyboard::isKeyPressed(sf::Keyboard::Down)},
         {sf::Keyboard::Left, sf::Keyboard::isKeyPressed(sf::Keyboard::Left)},
         {sf::Keyboard::Right, sf::Keyboard::isKeyPressed(sf::Keyboard::Right)},
         {sf::Keyboard::Escape, sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)},
+        {sf::Keyboard::A, sf::Keyboard::isKeyPressed(sf::Keyboard::A)},
     };
     return inputs;
 }
@@ -87,6 +92,7 @@ void SFML::setMapSize(Arcade::Displays::Vector2i size)
 void SFML::clear(void)
 {
     _texts.clear();
+    _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(_mapSize.y, std::vector<Arcade::Displays::ISprite *>(_mapSize.x, nullptr));
 
 }
 
@@ -113,6 +119,16 @@ void SFML::displayGame(void)
         }
         _window.draw(_text);
     }
+    // for (int y = 0; y < _mapSize.y; y++) {
+    //     for (int x = 0; x < _mapSize.x; x++) {
+    //         if (_map[y][x] != nullptr) {
+    //             _rect.setSize(sf::Vector2f(32, 32));
+    //             _rect.setPosition(x * 32, y * 32);
+    //             _rect.setFillColor(colorMap[_map[y][x]->getColor()]);
+    //             _window.draw(_rect);
+    //         }
+    //     }
+    // }
     _window.display();
 }
 

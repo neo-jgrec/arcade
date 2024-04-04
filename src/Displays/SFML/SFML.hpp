@@ -42,6 +42,10 @@ class SFML : public Arcade::Displays::IDisplayModule {
         sf::RectangleShape _textBackground;
         std::map<sf::Keyboard::Key, int> _saveInputs;
 
+        sf::RectangleShape _rect;
+        sf::CircleShape _circle;
+        sf::ConvexShape _triangle;
+
 };
 
 extern "C" {

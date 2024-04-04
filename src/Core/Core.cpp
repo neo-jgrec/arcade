@@ -136,6 +136,10 @@ void Core::Loop(void)
     {
         DISPLAY->clear();
         getInputs();
+        if (_inputs[Arcade::Games::KeyType::QUIT] == 1) {
+            running = false;
+            break;
+        }
         _deltaT = DISPLAY->getDeltaT();
         if (_inGame) {
             GAME->update(_inputs, _deltaT);
@@ -147,6 +151,9 @@ void Core::Loop(void)
             setTexts();
             DISPLAY->displayGame();
         } else {
+            if (_inputs[Arcade::Games::KeyType::ESC] == 1) {
+                running = false;
+            }
             displayMenu();
         }
     }
@@ -187,6 +194,7 @@ void Core::getInputs(void)
 {
     _inputs.clear();
     std::map<Arcade::Displays::KeyType, int> displayInputs = _displays[_currentLib]->getInputs();
+
     for (auto &input : keyMap)
     {
         _inputs[input.second] = 0;
@@ -267,8 +275,7 @@ void Core::displayMenu(void)
         displayOptions(display.first, DVEC(16, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
     displayOptions("F3: Name", DVEC(2, 11), _module == 2, false);
     displayOptions("", DVEC(2, 13), false, _module == 2);
-
-    _displays[_currentLib]->displayGame();
+    DISPLAY->displayGame();
 }
 
 void Core::displayOptions(std::string name, Arcade::Displays::Vector2i pos, bool selected, bool hover)
