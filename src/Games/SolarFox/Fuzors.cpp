@@ -17,16 +17,18 @@ namespace Arcade::Games {
     {
     }
 
-    void Fuzors::removeFuzorAt(int index)
+    void Fuzors::removeFuzor(Vector2i fuzor)
     {
-        _fuzors.erase(_fuzors.begin() + index);
+        for (size_t i = 0; i < _fuzors.size(); i++) {
+            if (_fuzors[i] == fuzor) {
+                _fuzors.erase(_fuzors.begin() + i);
+                return;
+            }
+        }
     }
 
     void Fuzors::setValue(unsigned int newValue)
     {
-        if (newValue < 0)
-            throw std::invalid_argument("Fuzor value cannot be negative");
-        else
-            _value = newValue;
+        _value = newValue;
     }
 };

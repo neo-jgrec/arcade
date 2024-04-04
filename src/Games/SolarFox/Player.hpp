@@ -8,40 +8,36 @@
 #ifndef PLAYER_HPP_
 #define PLAYER_HPP_
 
-#include "SolarSprite.hpp"
+#include "Entity.hpp"
+#include "Macro.hpp"
 
 namespace Arcade::Games {
 
-    class Player {
+    class Player : public Entity {
         public:
             Player();
             ~Player();
 
-            Vector2i getPosition(void) const { return _position; }
-            void setPosition(Vector2i newPosition);
+            void setTurbo(bool newTurbo) { _turbo = newTurbo; }
+            bool getTurbo(void) const { return _turbo; }
 
-            SolarSprite *getSprite(void) const { return _sprite; }
+            void setLives(int newLives) { lives = newLives; }
+            int getLives(void) const { return lives; }
 
-            u_int16_t getLives(void) const { return _lives; }
-            void loseOneLife(void) { _lives = _lives <= 0 ? 0 : _lives - 1; }
-            void setLives(u_int16_t newLives) { _lives = newLives; }
+            void headUp(void);
+            void headDown(void);
+            void headLeft(void);
+            void headRight(void);
 
-            u_int16_t getVelocity(void) const { return _velocity; }
-            void setVelocity(u_int16_t newVelocity);
+            void update(float elapsedTime);
+            void shoot(void);
 
-            Vector2i getDirection(void) const { return _direction; }
-            void setDirection(Vector2i newDirection) { _direction = newDirection; }
-
-            void move() { _position = _position + _direction; }
-
+        protected:
         private:
-            Vector2i _position = Vector2i(5, 5);
-            Vector2i _direction = Vector2i(0, 0);
-            SolarSprite *_sprite = new SolarSprite();
-            u_int16_t _lives = 3;
-            u_int16_t _velocity = 1;
+            float _moveCooldown = 0.0f;
+            bool _turbo = false;
+            int lives = 3;
     };
-
 };
 
 #endif /* !PLAYER_HPP_ */

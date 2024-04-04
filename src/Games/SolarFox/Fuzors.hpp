@@ -18,7 +18,7 @@ namespace Arcade::Games {
             ~Fuzors();
 
             void addFuzor(Vector2i position) { _fuzors.push_back(position); }
-            void removeFuzorAt(int index);
+            void removeFuzor(Vector2i fuzor);
             void clearFuzors(void) { _fuzors.clear(); }
             std::vector<Vector2i> getFuzors(void) const { return _fuzors; }
 

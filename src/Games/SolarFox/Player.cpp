@@ -9,33 +9,64 @@
 
 namespace Arcade::Games {
 
+
     Player::Player()
     {
-        _sprite->setAscii("P");
-        _sprite->setPath(std::string("gameAssets/solarfox/sprites/player.png"));
-        _sprite->setColor(Color::BLUE);
-        _sprite->setShape(Shape::TRIANGLE);
     }
 
     Player::~Player()
     {
-        delete _sprite;
     }
 
-    void Player::setPosition(Vector2i newPosition)
+    void Player::headUp(void)
     {
-        if ((newPosition.x < 0 && newPosition.x > 9) || (newPosition.y < 0 && newPosition.y > 9))
-            throw std::invalid_argument("Position is out of bounds");
-        else
-            _position = newPosition;
+        if (_direction.y == DOWN)
+            return;
+        _direction = Vector2i(NEUTRAL, UP);
+        _sprite->setRotation(ROTATION_UP);
+        _sprite->setDirection(_direction);
     }
 
-    void Player::setVelocity(u_int16_t newVelocity)
+    void Player::headDown(void)
     {
-        int intCast = newVelocity;
-        if (intCast < 0)
-            throw std::invalid_argument("Velocity cannot be negative");
-        else
-            _velocity = newVelocity;
+        if (_direction.y == UP)
+            return;
+        _direction = Vector2i(NEUTRAL, DOWN);
+        _sprite->setRotation(ROTATION_DOWN);
+        _sprite->setDirection(_direction);
     }
-};
+
+    void Player::headRight(void)
+    {
+        if (_direction.x == LEFT)
+            return;
+        _direction = Vector2i(RIGHT, NEUTRAL);
+        _sprite->setRotation(ROTATION_RIGHT);
+        _sprite->setDirection(_direction);
+    }
+
+    void Player::headLeft(void)
+    {
+        if (_direction.x == RIGHT)
+            return;
+        _direction = Vector2i(LEFT, NEUTRAL);
+        _sprite->setRotation(ROTATION_LEFT);
+        _sprite->setDirection(_direction);
+    }
+
+    void shoot(void)
+    {
+        return;
+    }
+
+
+    void Player::update(float elapsedTime)
+    {
+        if (_moveCooldown > 0)
+            _moveCooldown -= elapsedTime * (_turbo ? 2 : 1);
+        else {
+            _moveCooldown = 15.0f;
+            move();
+        }
+    }
+}
