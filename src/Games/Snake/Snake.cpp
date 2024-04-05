@@ -14,18 +14,26 @@ using namespace Arcade::Games;
 
 Snake::Snake()
 {
-    SnakeSprite *tile = new SnakeSprite();
-    std::cout << "SnakeSprite: " << tile << std::endl;
-    tile->setColor(Color::WHITE);
-    _textures.push_back(tile);
+    SnakeSprite *cyanTile = new SnakeSprite();
+    std::cout << "SnakeSprite: " << cyanTile << std::endl;
+    cyanTile->setColor(Color::CYAN);
+    _textures.push_back(cyanTile);
+
+    SnakeSprite *whiteTile = new SnakeSprite();
+    whiteTile->setColor(Color::WHITE);
+    _textures.push_back(whiteTile);
 
     SnakeSprite *head = new SnakeSprite();
-    head->setColor(Color::YELLOW);
+    head->setColor(Color::BLUE);
     _textures.push_back(head);
 
     SnakeSprite *body = new SnakeSprite();
-    body->setColor(Color::BLUE);
+    body->setColor(Color::MAGENTA);
     _textures.push_back(body);
+
+    SnakeSprite *apple = new SnakeSprite();
+    apple->setColor(Color::RED);
+    _textures.push_back(apple);
 }
 
 Snake::~Snake()
@@ -50,28 +58,6 @@ void Snake::init(std::string args, size_t nb_args)
     _player.setPosBody(bodyPositions);
     _player.setSpeed(0.1);
     _player.setAlive(true);
-
-    for (int y = 0; y < _mapSize.y; y++) {
-        std::vector<ISprite *> line;
-        for (int x = 0; x < _mapSize.x; x++) {
-            if (x == _player.getPosHead().x && y == _player.getPosHead().y) {
-                line.push_back(_textures[1]);
-            } else {
-                bool isBody = false;
-                for (auto &pos : _player.getPosBody()) {
-                    if (x == pos.x && y == pos.y) {
-                        line.push_back(_textures[2]);
-                        isBody = true;
-                        break;
-                    }
-                }
-                if (!isBody) {
-                    line.push_back(_textures[0]);
-                }
-            }
-        }
-        _map.push_back(line);
-    }
 }
 
 void Snake::close(void)
@@ -111,18 +97,22 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
     for (int y = 0; y < _mapSize.y; y++) {
         for (int x = 0; x < _mapSize.x; x++) {
             if (x == _player.getPosHead().x && y == _player.getPosHead().y) {
-                _map[y][x] = _textures[1];
+                _map[y][x] = _textures[2];
             } else {
                 bool isBody = false;
                 for (auto &pos : _player.getPosBody()) {
                     if (x == pos.x && y == pos.y) {
-                        _map[y][x] = _textures[2];
+                        _map[y][x] = _textures[3];
                         isBody = true;
                         break;
                     }
                 }
                 if (!isBody) {
-                    _map[y][x] = _textures[0];
+                    if ((x + y) % 2 == 0) {
+                        _map[y][x] = _textures[0];
+                    } else {
+                        _map[y][x] = _textures[1];
+                    }
                 }
             }
         }
@@ -130,4 +120,3 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
 
     return _player.getAlive();
 }
-
