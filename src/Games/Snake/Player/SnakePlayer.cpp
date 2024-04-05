@@ -106,22 +106,35 @@ void SnakePlayer::translatePlayerPositionToPositionInCircularMap(std::vector<std
 void SnakePlayer::processUserMovementInput(std::map<Arcade::Games::KeyType, int> inputs)
 {
     std::map<KeyType, std::function<void(void)>> keyToFunctionMap = {
-        {KeyType::VER, [this, &inputs]() {
-            if (inputs[KeyType::VER] == -1) {
-                _direction = UP;
-                _rotation = ROTATION_UP;
-            } else if (inputs[KeyType::VER] == 1) {
-                _direction = DOWN;
-                _rotation = ROTATION_DOWN;
-            }
-        }},
         {KeyType::HOR, [this, &inputs]() {
             if (inputs[KeyType::HOR] == 1) {
-                _direction = RIGHT;
-                _rotation = ROTATION_RIGHT;
+                if (_rotation == ROTATION_UP) {
+                    _direction = RIGHT;
+                    _rotation = ROTATION_RIGHT;
+                } else if (_rotation == ROTATION_DOWN) {
+                    _direction = LEFT;
+                    _rotation = ROTATION_LEFT;
+                } else if (_rotation == ROTATION_RIGHT) {
+                    _direction = DOWN;
+                    _rotation = ROTATION_DOWN;
+                } else if (_rotation == ROTATION_LEFT) {
+                    _direction = UP;
+                    _rotation = ROTATION_UP;
+                }
             } else if (inputs[KeyType::HOR] == -1) {
-                _direction = LEFT;
-                _rotation = ROTATION_LEFT;
+                if (_rotation == ROTATION_UP) {
+                    _direction = LEFT;
+                    _rotation = ROTATION_LEFT;
+                } else if (_rotation == ROTATION_DOWN) {
+                    _direction = RIGHT;
+                    _rotation = ROTATION_RIGHT;
+                } else if (_rotation == ROTATION_RIGHT) {
+                    _direction = UP;
+                    _rotation = ROTATION_UP;
+                } else if (_rotation == ROTATION_LEFT) {
+                    _direction = DOWN;
+                    _rotation = ROTATION_DOWN;
+                }
             }
         }}
     };
