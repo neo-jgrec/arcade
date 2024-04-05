@@ -77,10 +77,13 @@ void Snake::init(std::string args, size_t nb_args)
     _applesPos.push_back(Vector2i(std::rand() % _mapSize.x, std::rand() % _mapSize.y));
     _map[_applesPos[0].y][_applesPos[0].x] = _textures[4];
     _appleOnMap++;
+
+    _score = 0;
 }
 
 void Snake::close(void)
 {
+    _score = 0;
     _map.clear();
     _applesPos.clear();
     _appleOnMap = 0;
