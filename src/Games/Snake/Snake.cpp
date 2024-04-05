@@ -15,15 +15,15 @@ Snake::Snake()
 {
     SnakeSprite *tile = new SnakeSprite();
     std::cout << "SnakeSprite: " << tile << std::endl;
-    tile->setColor(Color::GREEN);
+    tile->setColor(Color::WHITE);
     _textures.push_back(tile);
 
     SnakeSprite *head = new SnakeSprite();
-    head->setColor(Color::GREEN);
+    head->setColor(Color::YELLOW);
     _textures.push_back(head);
 
     SnakeSprite *body = new SnakeSprite();
-    body->setColor(Color::GREEN);
+    body->setColor(Color::BLUE);
     _textures.push_back(body);
 }
 
