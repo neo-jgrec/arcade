@@ -19,15 +19,22 @@ SnakePlayer::~SnakePlayer()
 {
 }
 
+void SnakePlayer::updateBodyPositions() {
+    for (int i = _posBody.size() - 1; i > 0; --i) {
+        _posBody[i] = _posBody[i - 1];
+    }
+    _posBody[0] = _posHead;
+}
+
 void SnakePlayer::goUp(void)
 {
     _direction = UP;
     _rotation = ROTATION_UP;
 
+    Vector2i prevHeadPos = _posHead;
     _posHead = Vector2i(_posHead.x, _posHead.y - 1);
-    for (size_t i = 0; i < _posBody.size(); i++) {
-        _posBody[i] = Vector2i(_posBody[i].x, _posBody[i].y - 1);
-    }
+    updateBodyPositions();
+    _posBody[0] = prevHeadPos;
 }
 
 void SnakePlayer::goDown(void)
@@ -35,10 +42,10 @@ void SnakePlayer::goDown(void)
     _direction = DOWN;
     _rotation = ROTATION_DOWN;
 
+    Vector2i prevHeadPos = _posHead;
     _posHead = Vector2i(_posHead.x, _posHead.y + 1);
-    for (size_t i = 0; i < _posBody.size(); i++) {
-        _posBody[i] = Vector2i(_posBody[i].x, _posBody[i].y + 1);
-    }
+    updateBodyPositions();
+    _posBody[0] = prevHeadPos;
 }
 
 void SnakePlayer::goLeft(void)
@@ -46,10 +53,10 @@ void SnakePlayer::goLeft(void)
     _direction = LEFT;
     _rotation = ROTATION_LEFT;
 
+    Vector2i prevHeadPos = _posHead;
     _posHead = Vector2i(_posHead.x - 1, _posHead.y);
-    for (size_t i = 0; i < _posBody.size(); i++) {
-        _posBody[i] = Vector2i(_posBody[i].x - 1, _posBody[i].y);
-    }
+    updateBodyPositions();
+    _posBody[0] = prevHeadPos;
 }
 
 void SnakePlayer::goRight(void)
@@ -57,11 +64,12 @@ void SnakePlayer::goRight(void)
     _direction = RIGHT;
     _rotation = ROTATION_RIGHT;
 
+    Vector2i prevHeadPos = _posHead;
     _posHead = Vector2i(_posHead.x + 1, _posHead.y);
-    for (size_t i = 0; i < _posBody.size(); i++) {
-        _posBody[i] = Vector2i(_posBody[i].x + 1, _posBody[i].y);
-    }
+    updateBodyPositions();
+    _posBody[0] = prevHeadPos;
 }
+
 
 void SnakePlayer::processUserMovementInput(std::map<Arcade::Games::KeyType, int> inputs)
 {

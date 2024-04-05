@@ -53,6 +53,7 @@ namespace Arcade::Games {
             int getLength() { return _length; }
 
             void processUserMovementInput(std::map<Arcade::Games::KeyType, int> inputs);
+            void updateBodyPositions(void);
 
         protected:
             void goUp(void);

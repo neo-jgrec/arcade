@@ -39,11 +39,14 @@ void Snake::init(std::string args, size_t nb_args)
     (void)args;
     (void)nb_args;
 
-    _player.setPosHead(Vector2i(_mapSize.x / 2, _mapSize.y / 2));
     _player.setDirection(ROTATION_UP);
     _player.setLength(3);
-    _player.setPosBody({Vector2i(_player.getPosHead().x, _player.getPosHead().y + 1),
-                         Vector2i(_player.getPosHead().x, _player.getPosHead().y + 2)});
+    _player.setPosHead(Vector2i(_mapSize.x / 2, _mapSize.y / 2));
+    std::vector<Vector2i> bodyPositions;
+    for (int i = 0; i < _player.getLength(); i++) {
+        bodyPositions.push_back(Vector2i(_mapSize.x / 2, _mapSize.y / 2 + i + 1));
+    }
+    _player.setPosBody(bodyPositions);
     _player.setSpeed(0.1);
     _player.setAlive(true);
 
