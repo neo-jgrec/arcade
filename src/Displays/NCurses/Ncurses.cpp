@@ -79,14 +79,24 @@ std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void)
                 inputs[Arcade::Displays::KeyType::HOR] -= 1;
             if (keys[i] == KEY_RIGHT)
                 inputs[Arcade::Displays::KeyType::HOR] += 1;
-            // std::cout << keys[i] << std::endl;
-            if (keys[i] == 97) {
+            if (keys[i] == 97)
                 inputs[Arcade::Displays::KeyType::ACTION1] = 1;
-                std::cout << "ACTION1" << std::endl;
-            }
+            if (keys[i] == 122)
+                inputs[Arcade::Displays::KeyType::ACTION2] = 1;
+            if (keys[i] == 101)
+                inputs[Arcade::Displays::KeyType::ACTION3] = 1;
+            if (keys[i] == 114)
+                inputs[Arcade::Displays::KeyType::ACTION4] = 1;
+            if (keys[i] == KEY_F(1))
+                inputs[Arcade::Displays::KeyType::NEXT_LIB] = 1;
+            if (keys[i] == KEY_F(2))
+                inputs[Arcade::Displays::KeyType::PREV_LIB] = 1;
+            if (keys[i] == KEY_F(3))
+                inputs[Arcade::Displays::KeyType::RESTART] = 1;
+            if (keys[i] == KEY_F(4))
+                inputs[Arcade::Displays::KeyType::QUIT] = 1;
         }
     }
-                // inputs[Arcade::Displays::KeyType::ESC] = 1;
     return inputs;
 }
 
