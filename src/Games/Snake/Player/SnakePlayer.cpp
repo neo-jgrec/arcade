@@ -8,6 +8,7 @@
 #include "SnakePlayer.hpp"
 #include <functional>
 #include <tuple>
+#include <vector>
 
 using namespace Arcade::Games;
 
@@ -157,14 +158,15 @@ void SnakePlayer::addBody(void)
     _length++;
 }
 
-void SnakePlayer::handleCollisionWithApple(std::vector<Vector2i> &applesPos, int &appleOnMap, long int &score)
+void SnakePlayer::handleCollisionWithApple(std::vector<Vector2i> &applesPos, long int &score, std::vector<std::vector<Arcade::Games::ISprite *>> &map)
 {
     for (unsigned long i = 0; i < applesPos.size(); ++i) {
         if (_posHead == applesPos[i]) {
             applesPos.erase(applesPos.begin() + i);
-            appleOnMap--;
             score++;
             addBody();
+            applesPos.push_back(Vector2i(std::rand() % map.size(), std::rand() % map[0].size()));
+            map[applesPos[applesPos.size() - 1].y][applesPos[applesPos.size() - 1].x] = nullptr;
             break;
         }
     }

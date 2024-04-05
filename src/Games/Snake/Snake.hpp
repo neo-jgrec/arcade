@@ -10,7 +10,6 @@
 
     #include "../IGameModule.hpp"
     #include "Player/SnakePlayer.hpp"
-#include <cmath>
 
 namespace Arcade::Games {
     class Snake : public IGameModule {

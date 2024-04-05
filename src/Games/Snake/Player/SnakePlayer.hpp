@@ -59,8 +59,7 @@ namespace Arcade::Games {
 
             void translatePlayerPositionToPositionInCircularMap(std::vector<std::vector<Arcade::Games::ISprite *>> &_map);
 
-            void handleCollisionWithApple(std::vector<Vector2i> &applesPos, int &appleOnMap, long int &score);
-
+            void handleCollisionWithApple(std::vector<Vector2i> &applesPos, long int &score, std::vector<std::vector<Arcade::Games::ISprite *>> &map);
             void handlePlayerOverlapping(void);
 
         protected:
