@@ -10,6 +10,7 @@
 
     #include "../IGameModule.hpp"
     #include "Player/SnakePlayer.hpp"
+#include <cmath>
 
 namespace Arcade::Games {
     class Snake : public IGameModule {
@@ -66,6 +67,8 @@ namespace Arcade::Games {
                  */
                 std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void) { return _texts; }
 
+                void spawnApple(float deltaT);
+
         protected:
         private:
             int _rackIndex = 0;
@@ -82,6 +85,11 @@ namespace Arcade::Games {
 
             long int _score = 0;
             std::string _name = std::string("Snake");
+
+            int _appleOnMap = 0;
+            std::vector<Vector2i> _applesPos;
+            double _appleSpawnCooldown = 0;
+            double _appleSpawnRate = 1.0f;
     };
 }
 

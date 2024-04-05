@@ -8,6 +8,7 @@
 #include "Snake.hpp"
 #include "Player/SnakePlayer.hpp"
 #include "SnakeSprite.hpp"
+#include <cstdlib>
 #include <iostream>
 
 using namespace Arcade::Games;
@@ -48,6 +49,8 @@ void Snake::init(std::string args, size_t nb_args)
     (void)args;
     (void)nb_args;
 
+    std::srand(time(nullptr));
+
     _player.setDirection(ROTATION_UP);
     _player.setLength(3);
     _player.setPosHead(Vector2i(_mapSize.x / 2, _mapSize.y / 2));
@@ -60,29 +63,11 @@ void Snake::init(std::string args, size_t nb_args)
     _player.setAlive(true);
 
     for (int y = 0; y < _mapSize.y; y++) {
-        std::vector<ISprite *> line;
+        std::vector<Arcade::Games::ISprite *> row;
         for (int x = 0; x < _mapSize.x; x++) {
-            if (x == _player.getPosHead().x && y == _player.getPosHead().y) {
-                line.push_back(_textures[2]);
-            } else {
-                bool isBody = false;
-                for (auto &pos : _player.getPosBody()) {
-                    if (x == pos.x && y == pos.y) {
-                        line.push_back(_textures[3]);
-                        isBody = true;
-                        break;
-                    }
-                }
-                if (!isBody) {
-                    if (x % 2 == 0) {
-                        line.push_back(_textures[0]);
-                    } else {
-                        line.push_back(_textures[1]);
-                    }
-                }
-            }
+            row.push_back(_textures[1]);
         }
-        _map.push_back(line);
+        _map.push_back(row);
     }
 }
 
@@ -97,11 +82,34 @@ void Snake::close(void)
     _player.setDirection(0);
 }
 
+void Snake::spawnApple(float deltaT)
+{
+    if (_appleSpawnCooldown > 0) {
+        _appleSpawnCooldown -= deltaT;
+        return;
+    }
+    int x = std::rand() % _mapSize.x;
+    int y = std::rand() % _mapSize.y;
+
+    while (_map[y][x] != _textures[1]) {
+        x = std::rand() % _mapSize.x;
+        y = std::rand() % _mapSize.y;
+    }
+
+    _appleOnMap++;
+    _applesPos.push_back(Vector2i(x, y));
+    _map[y][x] = _textures[4];
+
+    _appleSpawnCooldown = _appleSpawnRate;
+}
+
 bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
 {
     if (_pause) {
         return true;
     }
+
+    spawnApple(deltaT);
 
     _player.update(deltaT);
 
@@ -138,6 +146,11 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
                         _map[y][x] = _textures[0];
                     } else {
                         _map[y][x] = _textures[1];
+                    }
+                    for (auto &applePos : _applesPos) {
+                        if (x == applePos.x && y == applePos.y) {
+                            _map[y][x] = _textures[4];
+                        }
                     }
                 }
             }
