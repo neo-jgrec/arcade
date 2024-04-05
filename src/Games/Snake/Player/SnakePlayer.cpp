@@ -169,3 +169,13 @@ void SnakePlayer::handleCollisionWithApple(std::vector<Vector2i> &applesPos, int
         }
     }
 }
+
+void SnakePlayer::handlePlayerOverlapping()
+{
+    for (unsigned long i = 0; i < _posBody.size(); ++i) {
+        if (_posHead == _posBody[i]) {
+            _alive = false;
+            break;
+        }
+    }
+}

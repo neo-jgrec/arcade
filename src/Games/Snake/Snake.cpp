@@ -109,6 +109,13 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
         return true;
     }
 
+    if (_player.getAlive() == false) {
+        close();
+        init("", 0);
+        _player.setAlive(true);
+        return true;
+    }
+
     spawnApple(deltaT);
 
     _player.update(deltaT);
@@ -117,6 +124,7 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
     _player.translatePlayerPositionToPositionInCircularMap(_map);
 
     _player.handleCollisionWithApple(_applesPos, _appleOnMap, _score);
+    _player.handlePlayerOverlapping();
 
     if (_player.getPosHead().x < 0 || _player.getPosHead().x >= _mapSize.x ||
         _player.getPosHead().y < 0 || _player.getPosHead().y >= _mapSize.y) {
