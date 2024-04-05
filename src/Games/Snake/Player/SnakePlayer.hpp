@@ -55,6 +55,8 @@ namespace Arcade::Games {
             void processUserMovementInput(std::map<Arcade::Games::KeyType, int> inputs);
             void updateBodyPositions(void);
 
+            void update(float deltaT);
+
         protected:
             void goUp(void);
             void goDown(void);
@@ -70,6 +72,7 @@ namespace Arcade::Games {
             double _speed = 0.5f;
             bool _alive = true;
             int _length = 4;
+            double _moveCooldown = 0.0f;
     };
 }
 

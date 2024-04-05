@@ -70,6 +70,24 @@ void SnakePlayer::goRight(void)
     _posBody[0] = prevHeadPos;
 }
 
+void SnakePlayer::update(float deltaT)
+{
+    if (_moveCooldown > 0) {
+        _moveCooldown -= deltaT;
+    } else {
+        _moveCooldown = _speed;
+
+        if (_rotation == ROTATION_UP) {
+            goUp();
+        } else if (_rotation == ROTATION_DOWN) {
+            goDown();
+        } else if (_rotation == ROTATION_LEFT) {
+            goLeft();
+        } else if (_rotation == ROTATION_RIGHT) {
+            goRight();
+        }
+    }
+}
 
 void SnakePlayer::processUserMovementInput(std::map<Arcade::Games::KeyType, int> inputs)
 {

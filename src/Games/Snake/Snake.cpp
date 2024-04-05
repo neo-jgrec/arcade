@@ -79,11 +79,11 @@ void Snake::close(void)
 
 bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
 {
-    (void)deltaT;
-
     if (_pause) {
         return true;
     }
+
+    _player.update(deltaT);
 
     _player.processUserMovementInput(inputs);
 
