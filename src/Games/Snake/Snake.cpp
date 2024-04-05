@@ -35,6 +35,10 @@ Snake::Snake()
     SnakeSprite *apple = new SnakeSprite();
     apple->setColor(Color::RED);
     _textures.push_back(apple);
+
+    SnakeSprite *bonusApple = new SnakeSprite();
+    bonusApple->setColor(Color::YELLOW);
+    _textures.push_back(bonusApple);
 }
 
 Snake::~Snake()
@@ -88,10 +92,21 @@ void Snake::close(void)
     _player.setDirection(0);
 }
 
-void Snake::spawnApple(float deltaT)
+void Snake::bonusApples(float deltaT)
 {
-    if (_appleSpawnCooldown > 0) {
-        _appleSpawnCooldown -= deltaT;
+    for (auto it = _bonusApplesPos.begin(); it != _bonusApplesPos.end();) {
+        std::get<1>(*it) -= 1;
+        if (std::get<1>(*it) <= 0) {
+            _map[std::get<0>(*it).y][std::get<0>(*it).x] = _textures[1];
+            it = _bonusApplesPos.erase(it);
+            _appleOnMap--;
+        } else {
+            it++;
+        }
+    }
+
+    if (_bonusAppleSpawnCooldown > 0) {
+        _bonusAppleSpawnCooldown -= deltaT;
         return;
     }
     int x = std::rand() % _mapSize.x;
@@ -103,10 +118,10 @@ void Snake::spawnApple(float deltaT)
     }
 
     _appleOnMap++;
-    _applesPos.push_back(Vector2i(x, y));
-    _map[y][x] = _textures[4];
+    _bonusApplesPos.push_back(std::make_tuple(Vector2i(x, y), 1000));
+    _map[y][x] = _textures[5];
 
-    _appleSpawnCooldown = _appleSpawnRate;
+    _bonusAppleSpawnCooldown = _bonusAppleSpawnRate;
 }
 
 bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
@@ -122,14 +137,14 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
         return true;
     }
 
-    spawnApple(deltaT);
+    bonusApples(deltaT);
 
     _player.update(deltaT);
 
     _player.processUserMovementInput(inputs);
     _player.translatePlayerPositionToPositionInCircularMap(_map);
 
-    _player.handleCollisionWithApple(_applesPos, _score, _map);
+    _player.handleCollisionWithApple(_applesPos, _score, _map, _bonusApplesPos);
     _player.handlePlayerOverlapping();
 
     if (_player.getPosHead().x < 0 || _player.getPosHead().x >= _mapSize.x ||
@@ -166,6 +181,11 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
                     for (auto &applePos : _applesPos) {
                         if (x == applePos.x && y == applePos.y) {
                             _map[y][x] = _textures[4];
+                        }
+                    }
+                    for (auto &bonusApplePos : _bonusApplesPos) {
+                        if (x == std::get<0>(bonusApplePos).x && y == std::get<0>(bonusApplePos).y) {
+                            _map[y][x] = _textures[5];
                         }
                     }
                 }

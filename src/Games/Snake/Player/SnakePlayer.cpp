@@ -170,7 +170,7 @@ void SnakePlayer::addBody(void)
     _length++;
 }
 
-void SnakePlayer::handleCollisionWithApple(std::vector<Vector2i> &applesPos, long int &score, std::vector<std::vector<Arcade::Games::ISprite *>> &map)
+void SnakePlayer::handleCollisionWithApple(std::vector<Vector2i> &applesPos, long int &score, std::vector<std::vector<Arcade::Games::ISprite *>> &map, std::vector<std::tuple<Vector2i, int>> &bonusApplesPos)
 {
     for (unsigned long i = 0; i < applesPos.size(); ++i) {
         if (_posHead == applesPos[i]) {
@@ -179,6 +179,14 @@ void SnakePlayer::handleCollisionWithApple(std::vector<Vector2i> &applesPos, lon
             addBody();
             applesPos.push_back(Vector2i(std::rand() % map.size(), std::rand() % map[0].size()));
             map[applesPos[applesPos.size() - 1].y][applesPos[applesPos.size() - 1].x] = nullptr;
+            break;
+        }
+    }
+    for (unsigned long i = 0; i < bonusApplesPos.size(); ++i) {
+        if (_posHead == std::get<0>(bonusApplesPos[i])) {
+            bonusApplesPos.erase(bonusApplesPos.begin() + i);
+            score++;
+            addBody();
             break;
         }
     }

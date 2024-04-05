@@ -66,7 +66,7 @@ namespace Arcade::Games {
                  */
                 std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void) { return _texts; }
 
-                void spawnApple(float deltaT);
+                void bonusApples(float deltaT);
 
         protected:
         private:
@@ -87,9 +87,11 @@ namespace Arcade::Games {
 
             int _appleOnMap = 0;
             std::vector<Vector2i> _applesPos;
-            double _appleSpawnCooldown = 0;
-            double _appleSpawnRate = 1.0f;
 
+            int _bonusAppleOnMap = 0;
+            std::vector<std::tuple<Vector2i, int>> _bonusApplesPos;
+            double _bonusAppleSpawnCooldown = 0;
+            double _bonusAppleSpawnRate = 1.0f;
     };
 }
 
