@@ -57,6 +57,8 @@ namespace Arcade::Games {
 
             void update(float deltaT);
 
+            void translatePlayerPositionToPositionInCircularMap(std::vector<std::vector<Arcade::Games::ISprite *>> &_map);
+
         protected:
             void goUp(void);
             void goDown(void);

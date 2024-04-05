@@ -86,6 +86,7 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
     _player.update(deltaT);
 
     _player.processUserMovementInput(inputs);
+    _player.translatePlayerPositionToPositionInCircularMap(_map);
 
     if (_player.getPosHead().x < 0 || _player.getPosHead().x >= _mapSize.x ||
         _player.getPosHead().y < 0 || _player.getPosHead().y >= _mapSize.y) {

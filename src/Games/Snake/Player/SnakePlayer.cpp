@@ -89,6 +89,20 @@ void SnakePlayer::update(float deltaT)
     }
 }
 
+void SnakePlayer::translatePlayerPositionToPositionInCircularMap(std::vector<std::vector<Arcade::Games::ISprite *>> &_map)
+{
+    int mapWidth = _map.size();
+    int mapHeight = _map[0].size();
+
+    _posHead.x = (_posHead.x + mapWidth) % mapWidth;
+    _posHead.y = (_posHead.y + mapHeight) % mapHeight;
+
+    for (Vector2i& pos : _posBody) {
+        pos.x = (pos.x + mapWidth) % mapWidth;
+        pos.y = (pos.y + mapHeight) % mapHeight;
+    }
+}
+
 void SnakePlayer::processUserMovementInput(std::map<Arcade::Games::KeyType, int> inputs)
 {
     std::map<KeyType, std::function<void(void)>> keyToFunctionMap = {
