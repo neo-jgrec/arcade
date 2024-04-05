@@ -51,9 +51,6 @@ void Snake::init(std::string args, size_t nb_args)
     _player.setSpeed(0.1);
     _player.setAlive(true);
 
-    _map.clear();
-    _mapSize = Vector2i(21, 21);
-
     for (int y = 0; y < _mapSize.y; y++) {
         std::vector<ISprite *> line;
         for (int x = 0; x < _mapSize.x; x++) {
@@ -79,6 +76,13 @@ void Snake::init(std::string args, size_t nb_args)
 
 void Snake::close(void)
 {
+    _map.clear();
+    _player.setAlive(false);
+    _player.setLength(0);
+    _player.setPosHead(Vector2i(0, 0));
+    _player.setPosBody({});
+    _player.setSpeed(0);
+    _player.setDirection(0);
 }
 
 bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
