@@ -57,7 +57,9 @@ void Snake::init(std::string args, size_t nb_args)
 
     std::srand(time(nullptr));
 
-    _player.setDirection(ROTATION_UP);
+    _player.setAlive(true);
+    _player.setDirection(UP);
+    _player.setRotation(ROTATION_UP);
     _player.setLength(3);
     _player.setPosHead(Vector2i(_mapSize.x / 2, _mapSize.y / 2));
     std::vector<Vector2i> bodyPositions;
