@@ -58,6 +58,32 @@ void Snake::init(std::string args, size_t nb_args)
     _player.setPosBody(bodyPositions);
     _player.setSpeed(0.1);
     _player.setAlive(true);
+
+    for (int y = 0; y < _mapSize.y; y++) {
+        std::vector<ISprite *> line;
+        for (int x = 0; x < _mapSize.x; x++) {
+            if (x == _player.getPosHead().x && y == _player.getPosHead().y) {
+                line.push_back(_textures[2]);
+            } else {
+                bool isBody = false;
+                for (auto &pos : _player.getPosBody()) {
+                    if (x == pos.x && y == pos.y) {
+                        line.push_back(_textures[3]);
+                        isBody = true;
+                        break;
+                    }
+                }
+                if (!isBody) {
+                    if (x % 2 == 0) {
+                        line.push_back(_textures[0]);
+                    } else {
+                        line.push_back(_textures[1]);
+                    }
+                }
+            }
+        }
+        _map.push_back(line);
+    }
 }
 
 void Snake::close(void)
