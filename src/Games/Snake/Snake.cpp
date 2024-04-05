@@ -118,6 +118,12 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
 
     spawnApple(deltaT);
 
+    if (_appleOnMap < 2) {
+        _applesPos.push_back(Vector2i(std::rand() % _mapSize.x, std::rand() % _mapSize.y));
+        _map[_applesPos[0].y][_applesPos[0].x] = _textures[4];
+        _appleOnMap++;
+    }
+
     _player.update(deltaT);
 
     _player.processUserMovementInput(inputs);
