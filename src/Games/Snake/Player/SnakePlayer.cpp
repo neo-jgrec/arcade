@@ -76,7 +76,12 @@ void SnakePlayer::update(float deltaT)
     if (_moveCooldown > 0) {
         _moveCooldown -= deltaT;
     } else {
-        _moveCooldown = _speed -(static_cast<double>(_length) / 10) * 0.01;
+        if (_hasBoost) {
+            _moveCooldown = _speed - (static_cast<double>(_length) / 10) * 5;
+            _hasBoost = -true;
+        } else {
+            _moveCooldown = _speed;
+        }
 
         if (_rotation == ROTATION_UP) {
             goUp();
@@ -136,6 +141,13 @@ void SnakePlayer::processUserMovementInput(std::map<Arcade::Games::KeyType, int>
                     _direction = DOWN;
                     _rotation = ROTATION_DOWN;
                 }
+            }
+        }},
+        {KeyType::ACTION1, [this, &inputs]() {
+            if (inputs[KeyType::ACTION1] == 1) {
+                _hasBoost = true;
+            } else if (inputs[KeyType::ACTION1] == 0 && _hasBoost == -true) {
+                _hasBoost = false;
             }
         }}
     };

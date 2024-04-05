@@ -74,6 +74,7 @@ namespace Arcade::Games {
             std::vector<Vector2i> _posBody = {Vector2i(10, 11), Vector2i(10, 12), Vector2i(10, 13)};
             int _direction = UP;
             int _rotation = ROTATION_UP;
+            int _hasBoost = false;
             double _speed = 1.75f;
             bool _alive = true;
             int _length = 4;
