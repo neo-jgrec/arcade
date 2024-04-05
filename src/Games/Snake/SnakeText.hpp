@@ -13,15 +13,15 @@
 namespace Arcade::Games {
     class SnakeText : public IGameModule {
         public:
-            SnakeText();
-            ~SnakeText();
+            SnakeText() = default;
+            ~SnakeText() = default;
 
             SnakeText(std::string text, Vector2i pos, Color color) : _text(text), _pos(pos), _color(color) { };
 
             void setText(std::string text) { _text = text; }
             std::string getText() { return _text; };
 
-            void setPos(Vector2i pos)  { _pos = pos; }
+            void setPos(Vector2i pos) { _pos = pos; }
             Vector2i getPos() { return _pos; };
 
             void setColor(Color color) { _color = color; }

@@ -64,7 +64,7 @@ namespace Arcade::Games {
                  * @brief Get the texts of the game
                  * @return std::vector<IText *>
                  */
-                std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void) { return _texts; }
+                std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> getTexts(void);
 
                 void bonusApples(float deltaT);
 

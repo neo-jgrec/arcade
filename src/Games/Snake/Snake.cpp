@@ -92,6 +92,21 @@ void Snake::close(void)
     _player.setDirection(0);
 }
 
+std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> Snake::getTexts(void)
+{
+    std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> texts;
+
+    texts.push_back(
+        std::make_tuple(
+            "Score: " + std::to_string(_score),
+            Vector2i(10, 10),
+            Color::BLACK
+        )
+    );
+
+    return texts;
+}
+
 void Snake::bonusApples(float deltaT)
 {
     for (auto it = _bonusApplesPos.begin(); it != _bonusApplesPos.end();) {
