@@ -75,7 +75,7 @@ void SnakePlayer::update(float deltaT)
     if (_moveCooldown > 0) {
         _moveCooldown -= deltaT;
     } else {
-        _moveCooldown = _speed - (_length * 0.01);
+        _moveCooldown = _speed -(static_cast<double>(_length) / 10) * 0.01;
 
         if (_rotation == ROTATION_UP) {
             goUp();

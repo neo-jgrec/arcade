@@ -61,6 +61,8 @@ namespace Arcade::Games {
 
             void handleCollisionWithApple(std::vector<Vector2i> &applesPos, int &appleOnMap, long int &score);
 
+            void handlePlayerOverlapping(void);
+
         protected:
             void goUp(void);
             void goDown(void);
