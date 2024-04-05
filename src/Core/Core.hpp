@@ -76,6 +76,8 @@ namespace Arcade::Core
             bool _flipflop = false;
 
             Score _score;
+
+            void checkSwitch(void);
     };
 }
 
