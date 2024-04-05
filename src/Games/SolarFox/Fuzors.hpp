@@ -25,9 +25,11 @@ namespace Arcade::Games {
             unsigned short int getValue(void) const { return _value; }
             void setValue(unsigned int newValue);
 
+            void update(float deltaT);
         private:
             std::vector<Vector2i> _fuzors;
             unsigned short int _value = 30;
+            float _spawnTime = 10.0f;
     };
 
 };

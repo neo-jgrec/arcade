@@ -17,12 +17,7 @@ namespace Arcade::Games
         SolarSprite *_enemyLaser = new SolarSprite();
         SolarSprite *_playerLaserSprite = new SolarSprite();
         SolarSprite *_playerSprite = new SolarSprite();
-        SolarSprite *_wallVer = new SolarSprite();
-        SolarSprite *_wallHor = new SolarSprite();
-        SolarSprite *_corner_0 = new SolarSprite();
-        SolarSprite *_corner_90 = new SolarSprite();
-        SolarSprite *_corner_180 = new SolarSprite();
-        SolarSprite *_corner_270 = new SolarSprite();
+        SolarSprite *_wall = new SolarSprite();
         SolarSprite *_fuzor = new SolarSprite();
 
         _background->setAscii(" ");
@@ -50,34 +45,9 @@ namespace Arcade::Games
         _playerLaserSprite->setColor(Color::GREEN);
         _playerLaserSprite->setShape(Shape::TRIANGLE);
 
-        _wallVer->setAscii("W");
-        _wallVer->setPath(std::string("gameAssets/solarfox/sprites/wall.png"));
-        _wallVer->setColor(Color::WHITE);
-
-        _wallHor->setAscii("W");
-        _wallHor->setPath(std::string("gameAssets/solarfox/sprites/wall.png"));
-        _wallHor->setColor(Color::WHITE);
-        _wallHor->setRotation(90);
-
-        _corner_0->setAscii("W");
-        _corner_0->setPath(std::string("gameAssets/solarfox/sprites/corner.png"));
-        _corner_0->setColor(Color::WHITE);
-        _corner_0->setRotation(0);
-
-        _corner_90->setAscii("W");
-        _corner_90->setPath(std::string("gameAssets/solarfox/sprites/corner.png"));
-        _corner_90->setColor(Color::WHITE);
-        _corner_90->setRotation(90);
-
-        _corner_180->setAscii("W");
-        _corner_180->setPath(std::string("gameAssets/solarfox/sprites/corner.png"));
-        _corner_180->setColor(Color::WHITE);
-        _corner_180->setRotation(180);
-
-        _corner_270->setAscii("W");
-        _corner_270->setPath(std::string("gameAssets/solarfox/sprites/corner.png"));
-        _corner_270->setColor(Color::WHITE);
-        _corner_270->setRotation(270);
+        _wall->setAscii("W");
+        _wall->setPath(std::string("gameAssets/solarfox/sprites/wall.png"));
+        _wall->setColor(Color::WHITE);
 
         _fuzor->setAscii("F");
         _fuzor->setPath(std::string("gameAssets/solarfox/sprites/fuzor.png"));
@@ -87,13 +57,8 @@ namespace Arcade::Games
         _textures.push_back(_background);
         _textures.push_back(_enemy);
         _textures.push_back(_enemyLaser);
-        _textures.push_back(_wallVer);
+        _textures.push_back(_wall);
         _textures.push_back(_fuzor);
-        _textures.push_back(_corner_0);
-        _textures.push_back(_corner_90);
-        _textures.push_back(_corner_180);
-        _textures.push_back(_corner_270);
-        _textures.push_back(_wallHor);
 
         _functs.emplace_back(KeyType::RESTART, 1, [this](){ return restart(); });
         _functs.emplace_back(KeyType::VER, UP, [this](){ return _player.headUp(); });
@@ -138,18 +103,18 @@ namespace Arcade::Games
             {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
             {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
             {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
-            {B, B, B, C0, _, _, E, _, _, _, _, _, _, _, C27, B, B, B},
-            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
-            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
-            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
-            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
-            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, E, B, B, B},
-            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
-            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
-            {B, B, B, E, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
-            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
-            {B, B, B, I, B, B, B, B, B, B, B, B, B, B, I, B, B, B},
-            {B, B, B, C9, _, _, _, _, E, _, _, _, _, _, C18, B, B, B},
+            {B, B, B, W, W, W, E, W, W, W, W, W, W, W, W, B, B, B},
+            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, E, B, B, B},
+            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+            {B, B, B, E, B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B},
+            {B, B, B, W, W, W, W, W, E, W, W, W, W, W, W, B, B, B},
             {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
             {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
             {B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B, B},
@@ -167,6 +132,10 @@ namespace Arcade::Games
 
         loadRack();
         _map[pPos.y][pPos.x] = PLAYER_TILE;
+        for (auto fuzor : _fuzors.getFuzors())
+        {
+            _map[fuzor.y][fuzor.x] = FUZOR_TILE;
+        }
     }
 
     void SolarFox::restart(void)
@@ -183,6 +152,20 @@ namespace Arcade::Games
 
     void SolarFox::updateColisions()
     {
+        Vector2i pPos = _player.getPosition();
+
+        if (_map[pPos.y][pPos.x] == WALL_TILE || _map[pPos.y][pPos.x] == ENEMY_TILE) {
+            _player.setLives(_player.getLives() - 1);
+            _player.setPosition(Vector2i(8, 8));
+        }
+        for (auto fuzor : _fuzors.getFuzors())
+        {
+            if (fuzor == pPos)
+            {
+                _score += 100;
+                _fuzors.removeFuzor(fuzor);
+            }
+        }
         return;
     }
 
@@ -196,8 +179,10 @@ namespace Arcade::Games
             }
         }
 
-        updateMap();
-        _player.update(deltaT);
+        _time = deltaT * 1000;
+
+        _player.update(_time);
+        _fuzors.update(_time);
         updateColisions();
         return true;
     }
@@ -208,13 +193,17 @@ namespace Arcade::Games
         std::string score = std::string("score: ") + std::to_string(_score);
         std::string lives = std::string("lives: ") + std::to_string(_player.getLives());
         std::string turbo = std::string("turbo: ") + std::to_string(_player.getTurbo() ? 1 : 0);
+        std::string time = std::string("time: ") + std::to_string(_time);
+
         Vector2i scorePos = Vector2i(4, 0);
         Vector2i livesPos = Vector2i(4, 1);
         Vector2i turboPos = Vector2i(4, 2);
+        Vector2i timePos = Vector2i(15, 0);
 
         texts.push_back(std::make_tuple(score, scorePos, Color::DEFAULT));
         texts.push_back(std::make_tuple(lives, livesPos, Color::DEFAULT));
         texts.push_back(std::make_tuple(turbo, turboPos, Color::DEFAULT));
+        texts.push_back(std::make_tuple(time, timePos, Color::DEFAULT));
         return texts;
     }
 }

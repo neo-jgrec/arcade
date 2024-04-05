@@ -21,7 +21,7 @@ namespace Arcade::Games {
             void setTurbo(bool newTurbo) { _turbo = newTurbo; }
             bool getTurbo(void) const { return _turbo; }
 
-            void setLives(int newLives) { lives = newLives; }
+            void setLives(int newLives) { lives = newLives < 0 ? 0 : newLives; }
             int getLives(void) const { return lives; }
 
             void headUp(void);

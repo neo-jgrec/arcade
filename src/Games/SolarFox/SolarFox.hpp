@@ -26,25 +26,9 @@
     #define ENEMY_LASER_TILE _textures[2]
     #define PLAYER_lASER_TILE _playerLaser.getSprite()
     #define WALL_TILE _textures[3]
-    #define I _textures[3]
-    #define _ _textures[9]
+    #define W _textures[3]
     #define FUZOR_TILE _textures[4]
-    #define CORNER_0_TILE _textures[5]
-    #define C0 _textures[5]
-    #define CORNER_90_TILE _textures[6]
-    #define C9 _textures[6]
-    #define CORNER_180_TILE _textures[7]
-    #define C18 _textures[7]
-    #define CORNER_270_TILE _textures[8]
-    #define C27 _textures[8]
     #define PLAYER_TILE _player.getSprite()
-
-    #define BACKGROUND 1
-    #define ENEMY 2
-    #define ENEMY_LASER 3
-    #define WALL 4
-    #define FUZOR 5
-    #define PLAYER 6
 
 namespace Arcade::Games {
 
@@ -82,7 +66,7 @@ namespace Arcade::Games {
                 * @brief Get the map of the game
                 * @return std::vector<std::string>
                 */
-                std::vector<std::vector<Arcade::Games::ISprite *>> getMap(void) { return _map; }
+                std::vector<std::vector<Arcade::Games::ISprite *>> getMap(void) { updateMap(); return _map; }
 
                 /**
                  * @brief Get the score of the game
