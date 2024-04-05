@@ -8,6 +8,7 @@
 #include "Snake.hpp"
 #include "Player/SnakePlayer.hpp"
 #include "SnakeSprite.hpp"
+#include <iostream>
 
 using namespace Arcade::Games;
 
@@ -49,6 +50,9 @@ void Snake::init(std::string args, size_t nb_args)
     _player.setPosBody(bodyPositions);
     _player.setSpeed(0.1);
     _player.setAlive(true);
+
+    _map.clear();
+    _mapSize = Vector2i(21, 21);
 
     for (int y = 0; y < _mapSize.y; y++) {
         std::vector<ISprite *> line;
