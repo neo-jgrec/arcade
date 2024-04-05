@@ -76,7 +76,7 @@ namespace Arcade::Games {
             std::vector<std::vector<Arcade::Games::ISprite *>> _map;
             std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Color>> _texts;
 
-            Vector2i _mapSize = Vector2i(21, 21);
+            Vector2i _mapSize = Vector2i(26, 26);
 
             SnakePlayer _player;
 

@@ -108,16 +108,20 @@ void SnakePlayer::processUserMovementInput(std::map<Arcade::Games::KeyType, int>
     std::map<KeyType, std::function<void(void)>> keyToFunctionMap = {
         {KeyType::VER, [this, &inputs]() {
             if (inputs[KeyType::VER] == -1) {
-                this->goUp();
+                _direction = UP;
+                _rotation = ROTATION_UP;
             } else if (inputs[KeyType::VER] == 1) {
-                this->goDown();
+                _direction = DOWN;
+                _rotation = ROTATION_DOWN;
             }
         }},
         {KeyType::HOR, [this, &inputs]() {
             if (inputs[KeyType::HOR] == 1) {
-                this->goRight();
+                _direction = RIGHT;
+                _rotation = ROTATION_RIGHT;
             } else if (inputs[KeyType::HOR] == -1) {
-                this->goLeft();
+                _direction = LEFT;
+                _rotation = ROTATION_LEFT;
             }
         }}
     };
