@@ -15,13 +15,14 @@ static std::map<Arcade::Displays::Color,sf::Color> colorMap = {
     {Arcade::Displays::Color::BLUE, sf::Color::Blue},
     {Arcade::Displays::Color::MAGENTA, sf::Color::Magenta},
     {Arcade::Displays::Color::CYAN, sf::Color::Cyan},
+    {Arcade::Displays::Color::GREEN, sf::Color::Green},
+    {Arcade::Displays::Color::BLACK, sf::Color::Black},
 };
 
 SFML::SFML() : _mapSize(0, 0)
 {
-    if (!_font.loadFromFile("gameAssets/ncurses/monogram.ttf")) {
+    if (!_font.loadFromFile("gameAssets/ncurses/monogram.ttf"))
         throw std::runtime_error("Could not load font");
-    }
     _text.setFont(_font);
     _text.setString("Hello, SFML!");
     _text.setCharacterSize(24);
@@ -37,7 +38,7 @@ SFML::~SFML()
 
 void SFML::init(void)
 {
-   _window.create(sf::VideoMode(800, 600), "Arcade", sf::Style::Titlebar | sf::Style::Close);
+   _window.create(sf::VideoMode(25 * 32, 15 * 32), "Arcade", sf::Style::Titlebar | sf::Style::Close);
     _window.setFramerateLimit(60);
 }
 
@@ -87,6 +88,7 @@ std::map<Arcade::Displays::KeyType, int> SFML::getInputs(void)
 void SFML::setMapSize(Arcade::Displays::Vector2i size)
 {
     _mapSize = size;
+    _window.create(sf::VideoMode(size.x * 32, size.y * 32), "Arcade", sf::Style::Titlebar | sf::Style::Close);
     _window.setSize(sf::Vector2u(size.x * 32, size.y * 32));
     _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(_mapSize.y, std::vector<Arcade::Displays::ISprite *>(_mapSize.x, nullptr));
 }
@@ -144,7 +146,6 @@ float SFML::getDeltaT(void)
     clock_t currentTime = clock();
     float deltaTime = static_cast<float>(currentTime - _lastTime) / CLOCKS_PER_SEC;
     _lastTime = currentTime;
-    std::cout << deltaTime << std::endl;
     return deltaTime;
 }
 
