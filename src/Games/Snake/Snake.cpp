@@ -74,6 +74,8 @@ void Snake::init(std::string args, size_t nb_args)
 void Snake::close(void)
 {
     _map.clear();
+    _applesPos.clear();
+    _appleOnMap = 0;
     _player.setAlive(false);
     _player.setLength(0);
     _player.setPosHead(Vector2i(0, 0));
