@@ -67,9 +67,9 @@ void SnakePlayer::processUserMovementInput(std::map<Arcade::Games::KeyType, int>
 {
     std::map<KeyType, std::function<void(void)>> keyToFunctionMap = {
         {KeyType::VER, [this, &inputs]() {
-            if (inputs[KeyType::VER] == 1) {
+            if (inputs[KeyType::VER] == -1) {
                 this->goUp();
-            } else if (inputs[KeyType::VER] == -1) {
+            } else if (inputs[KeyType::VER] == 1) {
                 this->goDown();
             }
         }},
