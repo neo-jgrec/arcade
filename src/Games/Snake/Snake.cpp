@@ -34,10 +34,12 @@ Snake::Snake()
 
     SnakeSprite *apple = new SnakeSprite();
     apple->setColor(Color::RED);
+    apple->setPath("gameAssets/snake/apple.png");
     _textures.push_back(apple);
 
     SnakeSprite *bonusApple = new SnakeSprite();
     bonusApple->setColor(Color::YELLOW);
+    bonusApple->setPath("gameAssets/snake/gap.png");
     _textures.push_back(bonusApple);
 }
 
