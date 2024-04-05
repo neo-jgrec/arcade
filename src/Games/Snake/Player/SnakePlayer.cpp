@@ -132,3 +132,27 @@ void SnakePlayer::processUserMovementInput(std::map<Arcade::Games::KeyType, int>
         }
     }
 }
+
+void SnakePlayer::addBody(void)
+{
+    if (_posBody.size() == 0) {
+        _posBody.push_back(_posHead);
+    } else {
+        _posBody.push_back(_posBody[_posBody.size() - 1]);
+    }
+
+    _length++;
+}
+
+void SnakePlayer::handleCollisionWithApple(std::vector<Vector2i> &applesPos, int &appleOnMap, long int &score)
+{
+    for (unsigned long i = 0; i < applesPos.size(); ++i) {
+        if (_posHead == applesPos[i]) {
+            applesPos.erase(applesPos.begin() + i);
+            appleOnMap--;
+            score++;
+            addBody();
+            break;
+        }
+    }
+}

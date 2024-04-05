@@ -90,6 +90,7 @@ namespace Arcade::Games {
             std::vector<Vector2i> _applesPos;
             double _appleSpawnCooldown = 0;
             double _appleSpawnRate = 1.0f;
+
     };
 }
 

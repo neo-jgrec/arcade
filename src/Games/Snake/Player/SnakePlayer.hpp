@@ -35,7 +35,7 @@ namespace Arcade::Games {
             void setPosBody(std::vector<Vector2i> pos) { _posBody = pos; }
             std::vector<Vector2i> getPosBody() { return _posBody; }
 
-            void addPosBody(Vector2i pos) { _posBody.push_back(pos); }
+            void addBody(void);
 
             void setDirection(int direction) { _direction = direction; }
             int getDirection() { return _direction; }
@@ -58,6 +58,8 @@ namespace Arcade::Games {
             void update(float deltaT);
 
             void translatePlayerPositionToPositionInCircularMap(std::vector<std::vector<Arcade::Games::ISprite *>> &_map);
+
+            void handleCollisionWithApple(std::vector<Vector2i> &applesPos, int &appleOnMap, long int &score);
 
         protected:
             void goUp(void);

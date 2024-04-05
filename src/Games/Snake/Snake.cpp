@@ -116,6 +116,8 @@ bool Snake::update(std::map<Arcade::Games::KeyType, int> inputs, float deltaT)
     _player.processUserMovementInput(inputs);
     _player.translatePlayerPositionToPositionInCircularMap(_map);
 
+    _player.handleCollisionWithApple(_applesPos, _appleOnMap, _score);
+
     if (_player.getPosHead().x < 0 || _player.getPosHead().x >= _mapSize.x ||
         _player.getPosHead().y < 0 || _player.getPosHead().y >= _mapSize.y) {
         _player.setAlive(false);
