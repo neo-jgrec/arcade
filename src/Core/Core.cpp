@@ -166,7 +166,7 @@ void Core::Loop(void)
         }
     }
     DISPLAY->close();
-    // GAME->close();
+    GAME->close();
 }
 
 void Core::setTiles(void)

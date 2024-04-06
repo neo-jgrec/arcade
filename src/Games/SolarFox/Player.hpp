@@ -8,40 +8,88 @@
 #ifndef PLAYER_HPP_
 #define PLAYER_HPP_
 
-#include "SolarSprite.hpp"
+#include "Entity.hpp"
+#include "Macro.hpp"
 
 namespace Arcade::Games {
 
-    class Player {
+    class Player : public Entity {
         public:
+            /**
+             * @brief Player object
+             * @details Player is the class for the player object
+             * @return Player
+            */
             Player();
             ~Player();
 
-            Vector2i getPosition(void) const { return _position; }
-            void setPosition(Vector2i newPosition);
+            /**
+             * @brief Set the state of the turbo
+             * @param newTurbo New state
+             * @return void
+            */
+            void setTurbo(bool newTurbo) { _turbo = newTurbo; }
+            /**
+             * @brief Get the turbo state
+             * @return bool
+            */
+            bool getTurbo(void) const { return _turbo; }
 
-            SolarSprite *getSprite(void) const { return _sprite; }
+            /**
+             * @brief Set the lives of the player
+             * @param newLives New lives of the player
+             * @return void
+            */
+            void setLives(int newLives) { lives = newLives < 0 ? 0 : newLives; }
+            /**
+             * @brief Get the lives of the player
+             * @return int
+            */
+            int getLives(void) const { return lives; }
 
-            u_int16_t getLives(void) const { return _lives; }
-            void loseOneLife(void) { _lives = _lives <= 0 ? 0 : _lives - 1; }
-            void setLives(u_int16_t newLives) { _lives = newLives; }
+            /**
+             * @brief set the direction of the player to up
+             * @return void
+            */
+            void headUp(void);
+            /**
+             * @brief set the direction of the player to down
+             * @return void
+            */
+            void headDown(void);
+            /**
+             * @brief set the direction of the player to left
+             * @return void
+            */
+            void headLeft(void);
+            /**
+             * @brief set the direction of the player to right
+             * @return void
+            */
+            void headRight(void);
 
-            u_int16_t getVelocity(void) const { return _velocity; }
-            void setVelocity(u_int16_t newVelocity);
-
-            Vector2i getDirection(void) const { return _direction; }
-            void setDirection(Vector2i newDirection) { _direction = newDirection; }
-
-            void move() { _position = _position + _direction; }
+            /**
+             * @brief Update the player
+             * @param elapsedTime Time between each frame
+             * @details Update the player's position
+             * @return void
+            */
+            void update(float elapsedTime);
 
         private:
-            Vector2i _position = Vector2i(5, 5);
-            Vector2i _direction = Vector2i(0, 0);
-            SolarSprite *_sprite = new SolarSprite();
-            u_int16_t _lives = 3;
-            u_int16_t _velocity = 1;
+            /**
+             * @brief time between each move of the player
+             */
+            float _moveCooldown = 15.0f;
+            /**
+             * @brief State of the turbo
+             */
+            bool _turbo = false;
+            /**
+             * @brief Lives of the player
+             */
+            int lives = 3;
     };
-
 };
 
 #endif /* !PLAYER_HPP_ */
