@@ -25,6 +25,7 @@ namespace Arcade::Games
         SolarSprite *_enemySpriteDown = new SolarSprite();
         SolarSprite *_enemySpriteRight = new SolarSprite();
         SolarSprite *_enemySpriteLeft = new SolarSprite();
+        SolarSprite *_quasar = new SolarSprite();
 
         _background->setAscii(" ");
         _background->setPath(std::string("gameAssets/solarfox/sprites/background.png"));
@@ -79,6 +80,11 @@ namespace Arcade::Games
         _enemySpriteLeft->setShape(Shape::TRIANGLE);
         _enemySpriteLeft->setRotation(ROTATION_RIGHT);
 
+        _quasar->setAscii("Q");
+        _quasar->setPath(std::string("gameAssets/solarfox/sprites/quasar.png"));
+        _quasar->setColor(Color::MAGENTA);
+        _quasar->setShape(Shape::CIRCLE);
+
         _textures.push_back(_background);
         _textures.push_back(_enemyLaser);
         _textures.push_back(_wall);
@@ -89,14 +95,14 @@ namespace Arcade::Games
         _textures.push_back(_enemySpriteLeft);
         _textures.push_back(_playerLaserSprite);
         _textures.push_back(_playerSprite);
+        _textures.push_back(_quasar);
 
         _functs.emplace_back(KeyType::RESTART, 1, [this](){ return restart(); });
         _functs.emplace_back(KeyType::VER, UP, [this](){ return _player.headUp(); });
         _functs.emplace_back(KeyType::VER, DOWN, [this](){ return _player.headDown(); });
         _functs.emplace_back(KeyType::HOR, RIGHT, [this](){ return _player.headRight(); });
         _functs.emplace_back(KeyType::HOR, LEFT, [this](){ return _player.headLeft(); });
-        _functs.emplace_back(KeyType::ACTION1, 1, [this](){ return _player.setTurbo(true); });
-        _functs.emplace_back(KeyType::ACTION1, 0, [this](){ return _player.setTurbo(false); });
+        _functs.emplace_back(KeyType::ACTION1, 1, [this](){ return _player.setTurbo(!_player.getTurbo()); });
         _functs.emplace_back(KeyType::ACTION2, 1, [this](){ return shoot(); });
 
         loadRack();
@@ -118,8 +124,7 @@ namespace Arcade::Games
         {
             _playerLaser.setPosition(_player.getPosition() + _player.getDirection());
             _playerLaser.setDirection(_player.getDirection());
-            _playerLaser.setBoundary(_player.getPosition() + _player.getDirection() * 2);
-            _playerLaser.setMoveCooldown(5.0f);
+            _playerLaser.setBoundary(_player.getPosition() + _player.getDirection() * 3);
             _playerLaser.setState(true);
         }
     }
@@ -134,6 +139,8 @@ namespace Arcade::Games
             exit(84);
         }
         _player.setDirection(Vector2i(1, 0));
+        _playerLaser.setSprite(_textures[8]);
+        _playerLaser.setMoveCooldown(5.0f);
     }
 
     void SolarFox::initEnemies(void)
@@ -184,12 +191,12 @@ namespace Arcade::Games
             {B, B, B, W, W, W, W, W, W, W, W, W, W, W, W, B, B, B}, // 3
             {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 4
             {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 5
-            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 6
+            {B, B, B, W, B, B, W, B, B, B, B, B, B, B, W, B, B, B}, // 6
             {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 7
             {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 8
-            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 9
+            {B, B, B, W, B, B, B, B, B, B, W, B, B, B, W, B, B, B}, // 9
             {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 10
-            {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 11
+            {B, B, B, W, B, W, B, B, B, B, B, B, B, B, W, B, B, B}, // 11
             {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 12
             {B, B, B, W, B, B, B, B, B, B, B, B, B, B, W, B, B, B}, // 13
             {B, B, B, W, W, W, W, W, W, W, W, W, W, W, W, B, B, B}, // 14
@@ -214,6 +221,9 @@ namespace Arcade::Games
         for (auto fuzor : _fuzors.getFuzors()) {
             _map[fuzor.y][fuzor.x] = FUZOR_TILE;
         }
+        for (auto quasar : _quasars.getQuasars()) {
+            _map[quasar.y][quasar.x] = QUASAR_TILE;
+        }
         for (auto enemy : _enemies) {
             Vector2i ePos = enemy.getPosition();
             _map[ePos.y][ePos.x] = enemy.getSprite();
@@ -232,8 +242,13 @@ namespace Arcade::Games
         _player.setPosition(Vector2i(8, 8));
         _player.setDirection(Vector2i(RIGHT, NEUTRAL));
         _player.setLives(3);
+        _player.setTurbo(false);
         _score = 0;
         _pause = false;
+        _playerLaser.setState(false);
+        _fuzors.clearFuzors();
+        _quasars.clearQuasars();
+        _enemiesLasers.clear();
         loadRack();
     }
 
@@ -262,6 +277,20 @@ namespace Arcade::Games
                 _fuzors.removeFuzor(fuzor);
             }
         }
+        if (_playerLaser.getState()) {
+            if (pLPos == _playerLaser.getBoundary())
+                _playerLaser.setState(false);
+        }
+        for (auto quasar : _quasars.getQuasars()) {
+            if (quasar == pPos) {
+                _player.setLives(_player.getLives() - 1);
+                _player.setPosition(Vector2i(8, 8));
+                _quasars.removeQuasar(quasar);
+            } else if (quasar == pLPos) {
+                _playerLaser.setState(false);
+                _quasars.removeQuasar(quasar);
+            }
+        }
         for (size_t i = 0; i < _enemiesLasers.size(); i++) {
             Vector2i elPos = _enemiesLasers[i].getPosition();
             if (elPos == pPos) {
@@ -277,6 +306,9 @@ namespace Arcade::Games
             if (_playerLaser.getBoundary() == _playerLaser.getPosition()) {
                 _playerLaser.setState(false);
             }
+        }
+        if (_player.getLives() == 0) {
+            restart();
         }
 
         return;
@@ -304,7 +336,7 @@ namespace Arcade::Games
             boundary = Vector2i(pos.x, 14);
         }
 
-        Lasers laser = Lasers(pos + direction, direction, ENEMY_LASER_TILE, boundary);
+        Lasers laser = Lasers(pos, direction, ENEMY_LASER_TILE, boundary);
         _enemiesLasers.push_back(laser);
     }
 
@@ -318,10 +350,11 @@ namespace Arcade::Games
             }
         }
 
-        float time = deltaT * 600;
+        float time = deltaT * 300;
 
         _player.update(time);
         _fuzors.update(time);
+        _quasars.update(time);
         for (auto &enemy : _enemies) {
             if (enemy.update(time)) {
                 createEnemyLaser(enemy.getPosition());
@@ -330,6 +363,7 @@ namespace Arcade::Games
         for (auto &laser : _enemiesLasers) {
             laser.update(time);
         }
+        _playerLaser.update(time);
         updateColisions();
         return true;
     }

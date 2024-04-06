@@ -36,7 +36,7 @@ namespace Arcade::Games {
         _spawnTime -= deltaT;
         if (_spawnTime <= 0) {
             _fuzors.push_back(Vector2i(4 + rand() % 10, 4 + rand() % 10));
-            _spawnTime = 50.0f;
+            _spawnTime = 60.0f;
         }
     }
 };

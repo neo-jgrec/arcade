@@ -15,6 +15,7 @@
     #include "Macro.hpp"
     #include "Player.hpp"
     #include "Lasers.hpp"
+    #include "Quasar.hpp"
 
     #include <functional>
     #include <tuple>
@@ -28,6 +29,7 @@
     #define W _textures[2]
     #define FUZOR_TILE _textures[3]
     #define PLAYER_TILE _player.getSprite()
+    #define QUASAR_TILE _textures[10]
 
 namespace Arcade::Games {
 
@@ -154,6 +156,7 @@ namespace Arcade::Games {
              * @brief Fuzors are the collectable objects in the game
             */
             Fuzors _fuzors;
+            Quasar _quasars;
             Player _player;
             Lasers _playerLaser;
 
