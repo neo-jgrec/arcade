@@ -31,11 +31,6 @@ namespace Arcade::Games {
         }
     }
 
-    void Fuzors::setValue(unsigned int newValue)
-    {
-        _value = newValue;
-    }
-
     void Fuzors::update(float deltaT)
     {
         _spawnTime -= deltaT;

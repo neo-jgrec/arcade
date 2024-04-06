@@ -54,12 +54,6 @@ namespace Arcade::Games {
         _sprite->setDirection(_direction);
     }
 
-    void shoot(void)
-    {
-        return;
-    }
-
-
     void Player::update(float elapsedTime)
     {
         if (_moveCooldown > 0)

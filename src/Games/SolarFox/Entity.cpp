@@ -15,7 +15,6 @@ namespace Arcade::Games {
 
     Entity::~Entity()
     {
-        delete _sprite;
     }
 
     void Entity::setPosition(Vector2i newPosition)
@@ -24,14 +23,5 @@ namespace Arcade::Games {
             throw std::invalid_argument("Position is out of bounds");
         else
             _position = newPosition;
-    }
-
-    void Entity::setVelocity(u_int16_t newVelocity)
-    {
-        int intCast = newVelocity;
-        if (intCast < 0)
-            throw std::invalid_argument("Velocity cannot be negative");
-        else
-            _velocity = newVelocity;
     }
 };

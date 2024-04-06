@@ -17,17 +17,24 @@ namespace Arcade::Games {
             Enemy();
             ~Enemy();
 
-            void update(float elapsedTime);
-            void shoot(float elapsedTime);
+            bool update(float elapsedTime);
+            bool shoot(float elapsedTime);
+
+            void setBoundaries(Vector2i pointA, Vector2i pointB) {
+                _boundaryA = pointA;
+                _boundaryB = pointB;
+            }
 
         protected:
         private:
             bool _isActive = true;
             float _respawnTime = 30.0f;
-            float _reloadTime = 10.0f;
-            int _shootProbability = 60;
+            float _reloadTime = 60.0f;
+            float _moveCooldown = 15.0f;
+            int _shootProbability = 15;
+            Vector2i _boundaryA = Vector2i(0, 0);
+            Vector2i _boundaryB = Vector2i(0, 0);
     };
-
 };
 
 #endif /* !ENEMY_HPP_ */

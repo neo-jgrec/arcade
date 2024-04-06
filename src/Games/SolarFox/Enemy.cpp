@@ -8,31 +8,30 @@
 #include "Enemy.hpp"
 
 #include <random>
-#include <ctime>
 
 namespace Arcade::Games {
 
     Enemy::Enemy()
     {
-        std::srand(std::time(nullptr));
     }
 
     Enemy::~Enemy()
     {
     }
 
-    void Enemy::shoot(float elapsedTime)
-    {    
+    bool Enemy::shoot(float elapsedTime)
+    {
         _reloadTime -= elapsedTime;
         if (_reloadTime > 0)
-            return;
-        _reloadTime = 10.0f;
-        if ((std::rand() % 100) / (100 - _shootProbability) < 0)
-            return;
-        // Shoot
+            return false;
+        _reloadTime = 60.0f;
+        float shootProbability = (std::rand() % 100) / (100 - _shootProbability);
+        if (shootProbability > 0)
+            return true;
+        return false;
     }
 
-    void Enemy::update(float elapsedTime)
+    bool Enemy::update(float elapsedTime)
     {
         if (_isActive == false) {
             _respawnTime -= elapsedTime;
@@ -40,10 +39,19 @@ namespace Arcade::Games {
                 _isActive = true;
                 _respawnTime = 30.0f;
             }
-            return;
+            return false;
         }
-        shoot(elapsedTime);
-        //move();
+        if (_moveCooldown > 0) {
+            _moveCooldown = _moveCooldown - elapsedTime;
+        } else {
+            _moveCooldown = 45.0f;
+            if (_position == _boundaryA || _position == _boundaryB) {
+                _direction.x = _direction.x * -1;
+                _direction.y = _direction.y * -1;
+            }
+            move();
+        }
+        return shoot(elapsedTime);
     }
 
 }
