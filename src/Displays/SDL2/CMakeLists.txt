@@ -15,23 +15,18 @@ target_include_directories(arcade_sdl2
         ${CMAKE_SOURCE_DIR}/includes
 )
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 find_package(SDL2 REQUIRED)
-
-find_package(SDL2_ttf
-    REQUIRED
-    PATHS ${CMAKE_SOURCE_DIR}/cmake
-)
-
-find_package(SDL2_image
-    REQUIRED
-    PATHS ${CMAKE_SOURCE_DIR}/cmake
-)
+find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_image REQUIRED)
 
 target_link_libraries(arcade_sdl2
     PRIVATE
         SDL2::SDL2
-    -lSDL2 -lSDL2_ttf -lSDL2_image
+        SDL2::SDL2main
+        SDL2_ttf
+        SDL2_image
 )
 
 set_target_properties(arcade_sdl2 PROPERTIES PREFIX "")
