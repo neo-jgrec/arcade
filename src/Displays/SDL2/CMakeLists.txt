@@ -17,9 +17,13 @@ target_include_directories(arcade_sdl2
 
 
 find_package(SDL2 REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_image REQUIRED)
+
 target_link_libraries(arcade_sdl2
     PRIVATE
         SDL2::SDL2
+    -lSDL2 -lSDL2_ttf -lSDL2_image
 )
 
 set_target_properties(arcade_sdl2 PROPERTIES PREFIX "")

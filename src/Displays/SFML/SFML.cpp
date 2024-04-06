@@ -74,6 +74,20 @@ std::map<Arcade::Displays::KeyType, int> SFML::getInputs(void)
         inputs[Arcade::Displays::KeyType::ESC] = 1;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && _saveInputs[sf::Keyboard::A] == 0)
         inputs[Arcade::Displays::KeyType::ACTION1] = 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && _saveInputs[sf::Keyboard::Z] == 0)
+        inputs[Arcade::Displays::KeyType::ACTION2] = 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && _saveInputs[sf::Keyboard::E] == 0)
+        inputs[Arcade::Displays::KeyType::ACTION3] = 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) && _saveInputs[sf::Keyboard::R] == 0)
+        inputs[Arcade::Displays::KeyType::ACTION4] = 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1) && _saveInputs[sf::Keyboard::F1] == 0)
+        inputs[Arcade::Displays::KeyType::NEXT_LIB] = 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2) && _saveInputs[sf::Keyboard::F2] == 0)
+        inputs[Arcade::Displays::KeyType::PREV_LIB] = 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F3) && _saveInputs[sf::Keyboard::F3] == 0)
+        inputs[Arcade::Displays::KeyType::RESTART] = 1;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::F4) && _saveInputs[sf::Keyboard::F4] == 0)
+        inputs[Arcade::Displays::KeyType::QUIT] = 1;
     _saveInputs = {
         {sf::Keyboard::Up, sf::Keyboard::isKeyPressed(sf::Keyboard::Up)},
         {sf::Keyboard::Down, sf::Keyboard::isKeyPressed(sf::Keyboard::Down)},
@@ -81,6 +95,13 @@ std::map<Arcade::Displays::KeyType, int> SFML::getInputs(void)
         {sf::Keyboard::Right, sf::Keyboard::isKeyPressed(sf::Keyboard::Right)},
         {sf::Keyboard::Escape, sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)},
         {sf::Keyboard::A, sf::Keyboard::isKeyPressed(sf::Keyboard::A)},
+        {sf::Keyboard::Z, sf::Keyboard::isKeyPressed(sf::Keyboard::Z)},
+        {sf::Keyboard::E, sf::Keyboard::isKeyPressed(sf::Keyboard::E)},
+        {sf::Keyboard::R, sf::Keyboard::isKeyPressed(sf::Keyboard::R)},
+        {sf::Keyboard::F1, sf::Keyboard::isKeyPressed(sf::Keyboard::F1)},
+        {sf::Keyboard::F2, sf::Keyboard::isKeyPressed(sf::Keyboard::F2)},
+        {sf::Keyboard::F3, sf::Keyboard::isKeyPressed(sf::Keyboard::F3)},
+        {sf::Keyboard::F4, sf::Keyboard::isKeyPressed(sf::Keyboard::F4)},
     };
     return inputs;
 }

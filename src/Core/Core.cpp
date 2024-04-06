@@ -19,6 +19,8 @@ static std::map<Arcade::Games::Color, Arcade::Displays::Color> colorMap = {
     {Arcade::Games::Color::BLUE, Arcade::Displays::Color::BLUE},
     {Arcade::Games::Color::MAGENTA, Arcade::Displays::Color::MAGENTA},
     {Arcade::Games::Color::CYAN, Arcade::Displays::Color::CYAN},
+    {Arcade::Games::Color::GREEN, Arcade::Displays::Color::GREEN},
+    {Arcade::Games::Color::BLACK, Arcade::Displays::Color::BLACK},
 };
 
 static std::map<Arcade::Games::Shape, Arcade::Displays::Shape> shapeMap = {
@@ -135,9 +137,10 @@ void Core::Loop(void)
 
     GAME->init("", 0);
     DISPLAY->init();
-    DISPLAY->setMapSize(DVEC(25, 15));
+    DISPLAY->setMapSize(DVEC(25, 20));
     while (running)
     {
+        checkSwitch();
         DISPLAY->clear();
         getInputs();
         if (_inputs[Arcade::Games::KeyType::QUIT] == 1) {
@@ -148,7 +151,7 @@ void Core::Loop(void)
         if (_inGame) {
             GAME->update(_inputs, _deltaT);
             if (_inputs[Arcade::Games::KeyType::ESC] == 1) {
-                DISPLAY->setMapSize(DVEC(25, 15));
+                DISPLAY->setMapSize(DVEC(25, 20));
                 _inGame = false;
                 _score.addScore(_currentGame, _name, stoi(GAME->getScore()));
             }
@@ -230,12 +233,11 @@ void Core::setTexts(void)
 void Core::displayMenu(void)
 {
     int i = 0;
-    
+
     if (_inName) {
         if (_inputs[Arcade::Games::KeyType::ACTION1] == 1)
             _inName = false;
         handleName();
-        
     } else {
 
         if (_inputs[Arcade::Games::KeyType::VER] == -1)
@@ -264,7 +266,7 @@ void Core::displayMenu(void)
                     DISPLAY->close();
                     _currentLib = display.first;
                     DISPLAY->init();
-                    DISPLAY->setMapSize(DVEC(25, 15));
+                    DISPLAY->setMapSize(DVEC(25, 20));
                 }
                 j++;
             }
@@ -380,4 +382,41 @@ std::string Core::removeUnderScore(std::string name)
         if (name[i] == '_')
             name[i] = ' ';
     return name;
+}
+
+void Core::checkSwitch(void)
+{
+    if (_inputs[Arcade::Games::KeyType::NEXT_LIB] == 1)
+    {
+        std::cout << "Switching to next display library" << std::endl;
+        auto it = _displays.find(_currentLib);
+        it++;
+        if (it == _displays.end())
+            it = _displays.begin();
+        DISPLAY->close();
+        _currentLib = it->first;
+        DISPLAY->init();
+        if (_inGame)
+            DISPLAY->setMapSize(DVEC(GAME->getMapSize().x, GAME->getMapSize().y));
+        else
+            DISPLAY->setMapSize(DVEC(25, 20));
+    }
+    if (_inputs[Arcade::Games::KeyType::PREV_LIB] == 1)
+    {
+        std::cout << "Switching to previous display library" << std::endl;
+        auto it = _displays.find(_currentLib);
+        if (it == _displays.begin())
+            it = _displays.end();
+        it--;
+        DISPLAY->close();
+        _currentLib = it->first;
+        DISPLAY->init();
+        if (_inGame)
+            DISPLAY->setMapSize(DVEC(GAME->getMapSize().x, GAME->getMapSize().y));
+        else
+            DISPLAY->setMapSize(DVEC(25, 20));
+    }
+    if (_inputs[Arcade::Games::KeyType::RESTART] == 1) {
+        GAME->init("", 0);
+    }
 }
