@@ -18,18 +18,22 @@ Snake::Snake()
     SnakeSprite *cyanTile = new SnakeSprite();
     std::cout << "SnakeSprite: " << cyanTile << std::endl;
     cyanTile->setColor(Color::CYAN);
+    cyanTile->setPath("gameAssets/snake/backgroundA.png");
     _textures.push_back(cyanTile);
 
     SnakeSprite *whiteTile = new SnakeSprite();
     whiteTile->setColor(Color::WHITE);
+    whiteTile->setPath("gameAssets/snake/backgroundB.png");
     _textures.push_back(whiteTile);
 
     SnakeSprite *head = new SnakeSprite();
     head->setColor(Color::BLUE);
+    head->setPath("gameAssets/snake/head.png");
     _textures.push_back(head);
 
     SnakeSprite *body = new SnakeSprite();
     body->setColor(Color::MAGENTA);
+    body->setPath("gameAssets/snake/body.png");
     _textures.push_back(body);
 
     SnakeSprite *apple = new SnakeSprite();
