@@ -17,8 +17,16 @@ target_include_directories(arcade_sdl2
 
 
 find_package(SDL2 REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_image REQUIRED)
+
+find_package(SDL2_ttf
+    REQUIRED
+    PATHS ${CMAKE_SOURCE_DIR}/cmake
+)
+
+find_package(SDL2_image
+    REQUIRED
+    PATHS ${CMAKE_SOURCE_DIR}/cmake
+)
 
 target_link_libraries(arcade_sdl2
     PRIVATE
