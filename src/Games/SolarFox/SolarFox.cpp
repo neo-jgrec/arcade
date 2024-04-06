@@ -132,12 +132,6 @@ namespace Arcade::Games
     void SolarFox::init(std::string, size_t nb_args)
     {
         std::srand(std::time(nullptr));
-
-        if (nb_args != 0)
-        {
-            std::cerr << "Solar Fox: init: Wrong number of arguments, expected 0 args" << std::endl;
-            exit(84);
-        }
         _player.setDirection(Vector2i(1, 0));
         _playerLaser.setSprite(_textures[8]);
         _playerLaser.setMoveCooldown(5.0f);
