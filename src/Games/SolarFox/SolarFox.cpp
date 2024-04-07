@@ -131,6 +131,7 @@ namespace Arcade::Games
 
     void SolarFox::init(std::string, size_t nb_args)
     {
+        (void)nb_args;
         std::srand(std::time(nullptr));
         _player.setDirection(Vector2i(1, 0));
         _playerLaser.setSprite(_textures[8]);

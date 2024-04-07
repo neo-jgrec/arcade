@@ -193,6 +193,7 @@ void SFML::displayGame(void)
 
 void SFML::setAnimationTime(float time)
 {
+    (void)time;
 }
 
 float SFML::getDeltaT(void)

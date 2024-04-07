@@ -289,11 +289,15 @@ void Core::displayMenu(void)
     }
     displayOptions("F1: Games", DVEC(2, 1), _module == 0, false);
     displayOptions("F2: Graphics", DVEC(17, 1), _module == 1, false);
-    for (auto &game : _games)
-        displayOptions(game.first, DVEC(2, 3 + i++ * 2), false, _index == i && _module == 0);
+    for (auto &game : _games) {
+        displayOptions(game.first, DVEC(2, 3 + i * 2), false, _index == i && _module == 0);
+        i++;
+    }
     i = 0;
-    for (auto &display : _displays)
-        displayOptions(display.first, DVEC(17, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
+    for (auto &display : _displays) {
+        displayOptions(display.first, DVEC(17, 3 + i * 2), display.first == _currentLib, _index == i && _module == 1);
+        i++;
+    }
     displayOptions("F3: Name", DVEC(2, 11), _module == 2, false);
     if (!_inName)
         displayOptions(_name, DVEC(2, 13), false, _module == 2);
@@ -350,7 +354,7 @@ char Core::switchChar(char c, bool up)
             charIndex = i;
     if (charIndex == 0 && !up)
         return nameList[nameList.size() - 1];
-    if (charIndex == nameList.size() - 1 && up)
+    if (charIndex == static_cast<int>(nameList.size()) - 1 && up)
         return nameList[0];
     if (up)
         return nameList[charIndex + 1];

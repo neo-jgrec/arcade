@@ -71,7 +71,7 @@ std::map<Arcade::Displays::KeyType, int> Ncurses::getInputs(void)
         keys.push_back(ch);
     }
     if (keys.size() > 1) {
-        for (int i = 0; i < keys.size(); i++) {
+        for (auto i = 0u; i < keys.size(); i++) {
             if (keys[i] == 27)
                 inputs[Arcade::Displays::KeyType::ESC] = 1;
             if (keys[i] == KEY_UP)
@@ -175,6 +175,7 @@ void Ncurses::displayGame(void)
 
 void Ncurses::setAnimationTime(float time)
 {
+    (void)time;
 }
 
 float Ncurses::getDeltaT(void)
