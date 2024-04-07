@@ -7,6 +7,9 @@
 
 #include "SDL2.hpp"
 
+#include <thread> // For std::this_thread::sleep_for
+#include <chrono>
+
 static std::map<Arcade::Displays::Color, SDL_Color> colorMap = {
     {Arcade::Displays::Color::DEFAULT, {255, 255, 255, 255}},
     {Arcade::Displays::Color::WHITE, {255, 255, 255, 255}},
@@ -159,7 +162,8 @@ void SDL2::displayGame(void)
         SDL_DestroyTexture(texture);
     }
     SDL_RenderPresent(_renderer);
-    usleep(5000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
 }
 
 void SDL2::clear(void)
@@ -178,7 +182,7 @@ float SDL2::getDeltaT(void)
     clock_t currentTime = clock();
     float deltaTime = static_cast<float>(currentTime - _lastTime) / CLOCKS_PER_SEC;
     _lastTime = currentTime;
-    return deltaTime;
+    return deltaTime / 4;
 }
 
 void SDL2::setText(std::string text, Arcade::Displays::Vector2i pos, Arcade::Displays::Color color)
