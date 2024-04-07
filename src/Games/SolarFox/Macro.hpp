@@ -15,9 +15,9 @@
     #define RIGHT 1
     #define LEFT -1
 
-    #define ROTATION_UP 270
+    #define ROTATION_UP 0
     #define ROTATION_RIGHT 90
     #define ROTATION_DOWN 180
-    #define ROTATION_LEFT 0
+    #define ROTATION_LEFT 270
 
 #endif /* !MACRO_HPP_ */

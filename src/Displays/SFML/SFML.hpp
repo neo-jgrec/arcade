@@ -37,6 +37,7 @@ class SFML : public Arcade::Displays::IDisplayModule {
         float _deltaT;
         std::vector<std::tuple<Arcade::Displays::Vector2i, std::string, Arcade::Displays::Color>> _texts;
         std::vector<std::vector<Arcade::Displays::ISprite *>> _map;
+        std::vector<std::vector<std::pair<std::string, Arcade::Displays::Vector2i>>> _mapSave;
         sf::Font _font;
         sf::Text _text;
         sf::RectangleShape _textBackground;
@@ -46,6 +47,8 @@ class SFML : public Arcade::Displays::IDisplayModule {
         sf::CircleShape _circle;
         sf::ConvexShape _triangle;
 
+        std::map<std::string, sf::Texture> _textures;
+        void setRotation(float angle);
 };
 
 extern "C" {

@@ -137,7 +137,7 @@ void Core::Loop(void)
 
     GAME->init("", 0);
     DISPLAY->init();
-    DISPLAY->setMapSize(DVEC(25, 20));
+    DISPLAY->setMapSize(DVEC(30, 20));
     while (running)
     {
         checkSwitch();
@@ -151,7 +151,7 @@ void Core::Loop(void)
         if (_inGame) {
             GAME->update(_inputs, _deltaT);
             if (_inputs[Arcade::Games::KeyType::ESC] == 1) {
-                DISPLAY->setMapSize(DVEC(25, 20));
+                DISPLAY->setMapSize(DVEC(30, 20));
                 _inGame = false;
                 _score.addScore(_currentGame, _name, stoi(GAME->getScore()));
             }
@@ -288,12 +288,12 @@ void Core::displayMenu(void)
         displayScores();
     }
     displayOptions("F1: Games", DVEC(2, 1), _module == 0, false);
-    displayOptions("F2: Graphics", DVEC(14, 1), _module == 1, false);
+    displayOptions("F2: Graphics", DVEC(17, 1), _module == 1, false);
     for (auto &game : _games)
         displayOptions(game.first, DVEC(2, 3 + i++ * 2), false, _index == i && _module == 0);
     i = 0;
     for (auto &display : _displays)
-        displayOptions(display.first, DVEC(14, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
+        displayOptions(display.first, DVEC(17, 3 + i++ * 2), display.first == _currentLib, _index == i && _module == 1);
     displayOptions("F3: Name", DVEC(2, 11), _module == 2, false);
     if (!_inName)
         displayOptions(_name, DVEC(2, 13), false, _module == 2);
@@ -414,7 +414,7 @@ void Core::checkSwitch(void)
         if (_inGame)
             DISPLAY->setMapSize(DVEC(GAME->getMapSize().x, GAME->getMapSize().y));
         else
-            DISPLAY->setMapSize(DVEC(25, 20));
+            DISPLAY->setMapSize(DVEC(30, 20));
     }
     if (_inputs[Arcade::Games::KeyType::RESTART] == 1) {
         GAME->init("", 0);

@@ -7,6 +7,9 @@
 
 #include "Ncurses.hpp"
 
+#include <thread> // For std::this_thread::sleep_for
+#include <chrono>
+
 static std::map<Arcade::Displays::Color, int> colorMap = {
     {Arcade::Displays::Color::DEFAULT, 1},
     {Arcade::Displays::Color::WHITE, 2},
@@ -104,6 +107,7 @@ void Ncurses::setMapSize(Arcade::Displays::Vector2i size)
 {
     _mapSize = size;
     _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(size.y, std::vector<Arcade::Displays::ISprite *>(size.x, nullptr));
+    ::clear();
 }
 
 void Ncurses::clear(void)
@@ -141,20 +145,17 @@ void Ncurses::displayResize(void)
 
 void Ncurses::displayGame(void)
 {
-    ::clear();
-    // std::string str = "Ncurses" + std::to_string(_mapSize.x) + " " + std::to_string(_mapSize.y);
-    // mvprintw(15, 15, str.c_str());
-    if (LINES < _mapSize.y || COLS < _mapSize.x * 3) {
+    if (LINES < _mapSize.y || COLS < _mapSize.x * 2) {
         displayResize();
-        _lastTime = clock() - _lastTime;
         refresh();
+        std::this_thread::sleep_for(std::chrono::milliseconds(2));
         return;
     }
     for (int y = 0; y < _mapSize.y; y++) {
         for (int x = 0; x < _mapSize.x; x++) {
             if (_map[y][x] != nullptr) {
                 attron(COLOR_PAIR(colorMap[_map[y][x]->getColor()]));
-                mvprintw(y, x, " ");
+                mvprintw(y, x * 2, "  ");
             }
         }
     }
@@ -163,11 +164,13 @@ void Ncurses::displayGame(void)
         Arcade::Displays::Vector2i pos = std::get<0>(text);
         std::string str = std::get<1>(text);
         Arcade::Displays::Color color = std::get<2>(text);
+        attron(COLOR_PAIR(1));
+        mvprintw(pos.y, pos.x * 2, std::string(str.size() + 4, ' ').c_str());
         attron(COLOR_PAIR(colorMap[color]));
-        mvprintw(pos.y, pos.x * 3, str.c_str());
+        mvprintw(pos.y, pos.x * 2, str.c_str());
     }
     refresh();
-    usleep(10000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
 }
 
 void Ncurses::setAnimationTime(float time)

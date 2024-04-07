@@ -7,6 +7,9 @@
 
 #include "SFML.hpp"
 
+#include <thread> // For std::this_thread::sleep_for
+#include <chrono>
+
 static std::map<Arcade::Displays::Color,sf::Color> colorMap = {
     {Arcade::Displays::Color::DEFAULT, sf::Color::White},
     {Arcade::Displays::Color::WHITE, sf::Color::White},
@@ -118,19 +121,58 @@ void SFML::clear(void)
 {
     _texts.clear();
     _map = std::vector<std::vector<Arcade::Displays::ISprite *>>(_mapSize.y, std::vector<Arcade::Displays::ISprite *>(_mapSize.x, nullptr));
-
 }
 
 void SFML::updateTile(Arcade::Displays::Vector2i pos, Arcade::Displays::ISprite *sprite)
 {
+    sf::Texture texture;
+
     if (pos.x < 0 || pos.y < 0 || pos.x >= _mapSize.x || pos.y >= _mapSize.y)
         return;
     _map[pos.y][pos.x] = sprite;
+    if (_textures.find(sprite->getPath()) != _textures.end())
+        return;
+    std::cout << "Loading texture: " << sprite->getPath() << std::endl;
+
+    if (texture.loadFromFile(sprite->getPath())) {
+        _textures[sprite->getPath()] = texture;
+    }
+}
+
+void SFML::setRotation(float angle)
+{
+    _rect.setRotation(angle);
+    if (angle == 180) {
+        _rect.setPosition(_rect.getPosition().x + 32, _rect.getPosition().y + 32);
+    }
+    if (angle == 270) {
+        _rect.setPosition(_rect.getPosition().x, _rect.getPosition().y + 32);
+    }
+    if (angle == 90) {
+        _rect.setPosition(_rect.getPosition().x + 32, _rect.getPosition().y);
+    }
 }
 
 void SFML::displayGame(void)
 {
     _window.clear();
+    for (int y = 0; y < _mapSize.y; y++) {
+        for (int x = 0; x < _mapSize.x; x++) {
+            if (_map[y][x] != nullptr) {
+                _rect.setSize(sf::Vector2f(32, 32));
+                _rect.setPosition(x * 32, y * 32);
+                _rect.setRotation(0);
+                _rect.setFillColor(sf::Color::White);
+                if (_textures.find(_map[y][x]->getPath()) != _textures.end()) {
+                    _rect.setTexture(&_textures[_map[y][x]->getPath()]);
+                } else {
+                    _rect.setFillColor(colorMap[_map[y][x]->getColor()]);
+                }
+                setRotation(_map[y][x]->getRotation());
+                _window.draw(_rect);
+            }
+        }
+    }
     for (auto &text : _texts) {
         _text.setString(std::get<1>(text));
         _text.setPosition(std::get<0>(text).x * 32, std::get<0>(text).y * 32);
@@ -139,27 +181,19 @@ void SFML::displayGame(void)
             _textBackground.setSize(sf::Vector2f(_text.getLocalBounds().width + 3, _text.getLocalBounds().height + 12));
             _textBackground.setPosition(std::get<0>(text).x * 32, std::get<0>(text).y * 32 + 10);
             _textBackground.setFillColor(colorMap[std::get<2>(text)]);
-            _text.setFillColor(sf::Color::Black);
+            if (std::get<2>(text) != Arcade::Displays::Color::BLACK)
+                _text.setFillColor(sf::Color::Black);
             _window.draw(_textBackground);
         }
         _window.draw(_text);
     }
-    for (int y = 0; y < _mapSize.y; y++) {
-        for (int x = 0; x < _mapSize.x; x++) {
-            if (_map[y][x] != nullptr) {
-                _rect.setSize(sf::Vector2f(32, 32));
-                _rect.setPosition(x * 32, y * 32);
-                _rect.setFillColor(colorMap[_map[y][x]->getColor()]);
-                _window.draw(_rect);
-            }
-        }
-    }
     _window.display();
-    usleep(10000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
 void SFML::setAnimationTime(float time)
 {
+    _animationTime = time;
 }
 
 float SFML::getDeltaT(void)
@@ -167,6 +201,7 @@ float SFML::getDeltaT(void)
     clock_t currentTime = clock();
     float deltaTime = static_cast<float>(currentTime - _lastTime) / CLOCKS_PER_SEC;
     _lastTime = currentTime;
+    _time += deltaTime;
     return deltaTime;
 }
 
