@@ -73,7 +73,7 @@ namespace Arcade::Games {
                  * @brief Get the score of the game
                  * @return std::string
                  */
-                std::string getScore(void) { return std::to_string(_score); }
+                std::string getScore(void) { return std::to_string(_highScore); }
 
                 /**
                  * @brief Get the animation time of the game
@@ -170,6 +170,7 @@ namespace Arcade::Games {
             std::vector<Lasers> _enemiesLasers;
 
             long int _score = 0;
+            long int _highScore = 0;
             std::string _name = std::string("SolarFox");
 
             std::vector<std::tuple<KeyType, int, std::function<void()>>> _functs;
