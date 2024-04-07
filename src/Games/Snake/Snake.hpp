@@ -91,7 +91,7 @@ namespace Arcade::Games {
             int _bonusAppleOnMap = 0;
             std::vector<std::tuple<Vector2i, int>> _bonusApplesPos;
             double _bonusAppleSpawnCooldown = 0;
-            double _bonusAppleSpawnRate = 1.0f;
+            double _bonusAppleSpawnRate = 10.0f;
     };
 }
 

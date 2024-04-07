@@ -95,6 +95,8 @@ void Snake::close(void)
     _map.clear();
     _applesPos.clear();
     _appleOnMap = 0;
+    _bonusApplesPos.clear();
+    _bonusAppleOnMap = 0;
     _player.setAlive(false);
     _player.setLength(0);
     _player.setPosHead(Vector2i(0, 0));
@@ -110,7 +112,7 @@ std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Colo
     texts.push_back(
         std::make_tuple(
             "Score: " + std::to_string(_score),
-            Vector2i(10, 10),
+            Vector2i(0, 0),
             Color::BLACK
         )
     );
@@ -121,7 +123,7 @@ std::vector<std::tuple<std::string, Arcade::Games::Vector2i, Arcade::Games::Colo
 void Snake::bonusApples(float deltaT)
 {
     for (auto it = _bonusApplesPos.begin(); it != _bonusApplesPos.end();) {
-        std::get<1>(*it) -= 1;
+        std::get<1>(*it) -= deltaT;
         if (std::get<1>(*it) <= 0) {
             _map[std::get<0>(*it).y][std::get<0>(*it).x] = _textures[1];
             it = _bonusApplesPos.erase(it);
@@ -144,7 +146,7 @@ void Snake::bonusApples(float deltaT)
     }
 
     _appleOnMap++;
-    _bonusApplesPos.push_back(std::make_tuple(Vector2i(x, y), 1000));
+    _bonusApplesPos.push_back(std::make_tuple(Vector2i(x, y), 500.0f));
     _map[y][x] = _textures[5];
 
     _bonusAppleSpawnCooldown = _bonusAppleSpawnRate;
