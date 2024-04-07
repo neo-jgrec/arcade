@@ -271,7 +271,8 @@ namespace Arcade::Games
                 _fuzors.removeFuzor(fuzor);
             }
         }
-        _highScore = _score;
+        if (_score > _highScore)
+            _highScore = _score;
         if (_playerLaser.getState()) {
             if (pLPos == _playerLaser.getBoundary())
                 _playerLaser.setState(false);
