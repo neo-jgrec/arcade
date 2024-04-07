@@ -193,7 +193,6 @@ void SFML::displayGame(void)
 
 void SFML::setAnimationTime(float time)
 {
-    _animationTime = time;
 }
 
 float SFML::getDeltaT(void)
@@ -201,7 +200,6 @@ float SFML::getDeltaT(void)
     clock_t currentTime = clock();
     float deltaTime = static_cast<float>(currentTime - _lastTime) / CLOCKS_PER_SEC;
     _lastTime = currentTime;
-    _time += deltaTime;
     return deltaTime;
 }
 
