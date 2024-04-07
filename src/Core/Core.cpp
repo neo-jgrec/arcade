@@ -133,9 +133,8 @@ void Core::Loop(void)
     _inGame = false;
     _index = 0;
     _module = 0;
-    _currentGame = "./lib/arcade_solarfox.so";
+    _currentGame = "";
 
-    GAME->init("", 0);
     DISPLAY->init();
     DISPLAY->setMapSize(DVEC(30, 20));
     while (running)
@@ -165,8 +164,9 @@ void Core::Loop(void)
             displayMenu();
         }
     }
+    if (_currentGame != "")
+        GAME->close();
     DISPLAY->close();
-    GAME->close();
 }
 
 void Core::setTiles(void)
@@ -250,10 +250,12 @@ void Core::displayMenu(void)
             _module = (_module + 1) % 3;
         if (_module == -1)
             _module = 2;
-        if (_module == 0)
-            _index = _index % _games.size();
-        if (_module == 1)
-            _index = _index % _displays.size();
+        if (_games.size() != 0) {
+            if (_module == 0)
+                _index = _index % _games.size();
+            if (_module == 1)
+                _index = _index % _displays.size();
+        }
         if (_inputs[Arcade::Games::KeyType::ACTION1] == 1)
         {
             if (_module == 2) {
@@ -274,7 +276,8 @@ void Core::displayMenu(void)
             for (auto &game : _games)
             {
                 if (j == _index && _module == 0) {
-                    GAME->close();
+                    if (_currentGame != "")
+                        GAME->close();
                     _currentGame = game.first;
                     GAME->init("", 0);
                     DISPLAY->setMapSize(DVEC(GAME->getMapSize().x, GAME->getMapSize().y));
